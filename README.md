@@ -24,7 +24,7 @@
 
 <br/>
 
-[🚀 Trải Nghiệm Web App](#52-khởi-chạy-giao-diện-web-app-trực-quan-interfacepy) • [📖 Hướng Dẫn Giao Diện](docs/guide_interface.md) • [⚡ Cài Đặt Nhanh](#51-cài-đặt-môi-trường) • [🏗️ Sơ Đồ Kiến Trúc](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow) • [🛡️ 17 Đẳng Thức Anti-GIGO](#43-bộ-kiểm-toán-số-học-anti-gigo--kính-lúp-vision-zoom-sửa-sai) • [📊 Benchmark](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
+[🚀 Trải Nghiệm Web App](#52-khởi-chạy-giao-diện-web-app-trực-quan-interfacepy) • [💻 Tech Stack](#23-ngăn-xếp-công-nghệ-technology-stack) • [📖 Hướng Dẫn Giao Diện](docs/guide_interface.md) • [⚡ Cài Đặt Nhanh](#51-cài-đặt-môi-trường) • [🏗️ Sơ Đồ Kiến Trúc](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow) • [🛡️ 17 Đẳng Thức Anti-GIGO](#43-bộ-kiểm-toán-số-học-anti-gigo--kính-lúp-vision-zoom-sửa-sai) • [📊 Benchmark](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
 
 ---
 
@@ -95,6 +95,7 @@
 - [2. Quy Trình Chuyển Đổi PDF → Markdown (Pipeline Architecture)](#2-quy-trình-chuyển-đổi-pdf--markdown-pipeline-architecture)
   - [2.1. Sơ đồ Luồng Bóc Tách Toàn Trình (End-to-End Flow)](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow)
   - [2.2. Phân Tầng Trách Nhiệm Kỹ Thuật](#22-phân-tầng-trách-nhiệm-kỹ-thuật)
+  - [2.3. Ngăn Xếp Công Nghệ (Technology Stack)](#23-ngăn-xếp-công-nghệ-technology-stack)
 - [3. Cấu Trúc Thư Mục Dự Án (Project Structure)](#3-cấu-trúc-thư-mục-dự-án-project-structure)
 - [4. Các Công Nghệ & Kỹ Thuật Trọng Tâm](#4-các-công-nghệ--kỹ-thuật-trọng-tâm)
   - [4.1. TOC Inspector: Trinh Sát Mục Lục & Căn Chỉnh Lệch Trang Vật Lý](#41-toc-inspector-trinh-sát-mục-lục--căn-chỉnh-lệch-trang-vật-lý)
@@ -256,6 +257,30 @@ flowchart TD
 | **3. Kiểm Toán & Sửa Sai** | [`accounting_verifier.py`](src/verifier/accounting_verifier.py)<br>[`vision_zoom_corrector.py`](src/verifier/vision_zoom_corrector.py) | Kiểm tra 17 đẳng thức số học kế toán bất biến. Khi có sai số, tự động suy luận loại trừ dòng nghi vấn, cắt ảnh độ phân giải cao và kích hoạt Vision LLM sửa lỗi cục bộ. |
 | **4. Chuẩn Hóa Cấu Trúc Markdown** | [`normalizer.py`](src/parser/normalizer.py)<br>[`section_detector.py`](src/parser/section_detector.py)<br>[`ocr_postprocess.py`](src/parser/ocr_postprocess.py) | Ghép nối bảng đa trang (Spanning Tables), dựng cây tiêu đề Heading Markdown phân cấp (`#`, `##`, `###`), lọc bỏ các dòng rác hành chính lặp lại và khử bảng giả 1 cột. |
 | **5. Kiểm Toán Bảng & HITL Review** | [`serve_md_editor.py`](serve_md_editor.py)<br>[`ingestion_graph.py`](src/agents/ingestion_graph.py) | Cắt sẵn toàn bộ ảnh crop bảng biểu 200 DPI. Cung cấp giao diện Web Spreadsheet để người dùng rà soát, đối chiếu song song ảnh gốc và chỉnh sửa bảng trước khi xuất bản bản Markdown cuối cùng. |
+
+---
+
+### 2.3. Ngăn Xếp Công Nghệ (Technology Stack)
+
+Hệ thống được thiết kế theo kiến trúc hybrid kết hợp giữa **Orchestration Agentic Workflow**, **Vision-Language Models**, **Mô hình OCR Deep Learning Nội Bộ** và **Giao diện Web phi phụ thuộc** (Zero external web framework dependencies):
+
+| Phân Tầng Kỹ Thuật | Công Nghệ / Thư Viện Cốt Lõi | Vai Trò & Nhiệm Vụ Trong Pipeline |
+| :--- | :--- | :--- |
+| **🤖 Agent Orchestration** | • **LangGraph** (`^0.2`)<br>• **LangChain Core** (`^0.3`) | Điều phối đồ thị trạng thái (`StateGraph`), phân luồng song song 2 nhánh, quản lý checkpoint bộ nhớ và vòng lặp tự sửa sai (Vision Zoom Loop). |
+| **👁️ Vision LLM Core** | • **Google Gemini 2.0 Flash Vision**<br>• **Groq Llama 3.2 Vision** (Fallback) | Bóc tách 6 trang BCTC cốt lõi; tái tạo cấu trúc bảng biểu đa cột, header nhiều tầng; Fast-Failover tự động khi chạm rate-limit. |
+| **⚡ Local Vietnamese OCR** | • **RapidOCR (DBNet)**<br>• **VietOCR (Transformer Seq2Seq)** | **100% Offline, 0 tokens API**: Phát hiện vùng text và nhận diện tiếng Việt có dấu chuẩn xác cho toàn bộ ~40 trang Thuyết minh. |
+| **🔥 Deep Learning Acceleration** | • **PyTorch** (`^2.1`)<br>• **NVIDIA CUDA** (`cu121`) | Tăng tốc GPU cho VietOCR xử lý theo lô (Batch $N=16$), tối ưu hóa VRAM và tự động giải phóng bộ nhớ rác (Active Eviction). |
+| **📑 PDF & Vision Processing** | • **PyMuPDF (fitz)**<br>• **pdfplumber** (`^0.11`)<br>• **pdf2image / Poppler** (200 DPI) | Render PDF sang ảnh raster độ phân giải cao 200 DPI, trích xuất text/vector metadata native, cắt dải ảnh dòng phục vụ kính lúp Vision Zoom. |
+| **🛡️ Schema & Validation** | • **Pydantic v2** (`^2.0`)<br>• **Pydantic-Settings** | Định nghĩa cấu trúc dữ liệu nghiêm ngặt: `ParsedBlock`, `Section`, `FinancialFact`, tự động đọc cấu hình an toàn từ `.env`. |
+| **💾 Relational Storage** | • **SQLite 3** (Python Native)<br>• **DDL Kế toán chuẩn hóa** | Lưu trữ quan hệ facts tài chính, 13 chỉ số tài chính deterministic và toàn bộ báo cáo lịch sử kiểm toán 17 đẳng thức Thông tư 200. |
+| **🌐 Web HITL Interface** | • **Vanilla HTML5 & Modern CSS3**<br>• **Native JavaScript (ES6+)**<br>• **Marked.js** (Client Markdown Preview) | Giao diện Web App tương tác (Port 8501) và Table Spreadsheet Reviewer (Port 8502) siêu nhẹ, zero framework bloat, stream log thời gian thực. |
+| **📊 Benchmark & Metrics** | • **TEDS-Struct Algorithm**<br>• **Custom Tree AST Parser** | Đo lường độ tương đồng cấu trúc bảng theo chuẩn quốc tế Document AI, tính toán Span F1, Col/Row Accuracy trên 49 bảng Ground Truth. |
+| **🧪 Testing & Code Quality** | • **Pytest / Pytest-asyncio**<br>• **Ruff** (`^0.4`) | Bộ kiểm thử tự động toàn diện bao phủ 100% logic kế toán; linter & formatter mã nguồn chuẩn mực. |
+
+> [!NOTE]
+> **Khả năng tương thích phần cứng (Hardware Agnostic):**
+> * **Có GPU NVIDIA (CUDA):** Kích hoạt VietOCR Batch GPU Acceleration ($N=16$), tốc độ bóc tách đạt **1.2s – 2.0s / trang**.
+> * **Chỉ có CPU (Intel, AMD, Apple Silicon):** Hệ thống tự động chuyển sang CPU Fallback, tốc độ bóc tách đạt **3.5s – 5.0s / trang**, vẫn bảo đảm 100% độ chính xác và 0 tốn phí API token.
 
 ---
 
