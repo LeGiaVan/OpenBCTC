@@ -24,11 +24,14 @@
 
 <br/>
 
-[🚀 Trải Nghiệm Web App](#52-khởi-chạy-giao-diện-web-app-trực-quan-interfacepy) • [⚡ Cài Đặt Nhanh](#51-cài-đặt-môi-trường) • [🏗️ Sơ Đồ Kiến Trúc](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow) • [🛡️ 17 Đẳng Thức Anti-GIGO](#43-bộ-kiểm-toán-số-học-anti-gigo--kính-lúp-vision-zoom-sửa-sai) • [📊 Benchmark](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
+[🚀 Trải Nghiệm Web App](#52-khởi-chạy-giao-diện-web-app-trực-quan-interfacepy) • [📖 Hướng Dẫn Giao Diện](docs/guide_interface.md) • [⚡ Cài Đặt Nhanh](#51-cài-đặt-môi-trường) • [🏗️ Sơ Đồ Kiến Trúc](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow) • [🛡️ 17 Đẳng Thức Anti-GIGO](#43-bộ-kiểm-toán-số-học-anti-gigo--kính-lúp-vision-zoom-sửa-sai) • [📊 Benchmark](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
 
 ---
 
 </div>
+
+> [!TIP]
+> 🚀 **Bỏ qua kiến trúc, chạy thử ngay (3 phút):** [**Hướng Dẫn Cài Đặt & Sử Dụng Giao Diện Web App** ➔](docs/guide_interface.md)
 
 ## 🌟 Điểm Nổi Bật Cốt Lõi (Key Highlights)
 
@@ -78,7 +81,7 @@
 | Tiêu Chí Kỹ Thuật | Phương Pháp OCR Truyền Thống / pdfplumber | Cloud Vision Chung (LlamaParse, Unstructured) | 🌟 OpenBCTC AI |
 | :--- | :---: | :---: | :---: |
 | **Chi phí API Thuyết minh** | 0 VNĐ (nhưng vỡ bảng, dính chữ) | Hàng trăm ngàn tokens / file ($$$) | **0 VNĐ (100% Offline Local GPU)** |
-| **Nhận diện số âm kế toán `(xxx)`** | Thường mất dấu ngoặc $\rightarrow$ Sai số dương | Dễ lẫn lộn dấu hoặc xé số qua dòng | **✅ 100% Chuẩn xác (Anti-GIGO Gate)** |
+| **Nhận diện số âm kế toán `(xxx)`** | Thường mất dấu ngoặc → Sai số dương | Dễ lẫn lộn dấu hoặc xé số qua dòng | **✅ 100% Chuẩn xác (Anti-GIGO Gate)** |
 | **Bảo đảm Cân đối Kế toán** | ❌ Không kiểm tra | ❌ Ảo giác LLM (Hallucination) | **✅ 17 Đẳng thức TT200 tự kiểm toán** |
 | **Cơ chế Tự Sửa Sai Số Học** | Thủ công bằng tay | Phải gửi lại cả trang (Full Re-OCR) | **🔍 Kính lúp Vision Zoom crop dòng cục bộ** |
 | **Đối Chiếu Kiểm Tra Bảng Biểu** | Lật tìm thủ công trong PDF gốc | Xem Markdown thô không kèm ảnh gốc | **🖥️ Web Spreadsheet đối chiếu ảnh 200 DPI (0s delay)** |
@@ -106,18 +109,19 @@
   - [5.4. Các Chế Độ Chạy Dòng Lệnh Nâng Cao (CLI Options)](#54-các-chế-độ-chạy-dòng-lệnh-nâng-cao-cli-options)
 - [6. Kết Quả Đo Lường Thực Tế & Benchmark](#6-kết-quả-đo-lường-thực-tế--benchmark)
   - [6.1. Bảng Hiệu Năng Đo Lường Trên BCTC Vinamilk 2024 (54 Trang)](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
-  - [6.2. Các Tệp Đầu Ra Trọng Yếu](#62-các-tệp-đầu-ra-trọng-yếu)
+  - [6.2. Đánh Giá Độ Chính Xác Cấu Trúc Bảng (49 Bảng Thuyết Minh Ground Truth)](#62-đánh-giá-độ-chính-xác-cấu-trúc-bảng-49-bảng-thuyết-minh-ground-truth)
+  - [6.3. Các Tệp Đầu Ra Trọng Yếu](#63-các-tệp-đầu-ra-trọng-yếu)
 - [7. Lộ Trình Phát Triển (Roadmap)](#7-lộ-trình-phát-triển-roadmap)
 
 ---
 
 ## 1. Tổng Quan & Vấn Đề Nghiệp Vụ
 
-Kho lưu trữ này được xây dựng với mục tiêu chuyên biệt và duy nhất: **Chuyển đổi hoàn hảo các tập tin Báo cáo Tài chính (BCTC) định dạng PDF (scan hoặc digital) sang định dạng Markdown (`.md`) có cấu trúc chuẩn mực, sạch rác và số liệu cân đối 100%**.
+Dự án này được xây dựng với mục tiêu **Chuyển đổi các tập tin Báo cáo Tài chính (BCTC) định dạng PDF (scan hoặc digital) sang định dạng Markdown (`.md`) có cấu trúc chuẩn mực, sạch rác và số liệu cân đối 100%**.
 
 ### Thách Thức Khi Parse PDF Báo Cáo Tài Chính
 1. **Dữ liệu phân mảnh & ranh giới phức tạp:** Tài liệu BCTC gồm trang bìa, báo cáo kiểm toán, 4 bảng số liệu cốt lõi (CĐKT, KQKD, LCTT) và hàng chục trang thuyết minh chi tiết. Số in trên mục lục không bao giờ khớp với số trang vật lý của file PDF.
-2. **Lỗi OCR làm sai lệch số học (Cạm bẫy GIGO):** Bỏ sót dấu ngoặc đơn số âm `(15.000.000)` $\rightarrow$ `+15.000.000`, nhầm lẫn ký tự số tương đồng (`8` ↔ `0`, `3` ↔ `8`), hoặc xé số qua dòng khiến bảng số mất hoàn toàn giá trị sử dụng.
+2. **Lỗi OCR làm sai lệch số học:** Bỏ sót dấu ngoặc đơn số âm `(15.000.000)` → `+15.000.000`, nhầm lẫn ký tự số tương đồng (`8` ↔ `0`, `3` ↔ `8`), hoặc xé số qua dòng khiến bảng số mất hoàn toàn giá trị sử dụng.
 3. **Bảng biểu vỡ khung & dính chữ:** Bảng thuyết minh đa cột, tiêu đề 2 tầng thường bị biến dạng thành bảng giả 1 cột hoặc tràn dòng khi parse thô.
 4. **Chi phí & Độ trễ:** Việc gửi 50–60 trang ảnh scan lên Vision API tốn kém chi phí, dễ bị nghẽn quota (Rate limit) và tiềm ẩn rủi ro lộ bí mật thông tin tài chính doanh nghiệp.
 
@@ -125,7 +129,7 @@ Kho lưu trữ này được xây dựng với mục tiêu chuyên biệt và du
 Hệ thống cung cấp một luồng bóc tách khép kín:
 * **Tự động phân luồng (Triage):** Dùng trinh sát mục lục để tách riêng các trang BCTC cốt lõi và các trang Thuyết minh.
 * **Xử lý song song:** Dùng Vision-LLM cho các trang bảng cốt lõi và Local OCR Engine cục bộ (RapidOCR + VietOCR GPU) cho các trang thuyết minh (0 API tokens).
-* **Kiểm toán số học toán học (Anti-GIGO):** Áp dụng 17 phương trình kế toán bất biến Thông tư 200. Nếu phát hiện sai số, kích hoạt kính lúp Vision Zoom cắt ảnh dòng sửa lỗi tại chỗ.
+* **Kiểm toán số học toán học (Anti-Garbage In Garbage Out):** Áp dụng 17 phương trình kế toán bất biến Thông tư 200. Nếu phát hiện sai số, kích hoạt kính lúp Vision Zoom cắt ảnh dòng sửa lỗi tại chỗ.
 * **Kiểm toán bảng biểu & Human-in-the-Loop Web Editor:** Tự động cắt trước ảnh crop 200 DPI của từng bảng và cung cấp giao diện Web Spreadsheet (Port 8502) để người dùng đối chiếu ảnh gốc - sửa bảng trực tiếp - xuất file Markdown cuối cùng.
 
 ---
@@ -265,23 +269,25 @@ OpenBCTC_AI/
 ├── interface.html                        # 🌐 GIAO DIỆN WEB TRỰC QUAN: Nạp PDF, giám sát tiến trình, review bảng & xuất file MD
 ├── interface.py                          # 🚀 ĐIỂM VÀO DUY NHẤT: Web Server (Port 8501) & CLI Engine điều khiển toàn bộ pipeline
 ├── serve_md_editor.py                    # 🌐 Máy chủ Web Table Editor (HITL) đối chiếu ảnh crop 200 DPI (Port 8502)
-├── architechture.png                     # Sơ đồ kiến trúc toàn trình bóc tách PDF -> Markdown
-├── to_sql_logic.png                      # Sơ đồ logic ánh xạ bản thể học kế toán
-├── vnm.pdf                               # Tệp BCTC thử nghiệm chuẩn hóa (Vinamilk 2024 - 54 trang)
 ├── docs/                                 # Tài liệu đặc tả kiến trúc kỹ thuật chuyên sâu
-│   ├── AGENT_GUIDE.md                    # Hướng dẫn chi tiết vận hành Agentic LangGraph
+│   ├── guide_interface.md                # 📖 Hướng dẫn cài đặt nhanh & vận hành giao diện Web App
 │   ├── fact_verifier_logic.md            # Đặc tả chi tiết 17 đẳng thức kế toán & ma trận suy luận
 │   ├── notes_ocr_performance_optimization.md # Kỹ thuật tối ưu hóa batch GPU & giải phóng RAM
 │   ├── section_detector_architecture.md  # Cây phân cấp ngữ nghĩa & State machine nhận diện Heading
 │   ├── self_correction_mechanism.md      # Đặc tả cơ chế kính lúp tự sửa sai Agentic Vision Zoom
 │   └── vision_zoom.md                    # Thuật toán cắt ảnh dòng 4 tầng Waterfall
-├── evaluation_table/                     # Bộ công cụ đánh giá Benchmark cấu trúc 49 bảng Ground Truth
-│   ├── evaluator.py                      # Động cơ tính TEDS-Struct, Row/Col F1-score
-│   ├── metrics.py                        # Công thức đo lường độ chính xác bảng biểu
-│   ├── serve_reviewer.py                 # Giao diện gán nhãn và đối chiếu Ground Truth
-│   ├── ground_truth/                     # 49 tệp bảng biểu chuẩn hóa đối chứng
-│   └── images/                           # Ảnh crop 49 bảng mẫu đối chứng
+├── evaluation_table/                     # Bộ công cụ Benchmark cấu trúc 49 bảng Ground Truth
+│   ├── evaluator.py                      # Động cơ benchmark chính (TEDS-Struct, Col/Row Acc, Span F1)
+│   ├── metrics.py                        # Triển khai thuật toán TEDS-Struct & Span F1
+│   ├── converter.py                      # Trích xuất Markdown sang HTML AST phục vụ TEDS
+│   ├── serve_reviewer.py                 # Giao diện gán nhãn và đối chiếu Ground Truth (Port 8503)
+│   ├── manifest.json                     # Metadata định danh 49 bảng (bbox, số hàng/cột, trang)
+│   ├── ground_truth/                     # 49 tệp bảng biểu chuẩn hóa đối chứng (.md)
+│   ├── predictions/                      # 49 tệp bảng biểu dự đoán từ pipeline OCR (.md)
+│   ├── images/                           # 49 ảnh crop bảng đối chứng 200 DPI (.png)
+│   └── reports/                          # Báo cáo đo lường chi tiết (report_latest.md, report.json)
 ├── images/                               # Biểu đồ kiến trúc & hình ảnh kiểm chuẩn
+│   ├── interface/                        # 8 ảnh chụp giao diện Web App 4 bước vận hành
 │   ├── 17_checks.png                     # Minh họa 17 bài kiểm tra kế toán Thông tư 200
 │   ├── local_ocr.png                     # Sơ đồ luồng bóc tách Thuyết minh Local OCR
 │   ├── logic_check.png                   # Sơ đồ suy luận loại trừ nghi vấn (Deductive Localization)
@@ -336,13 +342,14 @@ Trong hầu hết các tệp PDF BCTC, **số trang in trên mục lục không 
 
 [`TOCInspector`](src/agents/toc_inspector.py) giải quyết vấn đề này qua 3 bước:
 1. **Phát hiện Mục lục:** Quét 3–5 trang đầu tìm bảng mục lục bằng từ khóa `MỤC LỤC`, `BÁO CÁO TÌNH HÌNH TÀI CHÍNH` kết hợp `THUYẾT MINH`.
-2. **Khôi phục số trang dính OCR:** Tự động tách các số trang bị dính do OCR: `'68'` $\rightarrow$ `(6, 8)`; `'1253'` $\rightarrow$ `(12, 53)`.
+2. **Khôi phục số trang dính OCR:** Tự động tách các số trang bị dính do OCR: `'68'` → `(6, 8)`; `'1253'` → `(12, 53)`.
 3. **Thuật toán Anchor Search:** Tìm kiếm mục neo thực tế trong các trang kế tiếp để tính độ lệch trang vật lý:
-   $$\text{page\_offset} = \text{p\_num\_thực\_tế} - \text{first\_printed\_page}$$
+   $$\Delta_{\text{page}} = P_{\text{actual}} - P_{\text{printed}}$$
+   > 💡 **Quy tắc code:** `page_offset = p_num_thực_tế - first_printed_page`
 
 Nhờ đó, hệ thống phân luồng ranh giới chính xác 100%:
-* **Core Statements (BCTC Cốt lõi):** Trang 7 $\rightarrow$ 12.
-* **Notes (Thuyết minh BCTC):** Trang 13 $\rightarrow$ 54.
+* **Core Statements (BCTC Cốt lõi):** Trang 7 → 12.
+* **Notes (Thuyết minh BCTC):** Trang 13 → 54.
 
 ---
 
@@ -541,9 +548,9 @@ flowchart LR
 </details>
 
 1. **Intelligent Line Triage:** Dòng thuần số/mã hiệu được nhận diện nhanh bằng RapidOCR CPU/ONNX; chỉ những dòng văn bản tiếng Việt phức tạp mới chuyển sang VietOCR GPU.
-2. **VietOCR Batch GPU Acceleration:** Xử lý theo lô ($N=16$ dòng ảnh) trên CUDA GPU, rút ngắn thời gian bóc tách từ ~8.5s xuống còn **1.2s – 2.0s / trang**.
+2. **VietOCR Batch GPU Acceleration:** Xử lý theo lô ($N = 16$ dòng ảnh) trên CUDA GPU, rút ngắn thời gian bóc tách từ ~8.5s xuống còn **1.2s – 2.0s / trang**.
 3. **Active Memory Eviction:** Tự động gọi `torch.cuda.empty_cache()` và thu gom rác sau mỗi trang, duy trì dung lượng RAM ổn định ở mức **~1.2 GB**, triệt tiêu hoàn toàn nguy cơ tràn bộ nhớ (OOM).
-4. **Anti-Pseudo-Table Guard & Number Stitcher:** Lọc sạch các bảng giả 1 cột do OCR bắt nhầm đoạn văn; tự động nối các số bị xé dòng (`23.225` + `734.296` $\rightarrow$ `23.225.734.296`).
+4. **Anti-Pseudo-Table Guard & Number Stitcher:** Lọc sạch các bảng giả 1 cột do OCR bắt nhầm đoạn văn; tự động nối các số bị xé dòng (`23.225` + `734.296` → `23.225.734.296`).
 
 ---
 
@@ -568,7 +575,7 @@ Sau khi tổng hợp tài liệu Markdown toàn văn, OpenBCTC cung cấp một 
 ### 5.1. Cài Đặt Môi Trường
 
 > [!TIP]
-> **Yêu cầu hệ thống:** Python 3.11+, Windows / Linux / macOS. Khuyến nghị máy có GPU NVIDIA (VRAM $\ge 4$ GB) để đạt tốc độ tối đa 1.2s/trang cho Local OCR.
+> **Yêu cầu hệ thống:** Python 3.11+, Windows / Linux / macOS. Khuyến nghị máy có GPU NVIDIA (VRAM ≥ 4 GB) để đạt tốc độ tối đa 1.2s/trang cho Local OCR.
 
 ```powershell
 # 1. Khởi tạo và kích hoạt môi trường ảo
@@ -642,7 +649,7 @@ flowchart LR
 #### Bước 2: Bắt Đầu Xử Lý & Theo Dõi Tiến Trình Thời Gian Thực
 * Nhấp nút **"🚀 Bắt Đầu Bóc Tách BCTC"**.
 * Giao diện trực quan hóa trạng thái hoạt động của 6 node xử lý thời gian thực:
-  1. `Phân Loại PDF` $\rightarrow$ 2. `Trinh Sát Mục Lục` $\rightarrow$ 3. `Vision LLM BCTC Cốt Lõi` $\rightarrow$ 4. `Local OCR Thuyết Minh` $\rightarrow$ 5. `Anti-GIGO 17 Đẳng Thức Kế Toán` $\rightarrow$ 6. `Table Inspector & Crop Ảnh Bảng 200 DPI`.
+  1. `Phân Loại PDF` → 2. `Trinh Sát Mục Lục` → 3. `Vision LLM BCTC Cốt Lõi` → 4. `Local OCR Thuyết Minh` → 5. `Anti-GIGO 17 Đẳng Thức Kế Toán` → 6. `Table Inspector & Crop Ảnh Bảng 200 DPI`.
 * Thanh tiến trình động `%` cùng cửa sổ **Terminal Live Stream** hiển thị chi tiết từng thông điệp log từ LangGraph.
 
 #### Bước 3: Rà Soát Bảng Biểu Đối Chiếu Ảnh Crop 200 DPI (Port 8502)
@@ -703,8 +710,6 @@ python interface.py --clear-cache
 
 ### 6.1. Bảng Hiệu Năng Đo Lường Trên BCTC Vinamilk 2024 (54 Trang)
 
-Toàn bộ thông số dưới đây được đo lường trực tiếp trên máy trạm (Intel i5 8-Cores, RAM 16 GB, GPU NVIDIA GeForce RTX 2050 4GB VRAM) và xuất bản tự động vào [`outputs/vnm_ocr_benchmark_report.md`](outputs/vnm_ocr_benchmark_report.md):
-
 | Tiêu Chí Đo Lường | Phương Pháp Truyền Thống / Baseline | OpenBCTC (Sau Tối Ưu Hóa & Tích Hợp) | Ý Nghĩa Kỹ Thuật |
 | :--- | :---: | :---: | :---: |
 | **Độ tin cậy số liệu** | Dễ ảo giác do OCR thô, rớt số âm | **✅ 100% Cân đối (10/10 Invariants Pass)** | Triệt tiêu hoàn toàn lỗi GIGO |
@@ -719,7 +724,123 @@ Toàn bộ thông số dưới đây được đo lường trực tiếp trên m
 
 ---
 
-### 6.2. Các Tệp Đầu Ra Trọng Yếu
+### 6.2. Đánh Giá Độ Chính Xác Cấu Trúc Bảng (49 Bảng Thuyết Minh Ground Truth)
+
+Để đánh giá khoa học và khách quan chất lượng nhận diện bảng biểu trong phần Thuyết minh BCTC, OpenBCTC xây dựng bộ **Ground Truth gồm 49 bảng số liệu thực tế** (thu thập từ BCTC Vinamilk 2024) lưu tại [`evaluation_table/`](evaluation_table/).
+
+Bộ công cụ đánh giá sử dụng các độ đo chuẩn quốc tế trong bài toán Document AI / Table Extraction:
+* **TEDS-Struct (Tree Edit Distance based Similarity):** Đo lường khoảng cách chỉnh sửa giữa cây HTML AST dự đoán và cây HTML chuẩn (loại trừ nội dung chữ, chỉ đánh giá cấu trúc cây).
+* **Span F1 (Merged Cells & Multi-tier Headers):** Đánh giá độ chính xác nhận diện các ô gộp đa cột / đa hàng và tiêu đề phân tầng.
+* **Col & Row Accuracy:** Tỷ lệ số bảng khớp chính xác 100% số cột và số hàng.
+* **Grid Exact Match:** Tỷ lệ bảng khớp tuyệt đối cả số hàng và số cột.
+
+#### 📊 Tổng Hợp Chỉ Số Benchmark Cấu Trúc (Overall Metrics)
+
+| Chỉ Số Đánh Giá | Điểm Số Đạt Được | Mục Tiêu / Ý Nghĩa Kỹ Thuật |
+| :--- | :---: | :--- |
+| **TEDS-Struct** | **`0.8604`** | Độ tương đồng cấu trúc cây AST đạt mức **Rất Tốt** (> 0.85) |
+| **Độ chính xác Cột (Col Accuracy)** | **`89.8%`** (44/49 bảng) | Cực kỳ vững chắc, bảo toàn nguyên vẹn số lượng cột dữ liệu tài chính |
+| **Span F1 (Header 2 tầng & Ô gộp)** | **`71.8%`** | Nhận diện và gộp chính xác phần lớn các tiêu đề phân cấp phức tạp |
+| **Độ chính xác Hàng (Row Accuracy)** | **`46.9%`** (23/49 bảng) | Thách thức chủ yếu do bảng kéo dài qua nhiều trang PDF hoặc gộp dòng |
+| **Khớp Ma Trận Tuyệt Đối (Grid Exact Match)** | **`44.9%`** (22/49 bảng) | Gần 1 nửa số bảng đạt độ chính xác lưới tuyệt đối ngay lần đầu trích xuất |
+
+---
+
+#### 🔍 Phân Bố Lỗi Cấu Trúc & Biện Pháp Xử Lý (Error Taxonomy)
+
+Phân loại 7 dạng lỗi cấu trúc ghi nhận qua 49 bảng kiểm chuẩn:
+
+| Phân Loại Lỗi | Số Lượng Bảng | Tỷ Lệ | Nguyên Nhân Kỹ Thuật & Giải Pháp Pipeline |
+| :--- | :---: | :---: | :--- |
+| `OK` | **16** | 32.7% | **Cấu trúc hoàn hảo 100%:** Khớp trọn vẹn số hàng, số cột và toàn bộ tọa độ ô gộp. |
+| `MISSING_ROWS` | **19** | 38.8% | **Thiếu dòng:** Thường xuất hiện ở các bảng dài bị ngắt trang vật lý qua 2 trang PDF hoặc OCR gộp 2 dòng liên tiếp. Đã được khắc phục qua cơ chế `Spanning Tables` của [`normalizer.py`](src/parser/normalizer.py). |
+| `MISSED_MERGED_HEADER` | **12** | 24.5% | **Bỏ sót ô gộp tiêu đề:** Engine nhận diện tiêu đề đa tầng thành các ô riêng rẽ. Được giải quyết qua bộ nhận diện header 2 tầng trong [`table_utils.py`](src/parser/table_utils.py). |
+| `HALLUCINATED_MERGE` | **10** | 20.4% | **Gộp ô ảo:** OCR hiểu nhầm khoảng trắng của ô trống thành ô gộp mở rộng. |
+| `HEADER_DEPTH_MISMATCH` | **10** | 20.4% | **Lệch số tầng Header:** Nhầm lẫn giữa dòng tiêu đề con và dòng số liệu đầu tiên. |
+| `EXTRA_ROWS` | **7** | 14.3% | **Thừa dòng:** Đường kẻ phân cách, khoảng trắng hoặc ghi chú footnote dưới chân bảng bị nhận diện nhầm thành một hàng dữ liệu. Được lọc bởi [`ocr_postprocess.py`](src/parser/ocr_postprocess.py). |
+| `COLUMN_COUNT_MISMATCH` | **5** | 10.2% | **Lệch số cột:** Header 2 tầng bị ép phẳng (flatten) làm rớt các cột con. Chỉ xuất hiện ở 5/49 bảng. |
+
+---
+
+#### 📋 Bảng Chi Tiết Kết Quả 49 Bảng Ground Truth
+
+<details>
+<summary>👉 <b>Nhấp để mở rộng danh sách chi tiết toàn bộ 49 bảng kiểm thử (Click to expand)</b></summary>
+<br>
+
+> Toàn bộ dữ liệu được trích xuất từ [`evaluation_table/reports/report_latest.md`](evaluation_table/reports/report_latest.md):
+
+| Table ID | Hàng (Pred / GT) | Cột (Pred / GT) | Span F1 | TEDS-Struct | Phân Loại Lỗi Ghi Nhận |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| `p14_mineru_tbl_1` | 9 / 9 | 6 / 5 | 0.67 | **0.790** | `COLUMN_COUNT_MISMATCH`, `HALLUCINATED_MERGE`, `HEADER_DEPTH_MISMATCH` |
+| `p15_mineru_tbl_1` | 8 / 7 | 5 / 5 | 0.12 | **0.429** | `EXTRA_ROWS`, `MISSED_MERGED_HEADER`, `HALLUCINATED_MERGE`, `HEADER_DEPTH_MISMATCH` |
+| `p15_mineru_tbl_2` | 6 / 7 | 6 / 5 | 0.33 | **0.619** | `MISSING_ROWS`, `COLUMN_COUNT_MISMATCH`, `MISSED_MERGED_HEADER`, `HEADER_DEPTH_MISMATCH` |
+| `p27_mineru_tbl_1` | 4 / 4 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p27_mineru_tbl_2` | 12 / 11 | 3 / 3 | 0.00 | **0.796** | `EXTRA_ROWS`, `MISSED_MERGED_HEADER` |
+| `p27_mineru_tbl_3` | 5 / 6 | 3 / 3 | 1.00 | **0.840** | `MISSING_ROWS` |
+| `p28_mineru_tbl_1` | 8 / 8 | 3 / 3 | 0.00 | **0.939** | `HALLUCINATED_MERGE` |
+| `p28_mineru_tbl_2` | 3 / 4 | 2 / 2 | 1.00 | **0.769** | `MISSING_ROWS` |
+| `p28_mineru_tbl_3` | 3 / 3 | 2 / 2 | 1.00 | **1.000** | `OK` |
+| `p29_mineru_tbl_1` | 11 / 12 | 9 / 9 | 0.29 | **0.868** | `MISSING_ROWS`, `MISSED_MERGED_HEADER`, `HALLUCINATED_MERGE`, `HEADER_DEPTH_MISMATCH` |
+| `p30_mineru_tbl_1` | 0 / 13 | 0 / 9 | 0.00 | **0.009** | `MISSING_ROWS`, `COLUMN_COUNT_MISMATCH`, `MISSED_MERGED_HEADER`, `HEADER_DEPTH_MISMATCH` |
+| `p31_mineru_tbl_1` | 5 / 5 | 3 / 3 | 0.00 | **0.857** | `HALLUCINATED_MERGE` |
+| `p31_mineru_tbl_2` | 11 / 10 | 4 / 5 | 0.00 | **0.690** | `EXTRA_ROWS`, `COLUMN_COUNT_MISMATCH`, `MISSED_MERGED_HEADER`, `HALLUCINATED_MERGE`, `HEADER_DEPTH_MISMATCH` |
+| `p31_mineru_tbl_3` | 6 / 6 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p32_mineru_tbl_1` | 17 / 17 | 6 / 6 | 1.00 | **1.000** | `OK` |
+| `p33_mineru_tbl_1` | 15 / 13 | 6 / 5 | 0.00 | **0.743** | `EXTRA_ROWS`, `COLUMN_COUNT_MISMATCH`, `HALLUCINATED_MERGE` |
+| `p34_mineru_tbl_1` | 9 / 10 | 5 / 5 | 1.00 | **0.902** | `MISSING_ROWS` |
+| `p35_mineru_tbl_1` | 9 / 10 | 3 / 3 | 1.00 | **0.902** | `MISSING_ROWS` |
+| `p35_mineru_tbl_2` | 6 / 6 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p35_mineru_tbl_3` | 8 / 8 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p36_mineru_tbl_1` | 6 / 6 | 6 / 6 | 0.00 | **0.907** | `HALLUCINATED_MERGE` |
+| `p37_mineru_tbl_1` | 9 / 10 | 3 / 3 | 1.00 | **0.902** | `MISSING_ROWS` |
+| `p37_mineru_tbl_2` | 11 / 11 | 3 / 3 | 0.00 | **0.867** | `MISSED_MERGED_HEADER` |
+| `p38_mineru_tbl_1` | 8 / 8 | 5 / 5 | 1.00 | **1.000** | `OK` |
+| `p39_mineru_tbl_1` | 10 / 11 | 3 / 3 | 1.00 | **0.911** | `MISSING_ROWS` |
+| `p39_mineru_tbl_2` | 5 / 6 | 3 / 3 | 1.00 | **0.840** | `MISSING_ROWS` |
+| `p40_mineru_tbl_1` | 5 / 5 | 6 / 6 | 1.00 | **1.000** | `OK` |
+| `p41_mineru_tbl_1` | 2 / 2 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p41_mineru_tbl_2` | 6 / 6 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p41_mineru_tbl_3` | 5 / 5 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p42_mineru_tbl_1` | 11 / 12 | 6 / 6 | 1.00 | **0.918** | `MISSING_ROWS` |
+| `p43_mineru_tbl_1` | 6 / 7 | 3 / 3 | 0.40 | **0.625** | `MISSING_ROWS`, `MISSED_MERGED_HEADER`, `HEADER_DEPTH_MISMATCH` |
+| `p43_mineru_tbl_2` | 5 / 5 | 3 / 3 | 1.00 | **0.895** | `HEADER_DEPTH_MISMATCH` |
+| `p44_mineru_tbl_1` | 5 / 5 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p44_mineru_tbl_2` | 4 / 6 | 5 / 5 | 0.57 | **0.633** | `MISSING_ROWS`, `MISSED_MERGED_HEADER`, `HALLUCINATED_MERGE`, `HEADER_DEPTH_MISMATCH` |
+| `p45_mineru_tbl_1` | 2 / 2 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p45_mineru_tbl_2` | 11 / 13 | 3 / 3 | 0.00 | **0.918** | `MISSING_ROWS`, `MISSED_MERGED_HEADER` |
+| `p46_mineru_tbl_1` | 26 / 26 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p47_mineru_tbl_1` | 6 / 6 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p47_mineru_tbl_2` | 8 / 8 | 3 / 3 | 1.00 | **1.000** | `OK` |
+| `p48_mineru_tbl_1` | 12 / 11 | 3 / 3 | 1.00 | **0.918** | `EXTRA_ROWS` |
+| `p48_mineru_tbl_2` | 13 / 14 | 3 / 3 | 1.00 | **0.930** | `MISSING_ROWS` |
+| `p49_mineru_tbl_1` | 21 / 19 | 3 / 3 | 1.00 | **0.906** | `EXTRA_ROWS` |
+| `p50_mineru_tbl_1` | 18 / 17 | 3 / 3 | 1.00 | **0.945** | `EXTRA_ROWS` |
+| `p51_mineru_tbl_1` | 16 / 20 | 5 / 5 | 0.80 | **0.726** | `MISSING_ROWS`, `MISSED_MERGED_HEADER` |
+| `p52_mineru_tbl_1` | 11 / 12 | 5 / 5 | 0.00 | **0.667** | `MISSING_ROWS`, `MISSED_MERGED_HEADER`, `HALLUCINATED_MERGE` |
+| `p53_mineru_tbl_1` | 14 / 15 | 3 / 3 | 1.00 | **0.934** | `MISSING_ROWS` |
+| `p53_mineru_tbl_2` | 5 / 7 | 3 / 3 | 1.00 | **0.724** | `MISSING_ROWS` |
+| `p54_mineru_tbl_1` | 5 / 5 | 7 / 7 | 1.00 | **0.838** | `HEADER_DEPTH_MISMATCH` |
+
+</details>
+
+---
+
+#### ⚙️ Khởi Chạy Lại Bộ Benchmark (Reproduction)
+
+Kiểm toán viên và nhà phát triển có thể tái hiện lại toàn bộ kết quả đo lường trên qua dòng lệnh:
+
+```bash
+# Cách 1: Thông qua interface runner điều phối
+python interface.py --eval-tables
+
+# Cách 2: Chạy trực tiếp từ module đánh giá
+python evaluation_table/evaluator.py
+```
+
+---
+
+### 6.3. Các Tệp Đầu Ra Trọng Yếu
 
 Sau khi chạy pipeline, hệ thống tự động xuất bản và đồng bộ các tệp kết quả tại thư mục `outputs/`:
 
@@ -736,7 +857,7 @@ Sau khi chạy pipeline, hệ thống tự động xuất bản và đồng bộ
 - [x] **TOC Inspector & Physical Offset**: Tự động giải quyết lệch trang vật lý PDF scan.
 - [x] **Anti-GIGO 17 Đẳng Thức Kế Toán**: Tự động kiểm toán theo Thông tư 200/2014/TT-BTC.
 - [x] **Kính Lúp Vision Zoom**: Tự động crop dòng nghi vấn và sửa sai số học khép kín.
-- [x] **Tối Ưu Hóa Local OCR**: VietOCR Batch GPU Acceleration ($N=16$) & Active Memory Eviction.
+- [x] **Tối Ưu Hóa Local OCR**: VietOCR Batch GPU Acceleration (Batch N = 16) & Active Memory Eviction.
 - [x] **Zero-Latency Table Cropper & Web HITL Editor**: Giao diện Spreadsheet đối chiếu ảnh 200 DPI (Port 8502).
 - [x] **Web App All-in-One (`interface.py`)**: Kéo thả nạp PDF đa doanh nghiệp & Live stream log (Port 8501).
 - [ ] **Xuất dữ liệu Đa định dạng**: Xuất trực tiếp sang Microsoft Excel (`.xlsx`), JSON Schema và XBRL chuẩn quốc tế.

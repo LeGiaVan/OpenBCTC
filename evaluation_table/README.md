@@ -28,16 +28,15 @@ Toolkit này được thiết kế để **tự động tương thích và chu�
 
 ```
 evaluation_table/
-├── README.md                           # Tài liệu hướng dẫn chi tiết toàn bộ Framework
-├── plan.md                             # Kế hoạch phát triển và checklist triển khai
-├── extract_real_tables.py              # Script trích xuất 55 bảng thực tế từ cache OCR (MinerU + VietOCR)
+├── README.md                           # Hướng dẫn chi tiết & đặc tả bộ chỉ số Benchmark
 ├── converter.py                        # Bộ chuyển đổi linh hoạt: HTML / Markdown <-> Table Schema
 ├── metrics.py                          # 4 metric cốt lõi: Count Acc, Span IoU, TEDS-Struct, Error Taxonomy
 ├── evaluator.py                        # Script CLI đánh giá toàn diện bộ dataset GT vs Predictions
-├── manifest.json                       # Index JSON của 55 bảng thực tế kèm phân nhóm và siêu dữ liệu
-├── real_tables_catalog.md              # Bảng mục lục Markdown chi tiết 55 bảng thực tế
-├── ground_truth/                       # 55 file nhãn chuẩn ứng với 55 bảng thực tế
-├── predictions/                        # 55 bảng trích xuất 100% nguyên bản từ OCR cache (.html, .md, .json)
+├── serve_reviewer.py                   # Giao diện Web Reviewer đối chiếu ảnh crop & gán nhãn Ground Truth
+├── manifest.json                       # Index JSON của 49 bảng thực tế kèm phân nhóm và siêu dữ liệu
+├── ground_truth/                       # 49 file nhãn chuẩn ứng với 49 bảng thực tế (.json)
+├── predictions/                        # 49 bảng trích xuất từ pipeline (.html, .md, .json)
+├── images/                             # 49 ảnh crop 200 DPI của các bảng phục vụ đối chiếu
 └── reports/                            # Báo cáo đánh giá xuất ra tự động
     ├── report_latest.json              # File JSON chi tiết mọi thông số kỹ thuật
     └── report_latest.md                # Báo cáo Markdown có bảng so sánh và phân tích lỗi
@@ -47,7 +46,7 @@ evaluation_table/
 
 ## 3. Định dạng Dữ liệu Chuẩn (`table_schema`)
 
-Mọi bảng (dù là Ground Truth hay Prediction từ MinerU) đều được `converter.py` tự động ánh xạ về schema:
+Mọi bảng (dù là Ground Truth hay Prediction từ pipeline) đều được `converter.py` tự động ánh xạ về schema:
 
 ```json
 {
@@ -67,8 +66,8 @@ Mọi bảng (dù là Ground Truth hay Prediction từ MinerU) đều được `
 
 ### Quy tắc tọa độ `spans`:
 Mỗi phần tử trong `spans` là một mảng 4 số nguyên `[r_start, c_start, r_end, c_end]` (chỉ số 0-indexed):
-- `[0, 0, 0, 2]`: Ô từ hàng 0 cột 0 kéo dài đến hàng 0 cột 2 (gộp 3 cột ngang $\rightarrow$ `colspan="3"`).
-- `[1, 0, 2, 0]`: Ô từ hàng 1 cột 0 kéo dài đến hàng 2 cột 0 (gộp 2 hàng dọc $\rightarrow$ `rowspan="2"`).
+- `[0, 0, 0, 2]`: Ô từ hàng 0 cột 0 kéo dài đến hàng 0 cột 2 (gộp 3 cột ngang → `colspan="3"`).
+- `[1, 0, 2, 0]`: Ô từ hàng 1 cột 0 kéo dài đến hàng 2 cột 0 (gộp 2 hàng dọc → `rowspan="2"`).
 
 ---
 
@@ -91,7 +90,7 @@ Mỗi phần tử trong `spans` là một mảng 4 số nguyên `[r_start, c_sta
 - Công thức:
   $$\text{TEDS}_{\text{struct}}(T_{pred}, T_{gt}) = 1 - \frac{\text{TreeEditDistance}(T_{pred}, T_{gt})}{\max(|T_{pred}|, |T_{gt}|)}$$
 - Toolkit này triển khai **thuật toán Zhang-Shasha thuần Python (100% offline, zero-dependency)**, chỉ so sánh cấu trúc các node DOM (`table`, `thead`, `tr`, `th`, `td` kèm thuộc tính `rowspan`, `colspan`) và bỏ qua nội dung text.
-- Thang điểm: `0.0` (sai lệch hoàn toàn) $\rightarrow$ `1.0` (cấu trúc trùng khớp tuyệt đối).
+- Thang điểm: `0.0` (sai lệch hoàn toàn) → `1.0` (cấu trúc trùng khớp tuyệt đối).
 
 ### 4.4. Error Taxonomy (Phân loại tự động nguyên nhân lỗi)
 Framework tự động chẩn đoán và gắn nhãn các mã lỗi sau:
@@ -107,28 +106,30 @@ Framework tự động chẩn đoán và gắn nhãn các mã lỗi sau:
 
 ## 5. Hướng Dẫn Chạy Đánh Giá Nhanh (Quickstart)
 
-### Bước 1: Chạy đánh giá trên bộ mẫu có sẵn
-Từ thư mục gốc của dự án (`d:/FinAudit_AI`), chạy lệnh:
+### Bước 1: Chạy đánh giá trên bộ 49 bảng Ground Truth
+Từ thư mục gốc của dự án, chạy lệnh:
 
 ```bash
-.venv\Scripts\python.exe evaluation_table/evaluator.py
+python evaluation_table/evaluator.py
+# hoặc
+python interface.py --eval-tables
 ```
 
-Kết quả hiển thị trực tiếp trên Terminal:
-```
+Kết quả đo lường thực tế trên bộ dữ liệu 49 bảng:
+```text
 =================================================================
  KẾT QUẢ ĐÁNH GIÁ TABLE STRUCTURE:
- - Tổng số bảng: 5
- - Row Accuracy: 60.0%
- - Col Accuracy: 80.0%
- - Span F1 (Ô gộp): 80.0%
- - TEDS-Struct: 0.8649
- - Phân bố lỗi: {'OK': 2, 'HEADER_DEPTH_MISMATCH': 2, 'MISSING_ROWS': 2, ...}
+ - Tổng số bảng: 49
+ - Row Accuracy: 46.9%
+ - Col Accuracy: 89.8%
+ - Span F1 (Ô gộp): 71.8%
+ - TEDS-Struct: 0.8604
+ - Phân bố lỗi: {'MISSING_ROWS': 19, 'OK': 16, 'MISSED_MERGED_HEADER': 12, 'HALLUCINATED_MERGE': 10, 'HEADER_DEPTH_MISMATCH': 10, 'EXTRA_ROWS': 7, 'COLUMN_COUNT_MISMATCH': 5}
 =================================================================
 ```
 
 ### Bước 2: Xem báo cáo chi tiết
-Mở file [reports/report_latest.md](../evaluation_table/reports/report_latest.md) để xem phân tích từng bảng và hướng dẫn khắc phục.
+Mở file [reports/report_latest.md](reports/report_latest.md) để xem phân tích chi tiết từng bảng trong 49 bảng kiểm thử.
 
 ---
 
