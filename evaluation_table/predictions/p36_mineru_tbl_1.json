@@ -1,0 +1,37 @@
+{
+  "table_id": "p36_mineru_tbl_1",
+  "page": 36,
+  "note_title": "(b) Chi phí trả trước dài hạn",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 6,
+  "n_spans_pred": 2,
+  "spans_pred": [
+    [
+      3,
+      0,
+      4,
+      0
+    ],
+    [
+      3,
+      1,
+      4,
+      1
+    ]
+  ],
+  "tags": [
+    "two_tier_header",
+    "has_subtotals"
+  ],
+  "bbox": [
+    0.088,
+    0.259,
+    0.924,
+    0.507
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_36.json",
+  "content": "<table><tr><td></td><td>Chi phí đất trả trước VND</td><td>Công cụ và dụng cụ VND</td><td>Chi phí cải tạo mặt bằng VND</td><td>Chi phí trả trước khác VND</td><td>Tổng VND</td></tr><tr><td>Số dư đầu năm</td><td>183.396.239.552</td><td>154.771.254.541</td><td>17.704.034.929</td><td>15.450.482.659</td><td>371.322.011.681</td></tr><tr><td>Tăng trong năm Chuyển từ xây dựng cơ bản dở dang</td><td></td><td>188.812.927.784</td><td>183.388.691.060 4.809.497.353</td><td>7.109.408.925</td><td>379.311.027.769 8.004.415.925</td></tr><tr><td rowspan=\"2\">Phân bổ trong năm</td><td rowspan=\"2\">(7.216.089.803)</td><td>3.194.918.572 (102.772.843.225)</td><td>(31.233.131.073)</td><td>(11.492.381.093)</td><td>(152.714.445.194)</td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td>Số dư cuối năm</td><td>176.180.149.749</td><td>244.006.257.672</td><td>174.669.092.269</td><td>11.067.510.491</td><td>605.923.010.181</td></tr></table>"
+}

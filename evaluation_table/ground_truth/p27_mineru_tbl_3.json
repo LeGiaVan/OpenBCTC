@@ -1,0 +1,13 @@
+{
+  "table_id": "p27_mineru_tbl_3",
+  "n_rows": 6,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Biến động của dự phòng phải thu khó đòi trong năm như sau:",
+  "page": 27,
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)"
+}

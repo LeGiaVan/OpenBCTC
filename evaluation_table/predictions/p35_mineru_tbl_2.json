@@ -1,0 +1,23 @@
+{
+  "table_id": "p35_mineru_tbl_2",
+  "page": 35,
+  "note_title": "Các công trình xây dựng cơ bản dở dang lớn đang thực hiện như sau",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.449,
+    0.895,
+    0.607
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_35.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Nhà máy sữa Nghệ An|36.312.674.864|44.036.865.985|\n|Nhà máy sữa Tiên Sơn|50.733.128.702|13.092.495.386|\n|Chi nhánh Cần Thơ|51.145.347.427|51.145.347.427|\n|Các công trình khác|35.807.205.012|60.370.967.885|\n||173.998.356.005|168.645.676.683|"
+}

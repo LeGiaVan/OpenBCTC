@@ -1,0 +1,24 @@
+{
+  "table_id": "p50_mineru_tbl_1",
+  "page": 50,
+  "note_title": "(a) Ghi nhận trong báo cáo kết quả hoạt động kinh doanh riêng",
+  "format": "markdown",
+  "test_group": "group_5_dashes_and_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'",
+  "n_rows_pred": 18,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.121,
+    0.227,
+    0.906,
+    0.779
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_50.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Chi phí thuế thu nhập hiện hành Trong đó: chi phí thuế hiện quan đến thu nhập|2.128.415.483.304|2.058.534.807.543|\n|chịu thuế của các năm trước|32.589.723.407|22.083.666.289|\n|Lợi ích thuế thu nhập hoãn lại Phát sinh và hoàn nhập các chênh lệch tạm thời|(20.970.420.316)|(77.458.923.279)|\n|Chi phí thuế thu nhập|2.107.445.062.988|1.981.075.884.264|\n| --- | --- | --- |\n|Đối chiếu thuế suất thực tế|2025|2024|\n||VND|VND|\n|Lợi nhuận kế toán trước thuế|11.466.794.698.617|11.243.489.707.213|\n|Thuế tính theo thuế suất của Công ty Ảnh hưởng của chênh lệch thuế suất của các chi nhánh|2.293.358.939.723|2.248.697.941.443|\n|và nhà máy của Công ty|(85.166.664.125)|(58.311.949.336)|\n|Thu nhập không chịu thuế Thuế chuyển lợi nhuận từ công ty con ở nước ngoài|(99.126.301.723)|(121.453.484.964)|\n||36.253.022.852|22.348.883.102|\n|Chi phí không được khấu trừ thuế|2.877.460.000|9.567.219.082|\n|Ưu đãi thuế|(51.410.278.145)|(120.612.233.211)|\n|Thay đổi tài sản thuế thu nhập hoãn lại cưư cước ghi nhận|||\n|Chi phí thuế hiện hành liên quan đến thu nhập chịu thuế|(21.930.839.001)|(21.244.158.141)|\n|của các năm trước|32.589.723.407|22.083.666.289|\n|Chi phí thuế thu nhập|2.107.445.062.988|1.981.075.884.264|"
+}

@@ -1,0 +1,31 @@
+{
+  "table_id": "p15_mineru_tbl_2",
+  "page": 15,
+  "note_title": "(b) Các công ty liên doanh, liên kết",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 6,
+  "n_spans_pred": 1,
+  "spans_pred": [
+    [
+      0,
+      3,
+      0,
+      4
+    ]
+  ],
+  "tags": [
+    "two_tier_header",
+    "has_subtotals"
+  ],
+  "bbox": [
+    0.126,
+    0.613,
+    0.894,
+    0.908
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_15.json",
+  "content": "<table><tr><td>Tên</td><td>Trụ sở</td><td>Hoạt động chính</td><td colspan=\"2\">Lợi ích kinh tế 31/12/2025</td><td>1/1/2025</td></tr><tr><td>Các công ty liên doanh, liên kết sở hữu trực tiếp 10</td><td>Taupomh Limited 108 Tuwharetoa, Taupo, New</td><td>Sản xuất sữa</td><td>13,55%</td><td>13,55%</td></tr><tr><td>(trước đây là &quot;Miraka Holdings Limited&quot;&quot;) Công ty Cổ phần APIS</td><td>Zealand Số 18A, VSIP II-A, đường 27,</td><td>Kinh doanh</td><td>20,00%</td><td>20,00%</td></tr><tr><td></td><td>Khu công nghiệp Việt Nam Singapore II-A, Phường Vĩnh Tân, Thành phố Hồ Chí Minh</td><td>nguyên liệu thực phẩm</td><td></td><td></td></tr><tr><td>- Công ty Cổ phần Chế biến Dừa Á Châu (i) Del Monte Vinamilk Dairy</td><td>Khu công nghiệp Giao Long Giai đoạn II, Xã Giao Long, Tỉnh Vĩnh Long Tòa nhà JY Campos Centre,</td><td>Sản xuất và kinh doanh các mặt hàng từ dừa Nhập khẩu và</td><td>24,96%</td><td>24,96%</td></tr><tr><td>Philippines, Inc. (ii)</td><td>Đại lộ 9, Góc phổ 30, Thành phố Bonifacio Global, Thành phố Taguig, Nước Cộng Hòa Philippines</td><td>kinh doanh sữa và các sản phẩm từ sữa</td><td></td><td>50,00%</td></tr></table>"
+}

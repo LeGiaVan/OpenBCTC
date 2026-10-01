@@ -1,0 +1,13 @@
+{
+  "table_id": "p35_mineru_tbl_3",
+  "n_rows": 8,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "(a) Chi phí trả trước ngắn hạn (Trang 35)",
+  "page": 35,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

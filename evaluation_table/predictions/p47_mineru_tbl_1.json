@@ -1,0 +1,23 @@
+{
+  "table_id": "p47_mineru_tbl_1",
+  "page": 47,
+  "note_title": "3. Doanh thu hoạt động tài chính",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.125,
+    0.198,
+    0.9,
+    0.358
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_47.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Lãi tiền gửi|1.063.216.675.831|1.096.706.171.629|\n|Thu nhập từ cổ tức và lợi nhuận được chia|496.172.279.490|607.267.424.822|\n|Lãi chênh lệch tỷ giá hối đoái|48.387.255.808|94.360.971.105|\n|Doanh thu hoạt động tài chính khác|24.422.726.624|48.376.548.971|\n||1.632.198.937.753|1.846.711.116.527|"
+}

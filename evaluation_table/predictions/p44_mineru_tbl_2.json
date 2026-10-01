@@ -1,0 +1,43 @@
+{
+  "table_id": "p44_mineru_tbl_2",
+  "page": 44,
+  "note_title": "(b) Ngoại tệ các loại",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 4,
+  "n_cols_pred": 5,
+  "n_spans_pred": 3,
+  "spans_pred": [
+    [
+      0,
+      0,
+      0,
+      2
+    ],
+    [
+      0,
+      3,
+      0,
+      4
+    ],
+    [
+      1,
+      0,
+      2,
+      0
+    ]
+  ],
+  "tags": [
+    "two_tier_header",
+    "dashes_empty"
+  ],
+  "bbox": [
+    0.117,
+    0.633,
+    0.901,
+    0.794
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_44.json",
+  "content": "<table><tr><td colspan=\"3\">31/12/2025</td><td colspan=\"2\">1/1/2025</td></tr><tr><td rowspan=\"2\">Ngoại tệ - USD</td><td>Nguyên tệ</td><td>Tương đương VND</td><td>Nguyên tệ</td><td>Tương đương VND</td></tr><tr><td>1.975.590,72</td><td>52.110.156.421</td><td>8.532.683,99</td><td>218.018.608.628</td></tr><tr><td>-UE</td><td>289,87</td><td>9.175.339 52.119.331.760</td><td>657,84</td><td>17.953.138 218.036.561.766</td></tr></table>"
+}

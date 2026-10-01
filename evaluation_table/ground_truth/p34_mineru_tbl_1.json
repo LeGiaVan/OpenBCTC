@@ -1,0 +1,13 @@
+{
+  "table_id": "p34_mineru_tbl_1",
+  "n_rows": 10,
+  "n_cols": 5,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "8. Bất động sản đầu tư (Trang 34)",
+  "page": 34,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

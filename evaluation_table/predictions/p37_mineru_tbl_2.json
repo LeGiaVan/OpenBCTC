@@ -1,0 +1,24 @@
+{
+  "table_id": "p37_mineru_tbl_2",
+  "page": 37,
+  "note_title": "Phải trả người bán là các bên liên quan",
+  "format": "markdown",
+  "test_group": "group_5_dashes_and_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'",
+  "n_rows_pred": 11,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.129,
+    0.579,
+    0.896,
+    0.806
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_37.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Các công ty con|||\n|Công ty TNHH Một Thành viên Bò Sữa Việt Nam|201.910.320.476|229.741.256.789|\n|Công ty Cổ phần Giống Bò sữa Mộc Châu Công ty TNHH Một Thành viên Bò Sữa Thống Nhất Thanh|66.969.898.905|76.288.728.144|\n|Hóa|51.978.672.900|48.333.362.100|\n|Lao-Jagro Development Xiengkhouang Co., Ltd.|67.326.251.136||\n|Công ty Cổ phần Đường Việt Nam|420.104.880|1.038.240.000|\n|Công ty TNHH Chăn nuôi Việt Nhật|76.864.985||\n|Công ty liên kết|||\n|Công ty Cổ phần APIS|169.788.985.837|193.311.781.950|\n|Công ty Cổ phần Chế biến Dừa Á Châu|2.040.518.239|3.264.007.092|"
+}

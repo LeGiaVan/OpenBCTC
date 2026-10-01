@@ -1,0 +1,24 @@
+{
+  "table_id": "p40_mineru_tbl_1",
+  "page": 40,
+  "note_title": "16. Vay ngắn hạn",
+  "format": "markdown",
+  "test_group": "group_5_dashes_and_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'",
+  "n_rows_pred": 5,
+  "n_cols_pred": 6,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.084,
+    0.259,
+    0.928,
+    0.533
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_40.json",
+  "content": "||Loại tiền tệ|1/1/2025 VND|Vay thêm VND|Hoàn trả VND|31/12/2025 VND|\n| --- | --- | --- | --- | --- | --- |\n|Ngân hàng Thương mại Cổ phần Ngoại thương Việt Nam Ngân hàng Thương mại Cổ phần Công thương|VND|7550.000.000.000||18.110.000.000.000 (21.039.000.000.000)|4.591.000.000.000|\n|Việt Nam Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt|VND|800.000.000.000|1.650.000.000.000|(1.200.000.000.000)|1.250.000.000.000|\n|Nam - Chi nhánh Trung tâm Sài Gòn|VND||4.740.000.000.000|(1.740.000.000.000)|3.000.000.000.000|\n|||||8.320.000.000.00004.500.000.000.000.000)|8.841.000.000.000|\n\nCác khoản vay này không có đảm bảo và có thời hạn vay từ 1 - 12 tháng"
+}

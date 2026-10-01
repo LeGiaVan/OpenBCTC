@@ -1,0 +1,2 @@
+|  |
+(?) Tại ngày báo cảo, Công ty chun xác định giả trị hợp lý của các công cụ tải chính này để thuyết minh trong hảo cáo tài chính năng thi trị trường cho các công cụ tái chính này và hoặc các Chuân mục Kế trán Việt Nam, Chế độ Kế bản Doanh nghiệp không có hướng dầ cách tính giá trị hợp lý sử dụng các kỹ thuật định giá, Giá trị hợp lý của các công cụ tài chính này có thể khác với giá trị ghi

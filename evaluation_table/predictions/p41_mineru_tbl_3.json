@@ -1,0 +1,24 @@
+{
+  "table_id": "p41_mineru_tbl_3",
+  "page": 41,
+  "note_title": "Biến động quỹ khen thưởng và phúc lợi trong năm như sau:",
+  "format": "markdown",
+  "test_group": "group_5_dashes_and_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.623,
+    0.892,
+    0.767
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_41.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Số dư đầu năm|553.007.565.352|439.427.370.089|\n|Trích quỹ trong năm (Thuyết minh V.19) Sử dụng quỹ trong năm|935.934.963.563 (660.758.742.471)|926.241.382.296|\n|||(812.661.187.033)|\n|Số dư cuối năm|828.183.786.444|553.007.565.352|"
+}

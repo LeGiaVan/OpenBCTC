@@ -1,0 +1,25 @@
+{
+  "table_id": "p53_mineru_tbl_2",
+  "page": 53,
+  "note_title": "(ii) Thành viên Hội đồng quản trị kiêm Giám đốc Diều hành ? Tài chính",
+  "format": "markdown",
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "has_subtotals",
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.127,
+    0.56,
+    0.896,
+    0.733
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_53.json",
+  "content": "||2025 Triệu VND|2024 Triệu VND|\n| --- | --- | --- |\n|Tổng Giám đốc Tiền lương trung bình một tháng Bà Mai Kiều Liên|||\n|Các thành viên quản lý khác|457|457|\n|Tiền lương trung bình một tháng cho một người Các Giám đốc Điều hành|||\n||289|280|"
+}

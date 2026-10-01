@@ -1,0 +1,39 @@
+{
+  "table_id": "p29_mineru_tbl_1",
+  "n_rows": 12,
+  "n_cols": 9,
+  "spans": [
+    [
+      0,
+      1,
+      0,
+      4
+    ],
+    [
+      0,
+      5,
+      0,
+      9
+    ],
+    [
+      2,
+      0,
+      2,
+      9
+    ],
+    [
+      0,
+      0,
+      1,
+      0
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "(b) Các khoản đầu tư càí chính dài",
+  "page": 29,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}

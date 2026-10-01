@@ -1,0 +1,39 @@
+{
+  "table_id": "p44_mineru_tbl_2",
+  "n_rows": 6,
+  "n_cols": 5,
+  "spans": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      2
+    ],
+    [
+      0,
+      3,
+      0,
+      4
+    ],
+    [
+      2,
+      0,
+      2,
+      4
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "(b) Ngoại tệ các loại (Trang 44)",
+  "page": 44,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}

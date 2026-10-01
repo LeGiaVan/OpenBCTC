@@ -1,0 +1,37 @@
+{
+  "table_id": "p43_mineru_tbl_2",
+  "page": 43,
+  "note_title": "Chi tiết vốn cổ phần",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 2,
+  "spans_pred": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      2
+    ]
+  ],
+  "tags": [
+    "two_tier_header",
+    "has_subtotals"
+  ],
+  "bbox": [
+    0.129,
+    0.557,
+    0.9,
+    0.689
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_43.json",
+  "content": "<table><tr><td rowspan=\"2\"></td><td colspan=\"2\">31/12/2025 và 1/1/2025</td></tr><tr><td>VND</td><td>%</td></tr><tr><td>Tổng Công ty Đầu tư và Kinh doanh Vốn Nhà nước Vốn góp của các cổ đông khác</td><td>7.524.766.020.000 13.374.788.430.000</td><td>36,00% 64,00%</td></tr><tr><td></td><td></td><td></td></tr><tr><td></td><td>20.899.554.450.000</td><td>100,00%</td></tr></table>"
+}

@@ -1,0 +1,13 @@
+{
+  "table_id": "p50_mineru_tbl_1",
+  "n_rows": 17,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Thuyết minh Thuế thu nhập doanh nghiệp & Đối chiếu thuế suất (Trang 50)",
+  "page": 50,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

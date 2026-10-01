@@ -1,0 +1,23 @@
+{
+  "table_id": "p28_mineru_tbl_3",
+  "page": 28,
+  "note_title": "Đầu tư nắm giữ đến ngày đáo hạn - dài hạn tiền gửi ngân hàng có kỳ hạn",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 3,
+  "n_cols_pred": 2,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.55,
+    0.677,
+    0.894,
+    0.841
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_28.json",
+  "content": "|31/12/2025 VND|1/1/2025 VND|\n| --- | --- |\n|16.380.000.000.000|18.560.000.000.000|\n| --- | --- |\n|300.000.000.000|600.000.000.000|"
+}

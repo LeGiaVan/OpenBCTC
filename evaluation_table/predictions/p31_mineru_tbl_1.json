@@ -1,0 +1,30 @@
+{
+  "table_id": "p31_mineru_tbl_1",
+  "page": 31,
+  "note_title": "Biến động dự phòng giảm giá đầu tư tài chính dài hạn trong năm như sau:",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 1,
+  "spans_pred": [
+    [
+      1,
+      2,
+      3,
+      2
+    ]
+  ],
+  "tags": [
+    "two_tier_header"
+  ],
+  "bbox": [
+    0.129,
+    0.198,
+    0.892,
+    0.343
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_31.json",
+  "content": "<table><tr><td></td><td>2025 VND</td><td>2024 VND</td></tr><tr><td>Số dư đầu năm</td><td>(234.888.433.940)</td><td rowspan=\"3\">(40.945.770.602) (193.942.663.338)</td></tr><tr><td>Tăng dự phòng trong năm</td><td>(129.573.940.039)</td></tr><tr><td>Sử dụng dự phòng trong năm</td><td>71.272.565.310</td></tr><tr><td>Số dư cuối năm</td><td>(293.189.808.669)</td><td>(234.888.433.940)</td></tr></table>"
+}

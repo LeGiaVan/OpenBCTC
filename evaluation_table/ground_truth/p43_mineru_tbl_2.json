@@ -1,0 +1,27 @@
+{
+  "table_id": "p43_mineru_tbl_2",
+  "n_rows": 5,
+  "n_cols": 3,
+  "spans": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      2
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "Chi tiết vốn cổ phần (Trang 43)",
+  "page": 43,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}

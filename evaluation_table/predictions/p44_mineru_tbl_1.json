@@ -1,0 +1,23 @@
+{
+  "table_id": "p44_mineru_tbl_1",
+  "page": 44,
+  "note_title": "Các khoản tiền thuê tối thiểu phải trả cho các hợp đồng thuê hoạt động không được hủy ngang như sau:",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.13,
+    0.448,
+    0.9,
+    0.585
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_44.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Trong vòng 1 năm|135.806.785.351|20.036.976.894|\n|Từ 2 đến 5 năm|537.304.156.778|70.697.684.570|\n|Trên 5 năm|594.574.749.380|303.280.575.481|\n||1.267.685.691.509|394.015.236.945|"
+}

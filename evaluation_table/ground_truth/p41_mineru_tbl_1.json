@@ -1,0 +1,13 @@
+{
+  "table_id": "p41_mineru_tbl_1",
+  "n_rows": 2,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "17. Dự phòng phải trả ngắn hạn (Trang 41)",
+  "page": 41,
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)"
+}

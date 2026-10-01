@@ -1,0 +1,13 @@
+{
+  "table_id": "p28_mineru_tbl_1",
+  "n_rows": 8,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "(a) Phải thu ngắn hạn khác",
+  "page": 28,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}

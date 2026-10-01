@@ -1,0 +1,23 @@
+{
+  "table_id": "p27_mineru_tbl_3",
+  "page": 27,
+  "note_title": "Biến động của dự phòng phải thu khó đòi trong năm như sau:",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.751,
+    0.891,
+    0.904
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_27.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Số dư đầu năm Trích lập dự phòng trong năm|(317.223.362)|(229.719.432) (291.980.938)|\n|Hoàn nhập dự phòng trong năm|(2.794.419.817)|4.757.576|\n|Sử dụng dự phòng năm||199.719.432|\n|Số dư cuối năm|(3.111.643.179)|(317.223.362)|"
+}

@@ -1,0 +1,25 @@
+{
+  "table_id": "p42_mineru_tbl_1",
+  "page": 42,
+  "note_title": "19.1 Thay đổi vốn chủ sở hữu",
+  "format": "markdown",
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+  "n_rows_pred": 11,
+  "n_cols_pred": 6,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "has_subtotals",
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.071,
+    0.248,
+    0.941,
+    0.704
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_42.json",
+  "content": "||Vốn cổ phần VND|Thặng dự vốn cổ phần VND|Quỹ đầu tư phát triển VND|Lợi nhuận sau thuế chưa phân phối VND|Tổng VND|\n| --- | --- | --- | --- | --- | --- |\n|Số dư tại ngày 1 tháng 1 năm 2024|20.899.554.450.000|23.225.734.296|6.071.620.723.695|3.693.556.639.010|30.687.957.547.001|\n|Lợi nhuận thuần trong năm||||9.262.413.822.949|9.262.413.822.949|\n|Trích quỹ thuộc vốn chủ sở hữu Trích quỹ khen thưởng và phúc lợi (Thuyết minh V.18)|||926.241.382.296|(926.241.382.296) (926.241.382.296)|(926.241.382.296)|\n|Cổ tức||||(8.046.328.463.250)|(8.046.328.463.250)|\n| --- | --- | --- | --- | --- | --- |\n|Số dư tại ngày 1 tháng 1 năm 2025|20.899.554.450.00023.225.734.296||6.997.862.105.991|3.057.159.234.117|30.977.801.524.404|\n|Lợi nhuận thuần trong năm Hoàn nhập quỹ đầu tư phát triển (Thuyết minh IV.22(b)|||(6.997.862.105.991)|9.359.349.635.6296.997.862.105.991|9.359.349.635.629|\n|Trích quỹ khen thưởng và phúc lợi (Thuyết minh V.18) Cổ tức||||(935.934.963.563)|(935.934.963.563)|\n|||||(10.136.283.908.250)|(10.136.283.908.250)|\n|Số dư tại ngày 31 tháng 12 năm 2025|20.899.554.450.000|23.225.734.296||||\n|||||8.342.152.103.924|29.264.932.288.220|"
+}

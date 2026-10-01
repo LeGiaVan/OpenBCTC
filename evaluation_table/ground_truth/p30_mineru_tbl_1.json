@@ -1,0 +1,45 @@
+{
+  "table_id": "p30_mineru_tbl_1",
+  "n_rows": 13,
+  "n_cols": 9,
+  "spans": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      4
+    ],
+    [
+      0,
+      5,
+      0,
+      8
+    ],
+    [
+      2,
+      0,
+      2,
+      8
+    ],
+    [
+      8,
+      0,
+      8,
+      8
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "Thuyết minh Các khoản đầu tư tài chính dài hạn (Trang 30)",
+  "page": 30,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}

@@ -1,0 +1,13 @@
+{
+  "table_id": "p42_mineru_tbl_1",
+  "n_rows": 12,
+  "n_cols": 6,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "19.1 Thay đổi vốn chủ sở hữu (Trang 42)",
+  "page": 42,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

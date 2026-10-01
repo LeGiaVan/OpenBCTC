@@ -1,0 +1,13 @@
+{
+  "table_id": "p48_mineru_tbl_2",
+  "n_rows": 14,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Thuyết minh Chi phí quản lý doanh nghiệp (Trang 48)",
+  "page": 48,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

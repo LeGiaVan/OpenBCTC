@@ -1,0 +1,45 @@
+{
+  "table_id": "p15_mineru_tbl_2",
+  "n_rows": 7,
+  "n_cols": 5,
+  "spans": [
+    [
+      0,
+      3,
+      0,
+      4
+    ],
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      2,
+      1,
+      2
+    ],
+    [
+      2,
+      0,
+      2,
+      5
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "(b) Các công ty liên doanh, liên kết",
+  "page": 15,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}

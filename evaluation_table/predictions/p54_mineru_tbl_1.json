@@ -1,0 +1,49 @@
+{
+  "table_id": "p54_mineru_tbl_1",
+  "page": 54,
+  "note_title": "Khi trình bày thông tin bộ phận theo khu vực địa lý, daanh thu của bộ phận được trình bày dụa vào vị trí địa lý của khách hàng tạ ở các nước khác Việt Nam ( Nước ngoài\") Tái sản bộ phận và chi phá vốn không đo vị trí của tài sản và cơ sở sản xuất chủ yếu là ở",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 5,
+  "n_cols_pred": 7,
+  "n_spans_pred": 4,
+  "spans_pred": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      2
+    ],
+    [
+      0,
+      3,
+      0,
+      4
+    ],
+    [
+      0,
+      5,
+      0,
+      6
+    ]
+  ],
+  "tags": [
+    "two_tier_header",
+    "has_subtotals"
+  ],
+  "bbox": [
+    0.085,
+    0.435,
+    0.938,
+    0.621
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_54.json",
+  "content": "<table><tr><td rowspan=\"2\"></td><td colspan=\"2\">Trong nước 2025</td><td colspan=\"2\">Nước ngoài</td><td colspan=\"2\">Tổng</td></tr><tr><td>VND</td><td>2024 VND</td><td>2025 VND</td><td>2024 VND</td><td>2025 VND</td><td>2024 VND</td></tr><tr><td>Doanh thu thuân Giá vốn hàng bán và</td><td>45.886.078.014.025</td><td>45.012.731.592.777</td><td>77105.418.295.238</td><td></td><td>5566.976.31941 59..991.496.309.263</td><td>50.676.707.912.192</td></tr><tr><td>dịch vụ cung cấp</td><td>(26.168.285.491.610) (25.383.053)</td><td></td><td>(3.261.850.669.736)</td><td>(2.278.920.221.635) (29.430.136.161.346) (272.054.688)</td><td></td><td></td></tr><tr><td>Lợi nhuận gộp theo bộ phận</td><td>19.717.792.522.415</td><td>19.632.309.759.724</td><td>3.843.567.625.502</td><td>3.385.056.097.780</td><td>23.561.360.147,917</td><td>23.017.365.857:504</td></tr></table>"
+}

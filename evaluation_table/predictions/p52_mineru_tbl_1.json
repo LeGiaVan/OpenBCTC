@@ -1,0 +1,45 @@
+{
+  "table_id": "p52_mineru_tbl_1",
+  "page": 52,
+  "note_title": "Giao dịch các bên liên quan (Số dư công nợ)",
+  "format": "html",
+  "test_group": "group_4_cross_page",
+  "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+  "n_rows_pred": 11,
+  "n_cols_pred": 5,
+  "n_spans_pred": 3,
+  "spans_pred": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      4
+    ],
+    [
+      6,
+      0,
+      9,
+      0
+    ]
+  ],
+  "tags": [
+    "cross_page",
+    "two_tier_header",
+    "has_subtotals",
+    "dashes_empty"
+  ],
+  "bbox": [
+    0.129,
+    0.118,
+    0.903,
+    0.589
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_52.json",
+  "content": "|  |\n<table><tr><td rowspan=\"2\"></td><td colspan=\"4\">Mẫu B09 DN (Ban hành theo Thông tư số 200/2014/TT-BTC ngày 22 tháng 12 năm 2014 của Bộ Tài chính)</td></tr><tr><td>Mối quan hệ</td><td>Loại giao dịch</td><td>2025 VND</td><td>2024 VND</td></tr><tr><td>Tổng Công ty Chăn Nuôi Việt Nam - Công ty Cổ phần</td><td>Công ty con</td><td>Cổ tức được chia</td><td></td><td>87.890.625.000</td></tr><tr><td>Công ty TNHH Chăn nuôi Việt Nhật</td><td>Công ty con</td><td>Thu nhập khác Mua hàng hóa</td><td>38.446.000 908.443.210</td><td>47.202.500</td></tr><tr><td>Taupomh Limited (trước đây là &quot;Miraka&quot; Holdings Limited&quot;&quot;)</td><td>Công ty liên kết</td><td>Mua hàng hóa</td><td>76.863.468.330</td><td>83.606.729.705</td></tr><tr><td>Công ty Cổ phần APIS</td><td>Công ty liên kết</td><td>Mua hàng hóa và</td><td>1.406.263.878.439</td><td>599.996.498.668</td></tr><tr><td rowspan=\"4\">Công ty Cổ phần Chế biến Dừa Á Châu</td><td></td><td>dịch vụ Thu nhập khác</td><td>31.786.167</td><td></td></tr><tr><td></td><td>Cổ tức được chia</td><td>2.600.000.000</td><td>1.300.000.000</td></tr><tr><td>Công ty liên kết</td><td>Mua hàng hóa và dịch vụ</td><td>71.104.776.760</td><td>44.569.152.645</td></tr><tr><td></td><td>Góp vòn Cổ tức được chia</td><td>62.898.220.000 12.360.000.000</td><td>9.270.000.000</td></tr><tr><td>Tổng Công ty Đầu tư và Kinh doanh Vốn Nhà nước</td><td>Cổ đông</td><td>Cổ tức</td><td></td><td>3.649.511.519.700 2.897.034.917.700</td></tr></table>"
+}

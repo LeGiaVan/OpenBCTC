@@ -1,0 +1,23 @@
+{
+  "table_id": "p45_mineru_tbl_1",
+  "page": 45,
+  "note_title": "Tại ngày báo cáo, Công ty có các cam kết vốn sau đã được duyệt nhưng chưa được phản ánh trong báo cáo tình hình tài chính riêng:",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 2,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.132,
+    0.24,
+    0.902,
+    0.322
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_45.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Đã được duyệt và ký kết hợp đồng|395.804.646.115|624.678.544.215|"
+}

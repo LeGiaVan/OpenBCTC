@@ -1,0 +1,86 @@
+{
+  "table_id": "p15_mineru_tbl_1",
+  "page": 15,
+  "note_title": "Thuyết minh Cấu trúc Tập đoàn (Công ty con P2)",
+  "format": "html",
+  "test_group": "group_4_cross_page",
+  "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+  "n_rows_pred": 8,
+  "n_cols_pred": 5,
+  "n_spans_pred": 10,
+  "spans_pred": [
+    [
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      2,
+      0,
+      4
+    ],
+    [
+      1,
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      2,
+      1,
+      4
+    ],
+    [
+      2,
+      0,
+      2,
+      1
+    ],
+    [
+      2,
+      3,
+      2,
+      4
+    ],
+    [
+      3,
+      0,
+      3,
+      2
+    ],
+    [
+      4,
+      0,
+      5,
+      0
+    ],
+    [
+      6,
+      0,
+      6,
+      2
+    ],
+    [
+      7,
+      0,
+      7,
+      1
+    ]
+  ],
+  "tags": [
+    "cross_page",
+    "two_tier_header",
+    "has_subtotals"
+  ],
+  "bbox": [
+    0.128,
+    0.127,
+    0.907,
+    0.432
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_15.json",
+  "content": "<table><tr><td colspan=\"2\"></td><td colspan=\"3\">Mẫu B09 DN (Ban hành theo Thông tư số 200/2014/TT-BTC ngày 22 tháng 12 năm 2014 của Bộ Tài chính)</td></tr><tr><td colspan=\"2\">Tên</td><td colspan=\"3\">Hoạt động chính</td></tr><tr><td colspan=\"2\">Trụ sở</td><td></td><td colspan=\"2\">Lợi ích kinh tế 31/12/2025 1/1/2025</td></tr><tr><td colspan=\"3\">Các công ty con sở hữu gián tiếp thông qua Tổng Công ty Chăn nuôi Việt Nam ? Công ty Cổ phần Công ty Cổ phần</td><td></td><td></td></tr><tr><td rowspan=\"2\">Giống Bò sữa Mộc Châu Công ty TNHH Chăn nuôi Việt Nhật</td><td>912 Đường Thảo Nguyên, Phường Thảo Nguyên, Tỉnh Sơn La</td><td>Chế biến sữa và các sản phẩm từ sữa</td><td>49,73%</td><td>49,73%</td></tr><tr><td>519 Minh Khai, Phường Vĩnh Tuy, Thành phố Hà Nội</td><td>Sản xuất, chăn nuôi, chế biến và kinh doanh các sản</td><td>35,16%</td><td>35,16%</td></tr><tr><td colspan=\"3\">phẩm từ thịt bò Công ty con sở hữu gián tiếp thông qua Công ty TNHH Chăn nuôi Việt Nhật Số 1, Đường Trần Phú,</td><td></td><td></td></tr><tr><td colspan=\"2\">- Công ty tnhh JV Meat (K%) Phường Vĩnh Phúc, Tỉnh Phú Thọ</td><td>Chế biến các sản phẩm từ thịt bò</td><td>24,61%</td><td></td></tr></table>"
+}

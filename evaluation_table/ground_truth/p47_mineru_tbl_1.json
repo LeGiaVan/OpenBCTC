@@ -1,0 +1,13 @@
+{
+  "table_id": "p47_mineru_tbl_1",
+  "n_rows": 6,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "3. Doanh thu hoạt động tài chính (Trang 47)",
+  "page": 47,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

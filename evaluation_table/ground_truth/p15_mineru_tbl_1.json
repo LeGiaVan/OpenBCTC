@@ -1,0 +1,51 @@
+{
+  "table_id": "p15_mineru_tbl_1",
+  "n_rows": 7,
+  "n_cols": 5,
+  "spans": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      2,
+      1,
+      2
+    ],
+    [
+      0,
+      3,
+      0,
+      4
+    ],
+    [
+      2,
+      0,
+      2,
+      4
+    ],
+    [
+      5,
+      0,
+      5,
+      4
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "Thuyết minh Cấu trúc Tập đoàn (Công ty con P2)",
+  "page": 15,
+  "test_group": "group_4_cross_page",
+  "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)"
+}

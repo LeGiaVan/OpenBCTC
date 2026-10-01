@@ -1,0 +1,55 @@
+{
+  "table_id": "p33_mineru_tbl_1",
+  "page": 33,
+  "note_title": "7.0 Tài sản cố định vô hình",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 15,
+  "n_cols_pred": 6,
+  "n_spans_pred": 5,
+  "spans_pred": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      2,
+      1,
+      2
+    ],
+    [
+      0,
+      3,
+      1,
+      3
+    ],
+    [
+      0,
+      4,
+      1,
+      4
+    ]
+  ],
+  "tags": [
+    "two_tier_header",
+    "has_subtotals"
+  ],
+  "bbox": [
+    0.13,
+    0.189,
+    0.897,
+    0.551
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_33.json",
+  "content": "<table><tr><td rowspan=\"2\"></td><td rowspan=\"2\">Quyền sử dụng đất VND</td><td rowspan=\"2\">Thương hiệu VND</td><td rowspan=\"2\">Phần mềm</td><td rowspan=\"2\">Tổng VND</td></tr><tr><td>máy vi tính VND</td></tr><tr><td>Nguyên giá Số dư đầu năm</td><td>57.582.565.109</td><td></td><td>159.270.186.543</td><td></td></tr><tr><td>Tăng trong năm</td><td></td><td>61.688.107.485</td><td>1.425.754.600</td><td>216.852.751.652 63.113.862.085</td></tr><tr><td>Chuyển từ xây dựng cơ bản dở dang</td><td></td><td></td><td>6.970.292.700</td><td></td></tr><tr><td></td><td></td><td></td><td></td><td>6.970.292.700</td></tr><tr><td>Số dư cuối năm</td><td>57.582.565.109</td><td>61.688.107.485</td><td>167.666.233.843</td><td>286.936.906.437</td></tr><tr><td>Giá trị hao mòn lũy kế</td><td></td><td></td><td></td><td></td></tr><tr><td>Số dư đầu năm Khấu hao trong năm</td><td>11.608.069.186</td><td>15.422.026.871</td><td>137.556.894.300 7.366.191.264</td><td>149.164.963.486</td></tr><tr><td></td><td></td><td></td><td></td><td>22.788.218.135</td></tr><tr><td>Số dư cuối năm</td><td>11.608.069.186</td><td>15.422.026.871</td><td>144.923.085.564</td><td>171.953.181.621</td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td>Giá trị còn lại</td><td>45.974.495.923</td><td></td><td></td><td></td></tr><tr><td>Số dư đầu năm</td><td>45.974.495.923</td><td></td><td>21.713.292.243</td><td>67.687.788.166</td></tr><tr><td>Số dư cuối năm</td><td></td><td>46.266.080.614</td><td>22.743.148.279</td><td>114.983.724.816</td></tr></table>"
+}

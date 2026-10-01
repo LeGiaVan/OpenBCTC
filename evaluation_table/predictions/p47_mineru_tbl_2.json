@@ -1,0 +1,24 @@
+{
+  "table_id": "p47_mineru_tbl_2",
+  "page": 47,
+  "note_title": "Thuyết minh Chi phí bán hàng (Phần 1 - Trang 47)",
+  "format": "markdown",
+  "test_group": "group_4_cross_page",
+  "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+  "n_rows_pred": 8,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "cross_page",
+    "dashes_empty"
+  ],
+  "bbox": [
+    0.128,
+    0.411,
+    0.9,
+    0.61
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_47.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Chi phí lãi vay|289.972.001.368|227.618.556.891|\n|Chi phí lãi cho các khoản ký quỹ nhận được|118.823.410|158.377.728|\n|Lỗ chênh lệch tỷ giá hối đoái|47.822.731.343|71.848.929.461|\n|Trích lập dự phòng giảm giá các khoản đầu tư vào công ty liên doanh, liên kết|129.573.940.039||\n|Chiết khấu thanh toán cho khách hàng|13.904.359.338|193.942.663.33813.844.193.146|\n|Chi phí tài chính khác|(47.683.067.251)|52.683.250.000|\n||433.708.788.247|560.095.970.564|"
+}

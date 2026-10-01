@@ -1,0 +1,23 @@
+{
+  "table_id": "p39_mineru_tbl_1",
+  "page": 39,
+  "note_title": "14. Chi phí phải trả",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 10,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.2,
+    0.892,
+    0.392
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_39.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Hỗ trợ bán hàng, khuyến mãi|808.189.453.785|953.286.704.120|\n|Chi phí quảng cáo|308.800.296.557|368.539.669.475|\n|Chi phí lãi vay|65.315.864.405|49.937.461.667|\n|Chi phí vận chuyển|133.766.358.672|80.698.176.729|\n|Chi phí nhân công thuê ngoài|54.819.534.158|100.713.707.649|\n|Chi phí bảo trì và sửa chữa|25.618.637.668|24.538.910.493|\n|Chi phí thuê kệ trưng bày|52.063.370.805|37.424.521.756|\n|Chi phí nhiên liệu|8.930.900.745|8.913.344.039|\n|Chi phí phải trả khác|60.317.077.174|194.079.447.331|"
+}

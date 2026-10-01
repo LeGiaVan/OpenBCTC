@@ -1,0 +1,13 @@
+{
+  "table_id": "p38_mineru_tbl_1",
+  "n_rows": 8,
+  "n_cols": 5,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "13. Thuế phải nộp Ngân sách Nhà nước (Trang 38)",
+  "page": 38,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

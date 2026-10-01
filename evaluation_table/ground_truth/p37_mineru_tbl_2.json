@@ -1,0 +1,26 @@
+{
+  "table_id": "p37_mineru_tbl_2",
+  "n_rows": 11,
+  "n_cols": 3,
+  "spans": [
+    [
+      1,
+      0,
+      1,
+      2
+    ],
+    [
+      8,
+      0,
+      8,
+      2
+    ]
+  ],
+  "header_rows": [
+    0
+  ],
+  "description": "Phải trả người bán là các bên liên quan (Trang 37)",
+  "page": 37,
+  "test_group": "group_5_dashes_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'"
+}

@@ -1,0 +1,30 @@
+{
+  "table_id": "p28_mineru_tbl_1",
+  "page": 28,
+  "note_title": "(a) Phải thu ngắn hạn khác",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 8,
+  "n_cols_pred": 3,
+  "n_spans_pred": 1,
+  "spans_pred": [
+    [
+      6,
+      0,
+      7,
+      0
+    ]
+  ],
+  "tags": [
+    "two_tier_header"
+  ],
+  "bbox": [
+    0.126,
+    0.238,
+    0.894,
+    0.423
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_28.json",
+  "content": "<table><tr><td></td><td>31/12/2025 VND</td><td>1/1/2025 VND</td></tr><tr><td>Lãi tiền gửi</td><td>387.729.534.249</td><td>435.835.424.636</td></tr><tr><td>Thu nhập được hỗ trợ từ nhà cung cấp</td><td>144.863.075.402</td><td>169.670.880.280</td></tr><tr><td>Thuế nhập khẩu được hoàn lại</td><td>977.067.572</td><td>2.871.266.330</td></tr><tr><td>Phải thu từ nhân viên</td><td>1.046.964.009</td><td>2.129.224.017</td></tr><tr><td>Ký cược, ký quỹ ngắn hạn Phải thu khác</td><td>2.094.949.762</td><td>95.140.606</td></tr><tr><td rowspan=\"2\"></td><td>67.235.240.263</td><td>18.345.373.262</td></tr><tr><td>603.946.831.257</td><td>628.947.309.131</td></tr></table>"
+}

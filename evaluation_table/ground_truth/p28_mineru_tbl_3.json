@@ -1,0 +1,13 @@
+{
+  "table_id": "p28_mineru_tbl_3",
+  "n_rows": 3,
+  "n_cols": 2,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Đầu tư nắm giữ đến ngày đáo hạn - dài hạn tiền gửi ngân hàng có kỳ hạn",
+  "page": 28,
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)"
+}

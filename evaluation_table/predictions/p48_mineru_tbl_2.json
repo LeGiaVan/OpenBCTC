@@ -1,0 +1,23 @@
+{
+  "table_id": "p48_mineru_tbl_2",
+  "page": 48,
+  "note_title": "Thuyết minh Chi phí quản lý doanh nghiệp (Phần 1 - Trang 48)",
+  "format": "markdown",
+  "test_group": "group_4_cross_page",
+  "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+  "n_rows_pred": 13,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "cross_page"
+  ],
+  "bbox": [
+    0.128,
+    0.522,
+    0.897,
+    0.772
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_48.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Chi phí nhân viên|527.452.005.359|462.955.187.812|\n|Chi phí dịch vụ mua ngoài|327.869.042.108|284.000.549.117|\n|Chi phí vận chuyển|52.650.027.354|51.747.419.769|\n|Chi phí khấu hao|51.023.577.922|40.231.674.177|\n|Công tác phí|39.660.576.833|42.889.010.665|\n|Chi phí vật liệu quản lý|45.742.003.243|53.269.583.647|\n|Chi phí nhập hàng|24.102.685.033|24.101.686.408|\n|Thuế, phí và lệ phí|13.978.597.654|15.519.513.716|\n|Chi phí đồ dùng văn phòng|9.252.144.698|8.741.001.077|\n|Dự phòng phải thu khó đòi và dự phòng trợ cấp thôi việc|19.817.539.250|5.947.282.364|\n|Chi phí dịch vụ ngân hàng|3.630.295.539|3.208.778.995|\n|Chi phí khác|39.950.844.152|110.032.385.184|\n| --- | --- | --- |"
+}

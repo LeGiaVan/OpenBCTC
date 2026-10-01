@@ -1,0 +1,26 @@
+{
+  "table_id": "p45_mineru_tbl_2",
+  "n_rows": 13,
+  "n_cols": 3,
+  "spans": [
+    [
+      1,
+      0,
+      1,
+      2
+    ],
+    [
+      8,
+      0,
+      8,
+      2
+    ]
+  ],
+  "header_rows": [
+    0
+  ],
+  "description": "Doanh thu thuần bao gồm (Trang 45)",
+  "page": 45,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

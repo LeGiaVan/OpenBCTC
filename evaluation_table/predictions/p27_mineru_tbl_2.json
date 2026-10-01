@@ -1,0 +1,24 @@
+{
+  "table_id": "p27_mineru_tbl_2",
+  "page": 27,
+  "note_title": "(a) Phải thu khách hàng là các bên liên quan",
+  "format": "markdown",
+  "test_group": "group_5_dashes_and_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'",
+  "n_rows_pred": 12,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.44,
+    0.889,
+    0.687
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_27.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Các công ty con|||\n|Angkor Dairy Products Co., Ltd|256.897.899.710|45.448.826.972|\n|Driftwood Dairy Holding Corporation|12.300.319.149|21.097.166.864|\n|Công ty Cổ phần Giống Bò sữa Mộc Châu|2.475.488.520|1.798.622.554|\n|Công ty TNHH Một Thành viên Bò Sữa Thống Nhất|||\n|Thanh Hóa|125.535.274|525.533.928|\n|Công ty TNHH Một Thành viên Bò Sữa Việt Nam Công ty TNHH Chăn nuôi Việt Nhật|1.613.438.133|1.593.031.527|\n|Công ty Cổ phần Đường Việt Nam|87.077.214||\n||390.427.595|123.704.000|\n|Công ty liên doanh|||\n|Del Monte - Vinamilk Dairy Philippines, Inc.||19.883.394.715|"
+}

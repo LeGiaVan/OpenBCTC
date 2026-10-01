@@ -1,0 +1,23 @@
+{
+  "table_id": "p31_mineru_tbl_3",
+  "page": 31,
+  "note_title": "Biển động dự phòng giảm giá hàng tồn kho trong năm như sau:",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.672,
+    0.891,
+    0.83
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_31.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Số dư đầu năm|(3.238.060.589)|(3.110.984.330)|\n|Tăng dự phòng trong năm|(15.094.343.304)|(13.071.159.734)|\n|Hoàn nhập dự phòng trong năm|9.895.574.912|11.755.040.320|\n|Sử dụng dự phòng trong năm|2.594.556.793|1.189.043.155|\n|Số dư cuối năm|(5.842.272.188)|(3.238.060.589)|"
+}

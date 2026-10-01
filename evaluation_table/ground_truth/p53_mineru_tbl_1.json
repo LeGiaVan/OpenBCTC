@@ -1,0 +1,13 @@
+{
+  "table_id": "p53_mineru_tbl_1",
+  "n_rows": 15,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Thù lao của thành viên Hội đồng quản trị (Trang 53)",
+  "page": 53,
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)"
+}

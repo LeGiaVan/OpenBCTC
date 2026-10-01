@@ -1,0 +1,781 @@
+[
+  {
+    "table_id": "p14_mineru_tbl_1",
+    "page": 14,
+    "group_id": "group_4_cross_page",
+    "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+    "format": "HTML",
+    "n_rows": 9,
+    "n_cols": 6,
+    "n_spans": 2,
+    "tags": [
+      "cross_page",
+      "two_tier_header",
+      "has_subtotals",
+      "dashes_empty"
+    ],
+    "description": "Thuyết minh Cấu trúc Tập đoàn (Công ty con P1)",
+    "prediction_file": "p14_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p15_mineru_tbl_1",
+    "page": 15,
+    "group_id": "group_4_cross_page",
+    "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+    "format": "HTML",
+    "n_rows": 8,
+    "n_cols": 5,
+    "n_spans": 10,
+    "tags": [
+      "cross_page",
+      "two_tier_header",
+      "has_subtotals"
+    ],
+    "description": "Thuyết minh Cấu trúc Tập đoàn (Công ty con P2)",
+    "prediction_file": "p15_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p15_mineru_tbl_2",
+    "page": 15,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 6,
+    "n_cols": 6,
+    "n_spans": 1,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals"
+    ],
+    "description": "(b) Các công ty liên doanh, liên kết",
+    "prediction_file": "p15_mineru_tbl_2.html"
+  },
+  {
+    "table_id": "p27_mineru_tbl_1",
+    "page": 27,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 4,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "1.1 Tiền và các khoản tương đương tiền",
+    "prediction_file": "p27_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p27_mineru_tbl_2",
+    "page": 27,
+    "group_id": "group_5_dashes_and_empty",
+    "group_name": "Bảng có ô trống / gạch ngang '-'",
+    "format": "MD",
+    "n_rows": 12,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "(a) Phải thu khách hàng là các bên liên quan",
+    "prediction_file": "p27_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p27_mineru_tbl_3",
+    "page": 27,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Biến động của dự phòng phải thu khó đòi trong năm như sau:",
+    "prediction_file": "p27_mineru_tbl_3.md"
+  },
+  {
+    "table_id": "p28_mineru_tbl_1",
+    "page": 28,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 8,
+    "n_cols": 3,
+    "n_spans": 1,
+    "tags": [
+      "two_tier_header"
+    ],
+    "description": "(a) Phải thu ngắn hạn khác",
+    "prediction_file": "p28_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p28_mineru_tbl_2",
+    "page": 28,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 3,
+    "n_cols": 2,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Ký cược, ký quỹ dài hạn Phải thu khác",
+    "prediction_file": "p28_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p28_mineru_tbl_3",
+    "page": 28,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 3,
+    "n_cols": 2,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Đầu tư nắm giữ đến ngày đáo hạn - dài hạn tiền gửi ngân hàng có kỳ hạn",
+    "prediction_file": "p28_mineru_tbl_3.md"
+  },
+  {
+    "table_id": "p29_mineru_tbl_1",
+    "page": 29,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 11,
+    "n_cols": 9,
+    "n_spans": 3,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals",
+      "dashes_empty"
+    ],
+    "description": "(b) Các khoản đầu tư càí chính dài",
+    "prediction_file": "p29_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p30_mineru_tbl_1",
+    "page": 30,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "MD",
+    "n_rows": 0,
+    "n_cols": 0,
+    "n_spans": 0,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals",
+      "multi_span"
+    ],
+    "description": "Thuyết minh Các khoản đầu tư tài chính dài hạn (Trang 30)",
+    "prediction_file": "p30_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p31_mineru_tbl_1",
+    "page": 31,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 1,
+    "tags": [
+      "two_tier_header"
+    ],
+    "description": "Biến động dự phòng giảm giá đầu tư tài chính dài hạn trong năm như sau:",
+    "prediction_file": "p31_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p31_mineru_tbl_2",
+    "page": 31,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 11,
+    "n_cols": 4,
+    "n_spans": 2,
+    "tags": [
+      "two_tier_header"
+    ],
+    "description": "5. Hàng tồn kho",
+    "prediction_file": "p31_mineru_tbl_2.html"
+  },
+  {
+    "table_id": "p31_mineru_tbl_3",
+    "page": 31,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 6,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Biển động dự phòng giảm giá hàng tồn kho trong năm như sau:",
+    "prediction_file": "p31_mineru_tbl_3.md"
+  },
+  {
+    "table_id": "p32_mineru_tbl_1",
+    "page": 32,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 17,
+    "n_cols": 6,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "6.0 Tài sản cố định hữu hình",
+    "prediction_file": "p32_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p33_mineru_tbl_1",
+    "page": 33,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "HTML",
+    "n_rows": 15,
+    "n_cols": 6,
+    "n_spans": 5,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals"
+    ],
+    "description": "7.0 Tài sản cố định vô hình (Trang 33)",
+    "prediction_file": "p33_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p34_mineru_tbl_1",
+    "page": 34,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 9,
+    "n_cols": 5,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "8. Bất động sản đầu tư (Trang 34)",
+    "prediction_file": "p34_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p35_mineru_tbl_1",
+    "page": 35,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 9,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "9. Xây dựng cơ bản dở dang (Trang 35)",
+    "prediction_file": "p35_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p35_mineru_tbl_2",
+    "page": 35,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 6,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Các công trình xây dựng cơ bản dở dang lớn đang thực hiện (Trang 35)",
+    "prediction_file": "p35_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p35_mineru_tbl_3",
+    "page": 35,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 8,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "(a) Chi phí trả trước ngắn hạn (Trang 35)",
+    "prediction_file": "p35_mineru_tbl_3.md"
+  },
+  {
+    "table_id": "p36_mineru_tbl_1",
+    "page": 36,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "HTML",
+    "n_rows": 6,
+    "n_cols": 6,
+    "n_spans": 2,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals"
+    ],
+    "description": "(b) Chi phí trả trước dài hạn (Trang 36)",
+    "prediction_file": "p36_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p37_mineru_tbl_1",
+    "page": 37,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 9,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "11. Tài sản thuế thu nhập hoãn lại và thuế thu nhập hoãn lại phải trả (Trang 37)",
+    "prediction_file": "p37_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p37_mineru_tbl_2",
+    "page": 37,
+    "group_id": "group_5_dashes_empty",
+    "group_name": "Bảng có ô trống / gạch ngang '-'",
+    "format": "MD",
+    "n_rows": 11,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Phải trả người bán là các bên liên quan (Trang 37)",
+    "prediction_file": "p37_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p38_mineru_tbl_1",
+    "page": 38,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 8,
+    "n_cols": 5,
+    "n_spans": 0,
+    "tags": [
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "13. Thuế phải nộp Ngân sách Nhà nước (Trang 38)",
+    "prediction_file": "p38_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p39_mineru_tbl_1",
+    "page": 39,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 10,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "14. Chi phí phải trả (Trang 39)",
+    "prediction_file": "p39_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p39_mineru_tbl_2",
+    "page": 39,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "15. Phải trả ngắn hạn khác (Trang 39)",
+    "prediction_file": "p39_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p40_mineru_tbl_1",
+    "page": 40,
+    "group_id": "group_5_dashes_empty",
+    "group_name": "Bảng có ô trống / gạch ngang '-'",
+    "format": "MD",
+    "n_rows": 5,
+    "n_cols": 6,
+    "n_spans": 0,
+    "tags": [
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "16. Vay ngắn hạn (Trang 40)",
+    "prediction_file": "p40_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p41_mineru_tbl_1",
+    "page": 41,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 2,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "17. Dự phòng phải trả ngắn hạn (Trang 41)",
+    "prediction_file": "p41_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p41_mineru_tbl_2",
+    "page": 41,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 6,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Biến động dự phòng trợ cấp thôi việc trong năm (Trang 41)",
+    "prediction_file": "p41_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p41_mineru_tbl_3",
+    "page": 41,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Biến động quỹ khen thưởng và phúc lợi trong năm (Trang 41)",
+    "prediction_file": "p41_mineru_tbl_3.md"
+  },
+  {
+    "table_id": "p42_mineru_tbl_1",
+    "page": 42,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 11,
+    "n_cols": 6,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "19.1 Thay đổi vốn chủ sở hữu (Trang 42)",
+    "prediction_file": "p42_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p43_mineru_tbl_1",
+    "page": 43,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 6,
+    "n_cols": 3,
+    "n_spans": 1,
+    "tags": [
+      "two_tier_header"
+    ],
+    "description": "Vốn cổ phần được duyệt và đã phát hành của Công ty (Trang 43)",
+    "prediction_file": "p43_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p43_mineru_tbl_2",
+    "page": 43,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 2,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals"
+    ],
+    "description": "Chi tiết vốn cổ phần (Trang 43)",
+    "prediction_file": "p43_mineru_tbl_2.html"
+  },
+  {
+    "table_id": "p44_mineru_tbl_1",
+    "page": 44,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Các khoản tiền thuê hoạt động tối thiểu phải trả (Trang 44)",
+    "prediction_file": "p44_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p44_mineru_tbl_2",
+    "page": 44,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 4,
+    "n_cols": 5,
+    "n_spans": 3,
+    "tags": [
+      "two_tier_header",
+      "dashes_empty"
+    ],
+    "description": "(b) Ngoại tệ các loại (Trang 44)",
+    "prediction_file": "p44_mineru_tbl_2.html"
+  },
+  {
+    "table_id": "p45_mineru_tbl_1",
+    "page": 45,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 2,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "Các cam kết vốn đã được duyệt (Trang 45)",
+    "prediction_file": "p45_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p45_mineru_tbl_2",
+    "page": 45,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 11,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Doanh thu thuần bao gồm (Trang 45)",
+    "prediction_file": "p45_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p46_mineru_tbl_1",
+    "page": 46,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 26,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Doanh thu các bên liên quan & Giá vốn hàng bán (Trang 46)",
+    "prediction_file": "p46_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p47_mineru_tbl_1",
+    "page": 47,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 6,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "simple_header"
+    ],
+    "description": "3. Doanh thu hoạt động tài chính (Trang 47)",
+    "prediction_file": "p47_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p47_mineru_tbl_2",
+    "page": 47,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 8,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "cross_page",
+      "dashes_empty"
+    ],
+    "description": "4. Chi phí tài chính (Trang 47)",
+    "prediction_file": "p47_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p48_mineru_tbl_1",
+    "page": 48,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 12,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "cross_page",
+      "dashes_empty"
+    ],
+    "description": "Thuyết minh Chi phí bán hàng (Trang 48)",
+    "prediction_file": "p48_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p48_mineru_tbl_2",
+    "page": 48,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 13,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "cross_page"
+    ],
+    "description": "Thuyết minh Chi phí quản lý doanh nghiệp (Trang 48)",
+    "prediction_file": "p48_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p49_mineru_tbl_1",
+    "page": 49,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 21,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "cross_page",
+      "dashes_empty"
+    ],
+    "description": "Thu nhập khác, Chi phí khác & Chi phí SXKD theo yếu tố (Trang 49)",
+    "prediction_file": "p49_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p50_mineru_tbl_1",
+    "page": 50,
+    "group_id": "group_3_has_subtotals",
+    "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+    "format": "MD",
+    "n_rows": 18,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Thuyết minh Thuế thu nhập doanh nghiệp & Đối chiếu thuế suất (Trang 50)",
+    "prediction_file": "p50_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p51_mineru_tbl_1",
+    "page": 51,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 16,
+    "n_cols": 5,
+    "n_spans": 8,
+    "tags": [
+      "cross_page",
+      "two_tier_header"
+    ],
+    "description": "Giao dịch các bên liên quan - Phần 1 (Trang 51)",
+    "prediction_file": "p51_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p52_mineru_tbl_1",
+    "page": 52,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 11,
+    "n_cols": 5,
+    "n_spans": 3,
+    "tags": [
+      "cross_page",
+      "two_tier_header",
+      "has_subtotals",
+      "dashes_empty"
+    ],
+    "description": "Giao dịch các bên liên quan - Phần 2 (Trang 52)",
+    "prediction_file": "p52_mineru_tbl_1.html"
+  },
+  {
+    "table_id": "p53_mineru_tbl_1",
+    "page": 53,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 14,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Thù lao của thành viên Hội đồng quản trị (Trang 53)",
+    "prediction_file": "p53_mineru_tbl_1.md"
+  },
+  {
+    "table_id": "p53_mineru_tbl_2",
+    "page": 53,
+    "group_id": "group_1_simple_header",
+    "group_name": "Bảng đơn giản (1 tầng header)",
+    "format": "MD",
+    "n_rows": 5,
+    "n_cols": 3,
+    "n_spans": 0,
+    "tags": [
+      "has_subtotals",
+      "dashes_empty",
+      "simple_header"
+    ],
+    "description": "Tiền lương của Ban điều hành và quản lý khác (Trang 53)",
+    "prediction_file": "p53_mineru_tbl_2.md"
+  },
+  {
+    "table_id": "p54_mineru_tbl_1",
+    "page": 54,
+    "group_id": "group_2_two_tier_header",
+    "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+    "format": "HTML",
+    "n_rows": 5,
+    "n_cols": 7,
+    "n_spans": 4,
+    "tags": [
+      "two_tier_header",
+      "has_subtotals"
+    ],
+    "description": "Thông tin bộ phận theo khu vực địa lý (Trang 54)",
+    "prediction_file": "p54_mineru_tbl_1.html"
+  }
+]

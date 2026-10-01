@@ -1,0 +1,25 @@
+{
+  "table_id": "p46_mineru_tbl_1",
+  "page": 46,
+  "note_title": "Trong đó, doanh thu với khách hàng là các bên liên quan như sau:",
+  "format": "markdown",
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+  "n_rows_pred": 26,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "has_subtotals",
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.126,
+    0.2,
+    0.9,
+    0.792
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_46.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Các công ty con|||\n|Angkor Dairy Products Co., Ltd Driftwood Dairy Holding Corporation|1.497.448.618.455|770.338.149.208|\n|Công ty Cổ phần Giống Bò sữa Mộc Châu|57.445.331.446|63.250.251.120|\n|Công ty TNHH Một Thành viên Bò Sữa Thống Nhất|20.283.923.216|28.175.545.924|\n|Thanh Hóa|4.764.520.840|4.081.665.130|\n|Công ty TNHH Một Thành viên Bò Sữa Việt Nam|3.442.126.192|4.344.631.738|\n|Công ty TNHH Chăn nuôi Việt Nhật|2.065.662.072|1.800.460.224|\n|Tổng Công ty Chăn nuôi Việt Nam Công ty Cổ phần|51.004.360|2.500.000|\n|Công ty Cổ phần Đường Việt Nam|2.784.411.340|123.704.000|\n|Tổng doanh thu với các công ty con|1.588.285.597.921|872.116.907.344|\n|Các công ty liên doanh, liên kết|||\n|Del Monte Vinamilk Dairy Philippines, Inc||26.666.552.493|\n|Công ty Cổ phần APIS|2.914.318.194|40.831.237.179|\n|Công ty Cổ phần Chế biến Dừa Á Châu|159.758.889|214.492.400|\n| --- | --- | --- |\n|Giá vốn hàng bán và dịch vụ cung cấp|||\n||2025|2024|\n||VND|VND|\n|Tổng giá vốn hàng bán và dịch vụ cung cấp|||\n|- Thành phẩm đã bán|27.805.483.761.66126.264.678.207.267||\n|- Hàng hoá đã bán|973.664.091.357|764.690.296.376|\n|- Hàng khuyến mãi|642.036.077.692|625.090.710.288|\n|- Cung cấp dịch vụ|2.080.567.505|1.978.113.134|\n|- Chi phí hoạt động của bất động sản đầu tư|1.554.536.648|1.571.757.789|\n|- Dự phòng giảm giá hàng tổn kho|5.198.768.392|1.316.119.414|\n|- Giá vốn khác|118.358.091|10.850.420|\n| --- | --- | --- |"
+}

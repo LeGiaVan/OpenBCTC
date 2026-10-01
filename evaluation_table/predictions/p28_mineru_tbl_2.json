@@ -1,0 +1,23 @@
+{
+  "table_id": "p28_mineru_tbl_2",
+  "page": 28,
+  "note_title": "Ký cược, ký quỹ dài hạn Phải thu khác",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 3,
+  "n_cols_pred": 2,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.568,
+    0.474,
+    0.895,
+    0.597
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_28.json",
+  "content": "|31/12/2025 VND|1/1/2025 VND|\n| --- | --- |\n|11.814.647.395800.000.000|5.198.030.4291.500.000.000|\n|12.614.647.395|6.698.030.429|"
+}

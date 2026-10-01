@@ -1,0 +1,23 @@
+{
+  "table_id": "p39_mineru_tbl_2",
+  "page": 39,
+  "note_title": "15. Phải trả ngăn hạn khác",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 5,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.126,
+    0.489,
+    0.895,
+    0.646
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_39.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Kinh phí công đoàn|2.142.108.700|207.872.680|\n|Nhận ký quỹ ngắn hạn Cổ tức|13.855.352.763|15.724.969.246|\n|Phải trả ngắn hạn khác|12.624.936.197|1.044.977.722.50020.754.232.753|\n||28.622.397.660|1.081.664.797.179|"
+}

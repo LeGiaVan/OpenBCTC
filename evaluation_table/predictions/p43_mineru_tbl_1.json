@@ -1,0 +1,30 @@
+{
+  "table_id": "p43_mineru_tbl_1",
+  "page": 43,
+  "note_title": "Vốn cổ phần được duyệt và đã phát hành của Công ty là:",
+  "format": "html",
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 3,
+  "n_spans_pred": 1,
+  "spans_pred": [
+    [
+      0,
+      1,
+      0,
+      2
+    ]
+  ],
+  "tags": [
+    "two_tier_header"
+  ],
+  "bbox": [
+    0.13,
+    0.236,
+    0.9,
+    0.435
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_43.json",
+  "content": "<table><tr><td></td><td colspan=\"2\">31/12/2025 và 1/1/2025 Số cổ phiếu VND</td></tr><tr><td>Vốn cổ phần được duyệt</td><td></td><td>2.089.955.445 20.899.554.450.000</td></tr><tr><td>Cổ phiếu đã phát hành Cổ phiếu phổ thông</td><td></td><td>2.089.955.445 20.899.554.450.000</td></tr><tr><td></td><td></td><td></td></tr><tr><td>Cổ phiếu đang lưu hành Cổ phiếu phổ thông</td><td></td><td></td></tr><tr><td></td><td></td><td>2.089.955.445 20.899.554.450.000</td></tr></table>"
+}

@@ -1,0 +1,23 @@
+{
+  "table_id": "p30_mineru_tbl_1",
+  "page": 30,
+  "note_title": "(Ban hành theo Thông tư số 200/2014/TT-BTC ngày 22 tháng 12 năm 2014 của Bộ Tài chính)",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 0,
+  "n_cols_pred": 0,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.086,
+    0.24,
+    0.951,
+    0.834
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_30.json",
+  "content": "|  |\n(?) Tại ngày báo cảo, Công ty chun xác định giả trị hợp lý của các công cụ tải chính này để thuyết minh trong hảo cáo tài chính năng thi trị trường cho các công cụ tái chính này và hoặc các Chuân mục Kế trán Việt Nam, Chế độ Kế bản Doanh nghiệp không có hướng dầ cách tính giá trị hợp lý sử dụng các kỹ thuật định giá, Giá trị hợp lý của các công cụ tài chính này có thể khác với giá trị ghi"
+}

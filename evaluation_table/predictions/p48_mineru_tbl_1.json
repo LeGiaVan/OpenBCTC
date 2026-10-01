@@ -1,0 +1,24 @@
+{
+  "table_id": "p48_mineru_tbl_1",
+  "page": 48,
+  "note_title": "Thuyết minh Chi phí bán hàng (Phần 2 - Trang 48)",
+  "format": "markdown",
+  "test_group": "group_4_cross_page",
+  "group_name": "Bảng bị ngắt trang (trải dài 2+ trang PDF)",
+  "n_rows_pred": 12,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "cross_page",
+    "dashes_empty"
+  ],
+  "bbox": [
+    0.128,
+    0.197,
+    0.899,
+    0.467
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_48.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Chi phí dịch vụ khuyến mại, trưng bày, giới thiệu|||\n|sản phẩm và hỗ trợ bán hàng|8.915.714.772.853|8.764.660.054.539|\n|Chi phí quảng cáo, nghiên cứu thị trường|1.015.539.771.449|1.041.556.871.751|\n|Chi phí dịch vụ mua ngoài|786.903.062.383|848.772.345.195|\n|Chi phí vận chuyển|719.306.030.037|677.539.635.627|\n|Chi phí nhân viên|499.140.885.824|457.214.240.230|\n|Chi phí công cụ, dụng cụ|98.773.600.742|103.428.948.661|\n|Chi phí nguyên vật liệu|59.725.924.590|64.762.553.600|\n|Chi phí bán hàng, giải quyết khiếu nại và thu hồi sản phẩm|105.795.097.651||\n|Chi phí khấu hao|27.031.699.372|62.455.641.10526.372.351.850|\n||12.227.930.844.901|12.046.762.642.558|"
+}

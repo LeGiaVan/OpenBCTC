@@ -1,0 +1,13 @@
+{
+  "table_id": "p44_mineru_tbl_1",
+  "n_rows": 5,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Các khoản tiền thuê hoạt động tối thiểu phải trả (Trang 44)",
+  "page": 44,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

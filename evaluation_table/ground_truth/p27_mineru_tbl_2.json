@@ -1,0 +1,26 @@
+{
+  "table_id": "p27_mineru_tbl_2",
+  "n_rows": 11,
+  "n_cols": 3,
+  "spans": [
+    [
+      1,
+      0,
+      1,
+      3
+    ],
+    [
+      9,
+      0,
+      9,
+      3
+    ]
+  ],
+  "header_rows": [
+    0
+  ],
+  "description": "(a) Phải thu khách hàng là các bên liên quan",
+  "page": 27,
+  "test_group": "group_5_dashes_and_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'"
+}

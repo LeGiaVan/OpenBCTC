@@ -1,0 +1,13 @@
+{
+  "table_id": "p49_mineru_tbl_1",
+  "n_rows": 19,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Thu nhập khác, Chi phí khác & Chi phí SXKD theo yếu tố (Trang 49)",
+  "page": 49,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

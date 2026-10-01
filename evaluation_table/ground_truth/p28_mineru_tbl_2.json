@@ -1,0 +1,13 @@
+{
+  "table_id": "p28_mineru_tbl_2",
+  "n_rows": 4,
+  "n_cols": 2,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Ký cược, ký quỹ dài hạn Phải thu khác",
+  "page": 28,
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)"
+}

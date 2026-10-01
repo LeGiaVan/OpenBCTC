@@ -1,0 +1,25 @@
+{
+  "table_id": "p37_mineru_tbl_1",
+  "page": 37,
+  "note_title": "11. Tài sản thuế thu nhập hoãn lại và thuế thu nhập hoãn lại phải trá",
+  "format": "markdown",
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+  "n_rows_pred": 9,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "has_subtotals",
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.129,
+    0.193,
+    0.898,
+    0.497
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_37.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Tài sản thuế thu nhập hoãn lại Chênh lệch tỷ giá hối đoái|67.065.605||\n|Chi phí phải trả, các khoản dự phòng và tài sản cố định|119.823.503.947|104.466.336.169|\n|Tổng tài sản thuế thu nhập hoãn lại|119.890.569.552|104.466.336.169|\n|Thuế thu nhập hoãn lại phải trả|||\n|Chênh lệch tỷ giá hối đoái Chi phí trả trước dài hạn|(68.515.026) (9.143.447.428)|(1.751.710.011) (13.006.439.376)|\n|Tổng thuế thu nhập hoãn lại phải trả|||\n|Tài sản thuế thu nhập hoãn lại - thuần|(9.211.962.454)|(14.758.149.387)|\n||110.678.607.098|89.708.186.782|"
+}

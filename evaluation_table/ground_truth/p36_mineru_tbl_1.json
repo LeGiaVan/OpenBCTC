@@ -1,0 +1,13 @@
+{
+  "table_id": "p36_mineru_tbl_1",
+  "n_rows": 6,
+  "n_cols": 6,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "(b) Chi phí trả trước dài hạn (Trang 36)",
+  "page": 36,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

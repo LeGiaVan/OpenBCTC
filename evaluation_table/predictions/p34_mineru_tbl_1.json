@@ -1,0 +1,25 @@
+{
+  "table_id": "p34_mineru_tbl_1",
+  "page": 34,
+  "note_title": "8. Bất động sản đầu tư",
+  "format": "markdown",
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'",
+  "n_rows_pred": 9,
+  "n_cols_pred": 5,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "has_subtotals",
+    "dashes_empty",
+    "simple_header"
+  ],
+  "bbox": [
+    0.129,
+    0.193,
+    0.899,
+    0.508
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_34.json",
+  "content": "||Quyền sử dụng đất VND|Nhà cửa VND|Cơ sở hạ tầng VND|Tổng VND|\n| --- | --- | --- | --- | --- |\n|Nguyên giá|||||\n|Số dư đầu năm và số dư cuối năm|38.884.288.17054.976.414.196|||982.364.06494.843.066.430|\n|Giá trị hao mòn lũy kế|||||\n|Số dư đầu năm|8.993.644.882|31.521.766.745|982.364.064|41.497.775.691|\n|Khấu hao trong năm|793.556.901|888.337.379||1.681.894.280|\n|Số dư cuối năm|9.787.201.783|32.410.104.124|982.364.064|43.179.669.971|\n| --- | --- | --- | --- | --- |\n|Giá trị còn lại Số dư đầu năm||29.890.643.28823.454.647.451||53.345.290.739|\n|Số dư cuối năm|29.097.086.38722.566.310.072|||51.663.396.459|"
+}

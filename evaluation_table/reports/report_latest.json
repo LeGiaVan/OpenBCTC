@@ -1,0 +1,882 @@
+{
+  "total_tables": 49,
+  "row_accuracy": 0.4694,
+  "col_accuracy": 0.898,
+  "exact_grid_accuracy": 0.449,
+  "avg_span_f1": 0.718,
+  "avg_teds_struct": 0.8604,
+  "error_distribution": {
+    "MISSING_ROWS": 19,
+    "OK": 16,
+    "MISSED_MERGED_HEADER": 12,
+    "HALLUCINATED_MERGE": 10,
+    "HEADER_DEPTH_MISMATCH": 10,
+    "EXTRA_ROWS": 7,
+    "COLUMN_COUNT_MISMATCH": 5
+  },
+  "details": [
+    {
+      "table_id": "p14_mineru_tbl_1",
+      "n_rows_gt": 9,
+      "n_rows_pred": 9,
+      "n_cols_gt": 5,
+      "n_cols_pred": 6,
+      "row_exact_match": true,
+      "col_exact_match": false,
+      "exact_grid_match": false,
+      "span_precision": 0.5,
+      "span_recall": 1.0,
+      "span_f1": 0.6667,
+      "teds_struct": 0.7903,
+      "errors": [
+        "COLUMN_COUNT_MISMATCH",
+        "HALLUCINATED_MERGE",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p15_mineru_tbl_1",
+      "n_rows_gt": 7,
+      "n_rows_pred": 8,
+      "n_cols_gt": 5,
+      "n_cols_pred": 5,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 0.1,
+      "span_recall": 0.1667,
+      "span_f1": 0.125,
+      "teds_struct": 0.4286,
+      "errors": [
+        "EXTRA_ROWS",
+        "MISSED_MERGED_HEADER",
+        "HALLUCINATED_MERGE",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p15_mineru_tbl_2",
+      "n_rows_gt": 7,
+      "n_rows_pred": 6,
+      "n_cols_gt": 5,
+      "n_cols_pred": 6,
+      "row_exact_match": false,
+      "col_exact_match": false,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 0.2,
+      "span_f1": 0.3333,
+      "teds_struct": 0.619,
+      "errors": [
+        "MISSING_ROWS",
+        "COLUMN_COUNT_MISMATCH",
+        "MISSED_MERGED_HEADER",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p27_mineru_tbl_1",
+      "n_rows_gt": 4,
+      "n_rows_pred": 4,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p27_mineru_tbl_2",
+      "n_rows_gt": 11,
+      "n_rows_pred": 12,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.7959,
+      "errors": [
+        "EXTRA_ROWS",
+        "MISSED_MERGED_HEADER"
+      ]
+    },
+    {
+      "table_id": "p27_mineru_tbl_3",
+      "n_rows_gt": 6,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.84,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p28_mineru_tbl_1",
+      "n_rows_gt": 8,
+      "n_rows_pred": 8,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.9394,
+      "errors": [
+        "HALLUCINATED_MERGE"
+      ]
+    },
+    {
+      "table_id": "p28_mineru_tbl_2",
+      "n_rows_gt": 4,
+      "n_rows_pred": 3,
+      "n_cols_gt": 2,
+      "n_cols_pred": 2,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.7692,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p28_mineru_tbl_3",
+      "n_rows_gt": 3,
+      "n_rows_pred": 3,
+      "n_cols_gt": 2,
+      "n_cols_pred": 2,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p29_mineru_tbl_1",
+      "n_rows_gt": 12,
+      "n_rows_pred": 11,
+      "n_cols_gt": 9,
+      "n_cols_pred": 9,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 0.3333,
+      "span_recall": 0.25,
+      "span_f1": 0.2857,
+      "teds_struct": 0.8679,
+      "errors": [
+        "MISSING_ROWS",
+        "MISSED_MERGED_HEADER",
+        "HALLUCINATED_MERGE",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p30_mineru_tbl_1",
+      "n_rows_gt": 13,
+      "n_rows_pred": 0,
+      "n_cols_gt": 9,
+      "n_cols_pred": 0,
+      "row_exact_match": false,
+      "col_exact_match": false,
+      "exact_grid_match": false,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.0093,
+      "errors": [
+        "MISSING_ROWS",
+        "COLUMN_COUNT_MISMATCH",
+        "MISSED_MERGED_HEADER",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p31_mineru_tbl_1",
+      "n_rows_gt": 5,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.8571,
+      "errors": [
+        "HALLUCINATED_MERGE"
+      ]
+    },
+    {
+      "table_id": "p31_mineru_tbl_2",
+      "n_rows_gt": 10,
+      "n_rows_pred": 11,
+      "n_cols_gt": 5,
+      "n_cols_pred": 4,
+      "row_exact_match": false,
+      "col_exact_match": false,
+      "exact_grid_match": false,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.6897,
+      "errors": [
+        "EXTRA_ROWS",
+        "COLUMN_COUNT_MISMATCH",
+        "MISSED_MERGED_HEADER",
+        "HALLUCINATED_MERGE",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p31_mineru_tbl_3",
+      "n_rows_gt": 6,
+      "n_rows_pred": 6,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p32_mineru_tbl_1",
+      "n_rows_gt": 17,
+      "n_rows_pred": 17,
+      "n_cols_gt": 6,
+      "n_cols_pred": 6,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p33_mineru_tbl_1",
+      "n_rows_gt": 13,
+      "n_rows_pred": 15,
+      "n_cols_gt": 5,
+      "n_cols_pred": 6,
+      "row_exact_match": false,
+      "col_exact_match": false,
+      "exact_grid_match": false,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.7426,
+      "errors": [
+        "EXTRA_ROWS",
+        "COLUMN_COUNT_MISMATCH",
+        "HALLUCINATED_MERGE"
+      ]
+    },
+    {
+      "table_id": "p34_mineru_tbl_1",
+      "n_rows_gt": 10,
+      "n_rows_pred": 9,
+      "n_cols_gt": 5,
+      "n_cols_pred": 5,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9016,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p35_mineru_tbl_1",
+      "n_rows_gt": 10,
+      "n_rows_pred": 9,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9024,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p35_mineru_tbl_2",
+      "n_rows_gt": 6,
+      "n_rows_pred": 6,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p35_mineru_tbl_3",
+      "n_rows_gt": 8,
+      "n_rows_pred": 8,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p36_mineru_tbl_1",
+      "n_rows_gt": 6,
+      "n_rows_pred": 6,
+      "n_cols_gt": 6,
+      "n_cols_pred": 6,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.907,
+      "errors": [
+        "HALLUCINATED_MERGE"
+      ]
+    },
+    {
+      "table_id": "p37_mineru_tbl_1",
+      "n_rows_gt": 10,
+      "n_rows_pred": 9,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9024,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p37_mineru_tbl_2",
+      "n_rows_gt": 11,
+      "n_rows_pred": 11,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.8667,
+      "errors": [
+        "MISSED_MERGED_HEADER"
+      ]
+    },
+    {
+      "table_id": "p38_mineru_tbl_1",
+      "n_rows_gt": 8,
+      "n_rows_pred": 8,
+      "n_cols_gt": 5,
+      "n_cols_pred": 5,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p39_mineru_tbl_1",
+      "n_rows_gt": 11,
+      "n_rows_pred": 10,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9111,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p39_mineru_tbl_2",
+      "n_rows_gt": 6,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.84,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p40_mineru_tbl_1",
+      "n_rows_gt": 5,
+      "n_rows_pred": 5,
+      "n_cols_gt": 6,
+      "n_cols_pred": 6,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p41_mineru_tbl_1",
+      "n_rows_gt": 2,
+      "n_rows_pred": 2,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p41_mineru_tbl_2",
+      "n_rows_gt": 6,
+      "n_rows_pred": 6,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p41_mineru_tbl_3",
+      "n_rows_gt": 5,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p42_mineru_tbl_1",
+      "n_rows_gt": 12,
+      "n_rows_pred": 11,
+      "n_cols_gt": 6,
+      "n_cols_pred": 6,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9176,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p43_mineru_tbl_1",
+      "n_rows_gt": 7,
+      "n_rows_pred": 6,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 0.25,
+      "span_f1": 0.4,
+      "teds_struct": 0.625,
+      "errors": [
+        "MISSING_ROWS",
+        "MISSED_MERGED_HEADER",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p43_mineru_tbl_2",
+      "n_rows_gt": 5,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.8947,
+      "errors": [
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p44_mineru_tbl_1",
+      "n_rows_gt": 5,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p44_mineru_tbl_2",
+      "n_rows_gt": 6,
+      "n_rows_pred": 4,
+      "n_cols_gt": 5,
+      "n_cols_pred": 5,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 0.6667,
+      "span_recall": 0.5,
+      "span_f1": 0.5714,
+      "teds_struct": 0.6333,
+      "errors": [
+        "MISSING_ROWS",
+        "MISSED_MERGED_HEADER",
+        "HALLUCINATED_MERGE",
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    },
+    {
+      "table_id": "p45_mineru_tbl_1",
+      "n_rows_gt": 2,
+      "n_rows_pred": 2,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p45_mineru_tbl_2",
+      "n_rows_gt": 13,
+      "n_rows_pred": 11,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.9184,
+      "errors": [
+        "MISSING_ROWS",
+        "MISSED_MERGED_HEADER"
+      ]
+    },
+    {
+      "table_id": "p46_mineru_tbl_1",
+      "n_rows_gt": 26,
+      "n_rows_pred": 26,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p47_mineru_tbl_1",
+      "n_rows_gt": 6,
+      "n_rows_pred": 6,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p47_mineru_tbl_2",
+      "n_rows_gt": 8,
+      "n_rows_pred": 8,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 1.0,
+      "errors": [
+        "OK"
+      ]
+    },
+    {
+      "table_id": "p48_mineru_tbl_1",
+      "n_rows_gt": 11,
+      "n_rows_pred": 12,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9184,
+      "errors": [
+        "EXTRA_ROWS"
+      ]
+    },
+    {
+      "table_id": "p48_mineru_tbl_2",
+      "n_rows_gt": 14,
+      "n_rows_pred": 13,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9298,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p49_mineru_tbl_1",
+      "n_rows_gt": 19,
+      "n_rows_pred": 21,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9059,
+      "errors": [
+        "EXTRA_ROWS"
+      ]
+    },
+    {
+      "table_id": "p50_mineru_tbl_1",
+      "n_rows_gt": 17,
+      "n_rows_pred": 18,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9452,
+      "errors": [
+        "EXTRA_ROWS"
+      ]
+    },
+    {
+      "table_id": "p51_mineru_tbl_1",
+      "n_rows_gt": 20,
+      "n_rows_pred": 16,
+      "n_cols_gt": 5,
+      "n_cols_pred": 5,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 0.6667,
+      "span_f1": 0.8,
+      "teds_struct": 0.7263,
+      "errors": [
+        "MISSING_ROWS",
+        "MISSED_MERGED_HEADER"
+      ]
+    },
+    {
+      "table_id": "p52_mineru_tbl_1",
+      "n_rows_gt": 12,
+      "n_rows_pred": 11,
+      "n_cols_gt": 5,
+      "n_cols_pred": 5,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "span_f1": 0.0,
+      "teds_struct": 0.6667,
+      "errors": [
+        "MISSING_ROWS",
+        "MISSED_MERGED_HEADER",
+        "HALLUCINATED_MERGE"
+      ]
+    },
+    {
+      "table_id": "p53_mineru_tbl_1",
+      "n_rows_gt": 15,
+      "n_rows_pred": 14,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.9344,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p53_mineru_tbl_2",
+      "n_rows_gt": 7,
+      "n_rows_pred": 5,
+      "n_cols_gt": 3,
+      "n_cols_pred": 3,
+      "row_exact_match": false,
+      "col_exact_match": true,
+      "exact_grid_match": false,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.7241,
+      "errors": [
+        "MISSING_ROWS"
+      ]
+    },
+    {
+      "table_id": "p54_mineru_tbl_1",
+      "n_rows_gt": 5,
+      "n_rows_pred": 5,
+      "n_cols_gt": 7,
+      "n_cols_pred": 7,
+      "row_exact_match": true,
+      "col_exact_match": true,
+      "exact_grid_match": true,
+      "span_precision": 1.0,
+      "span_recall": 1.0,
+      "span_f1": 1.0,
+      "teds_struct": 0.8378,
+      "errors": [
+        "HEADER_DEPTH_MISMATCH"
+      ]
+    }
+  ]
+}

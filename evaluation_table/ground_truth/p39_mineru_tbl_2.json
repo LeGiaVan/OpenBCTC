@@ -1,0 +1,13 @@
+{
+  "table_id": "p39_mineru_tbl_2",
+  "n_rows": 6,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "15. Phải trả ngắn hạn khác (Trang 39)",
+  "page": 39,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

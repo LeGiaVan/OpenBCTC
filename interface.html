@@ -1,0 +1,4119 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenBCTC AI — Hệ Thống Bóc Tách Báo Cáo Tài Chính (PDF → Markdown)</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Marked for Markdown Preview -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-card-hover: rgba(31, 41, 55, 0.85);
+      --bg-input: rgba(15, 23, 42, 0.8);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(16, 185, 129, 0.5);
+
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+
+      --accent-emerald: #10b981;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.25);
+      --accent-blue: #3b82f6;
+      --accent-blue-glow: rgba(59, 130, 246, 0.25);
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+
+      --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.15);
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(at 10% 10%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 20%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+        radial-gradient(at 50% 90%, rgba(139, 92, 246, 0.05) 0px, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Header Nav */
+    header {
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #10b981, #3b82f6);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px var(--accent-emerald-glow);
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #ffffff, #d1d5db);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-subtitle .badge {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .header-pills {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-item strong {
+      color: var(--text-main);
+    }
+
+    .pill-item .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+
+    /* Container */
+    main.container {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px 60px;
+      flex: 1;
+    }
+
+    /* Stepper Header */
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .step-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-blue));
+      transition: width 0.3s ease;
+    }
+
+    .step-item.active {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(17, 24, 39, 0.95);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .step-item.active::after {
+      width: 100%;
+    }
+
+    .step-item.completed {
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .step-item.active .step-num {
+      background: var(--accent-emerald);
+      color: #064e3b;
+      font-weight: 800;
+      border-color: transparent;
+      box-shadow: 0 0 14px var(--accent-emerald);
+    }
+
+    .step-item.completed .step-num {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+    }
+
+    .step-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .step-desc {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .step-item.active .step-desc {
+      color: var(--accent-emerald);
+    }
+
+    /* Content Cards */
+    .step-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .step-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    .card-header {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-header h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-header p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Drop Zone */
+    .dropzone-container {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 40px 24px;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.4);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .dropzone-container:hover,
+    .dropzone-container.dragover {
+      border-color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.05);
+      box-shadow: inset 0 0 20px rgba(16, 185, 129, 0.1);
+    }
+
+    .dropzone-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .dropzone-text h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .dropzone-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .dropzone-input {
+      display: none;
+    }
+
+    .file-preview-card {
+      margin-top: 20px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-sm);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .file-preview-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .file-preview-icon {
+      font-size: 24px;
+    }
+
+    .file-preview-info h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .file-preview-info span {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .badge-ready {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-emerald);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-clear-file {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear-file:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: #fff;
+    }
+
+    /* Configuration Grid */
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-control {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-emerald);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+    .sample-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #60a5fa;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+    }
+
+    .sample-chip:hover {
+      background: rgba(59, 130, 246, 0.25);
+      border-color: #60a5fa;
+    }
+
+    /* Action Buttons */
+    .action-bar {
+      margin-top: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 20px var(--accent-emerald-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--accent-blue-glow);
+    }
+
+    .btn-accent:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Phase 2: Live Processing */
+    .processing-timeline {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .node-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .node-card.running {
+      border-color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.08);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+    }
+
+    .node-card.done {
+      border-color: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.03);
+    }
+
+    .node-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .node-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .node-status {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    .node-card.running .node-status {
+      color: var(--accent-emerald);
+      font-weight: 600;
+    }
+
+    /* Progress Bar */
+    .progress-bar-wrap {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-blue));
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+      box-shadow: 0 0 12px var(--accent-emerald);
+    }
+
+    /* Terminal Console */
+    .terminal-window {
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      font-family: var(--font-mono);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .t-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .t-dot.red {
+      background: #ef4444;
+    }
+
+    .t-dot.yellow {
+      background: #f59e0b;
+    }
+
+    .t-dot.green {
+      background: #10b981;
+    }
+
+    .terminal-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .terminal-body {
+      padding: 16px;
+      height: 320px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #d1d5db;
+    }
+
+    .log-line {
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    .log-time {
+      color: var(--text-dim);
+      margin-right: 8px;
+    }
+
+    .log-info {
+      color: #60a5fa;
+    }
+
+    .log-success {
+      color: #34d399;
+      font-weight: 600;
+    }
+
+    .log-warn {
+      color: #fbbf24;
+    }
+
+    .log-error {
+      color: #f87171;
+      font-weight: 700;
+    }
+
+    /* Phase 3: Review Table HITL */
+    .metric-summary-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .metric-card .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .metric-card .val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .metric-card .note {
+      font-size: 0.75rem;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .review-action-banner {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      gap: 20px;
+    }
+
+    .review-banner-text h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .review-banner-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .iframe-wrapper {
+      width: 100%;
+      height: 650px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #111827;
+      position: relative;
+    }
+
+    .iframe-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Phase 4: Export & Preview */
+
+    /* ========================================================================= */
+    /* CHỈNH SỬA MARKDOWN THÔ & DOUBLE-CLICK NAVIGATION                          */
+    /* ========================================================================= */
+    .preview-hint-bar {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 8px 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: #a7f3d0;
+      user-select: none;
+    }
+
+    .btn-switch-raw-hint {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .btn-switch-raw-hint:hover {
+      background: var(--accent-emerald);
+    }
+
+    .btn-save-editor {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      color: #34d399;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .btn-save-editor:hover {
+      background: var(--accent-emerald);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-save-editor.unsaved {
+      background: rgba(245, 158, 11, 0.25) !important;
+      border-color: rgba(245, 158, 11, 0.6) !important;
+      color: #fbbf24 !important;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+    }
+
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast-item {
+      pointer-events: auto;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .toast-item.success { border-color: rgba(16, 185, 129, 0.5); color: #34d399; }
+    .toast-item.info { border-color: rgba(59, 130, 246, 0.5); color: #93c5fd; }
+    .toast-item.warning { border-color: rgba(245, 158, 11, 0.5); color: #fbbf24; }
+
+    /* Floating Action Bar ở góc dưới cho Mã Thô (không cần kéo lên trên) */
+    .floating-editor-bar {
+      position: absolute;
+      bottom: 20px;
+      right: 24px;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.2);
+      border-radius: var(--radius-full);
+      padding: 6px 10px;
+      animation: fadeIn 0.25s ease;
+      transition: all 0.2s ease;
+    }
+
+    /* Khi ở chế độ Toàn Màn Hình hoặc Tràn Trang, ghim cố định góc dưới màn hình */
+    .preview-box.is-fullscreen .floating-editor-bar,
+    .preview-box.is-expanded .floating-editor-bar {
+      position: fixed !important;
+      bottom: 24px !important;
+      right: 32px !important;
+      z-index: 9999999 !important;
+    }
+
+    .btn-floating-view {
+      background: linear-gradient(135deg, var(--accent-emerald), #059669);
+      border: none;
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+
+    .btn-floating-view:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+      background: linear-gradient(135deg, #34d399, #10b981);
+    }
+
+    .btn-floating-save {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-floating-save:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-floating-save.unsaved {
+      background: rgba(245, 158, 11, 0.25) !important;
+      border-color: rgba(245, 158, 11, 0.6) !important;
+      color: #fbbf24 !important;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-floating-top {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      padding: 6px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-floating-top:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* ========================================================================= */
+    /* MỤC XEM TIÊU ĐỀ MARKDOWN GỐC (PARSER NGUYÊN BẢN)                          */
+    /* ========================================================================= */
+    .headings-toolbar {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .headings-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .badge-orig {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      width: fit-content;
+    }
+
+    .headings-file-info {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .headings-file-info code {
+      color: #93c5fd;
+      background: rgba(59, 130, 246, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .headings-level-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .level-tag {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .headings-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .headings-search {
+      position: relative;
+    }
+
+    .headings-search input {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      padding: 6px 12px 6px 30px;
+      font-size: 0.78rem;
+      width: 250px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .headings-search input:focus {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    }
+
+    .headings-search .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .headings-view-toggle {
+      display: flex;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-sm);
+      padding: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .headings-view-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .headings-view-btn.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .headings-filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .filter-pill.active {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: rgba(59, 130, 246, 0.4);
+      color: #93c5fd;
+      font-weight: 600;
+    }
+
+    .headings-tree-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 6px;
+    }
+
+    .heading-node {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .heading-node:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateX(2px);
+    }
+
+    .heading-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      min-width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .badge-h1 { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .badge-h2 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .badge-h3 { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .badge-h4 { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+    .badge-h5 { background: rgba(6, 182, 212, 0.2); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.4); }
+    .badge-h6 { background: rgba(156, 163, 175, 0.2); color: #d1d5db; border: 1px solid rgba(156, 163, 175, 0.4); }
+
+    .heading-title-text {
+      flex: 1;
+      font-size: 0.83rem;
+      color: #e5e7eb;
+      font-family: var(--font-sans);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .heading-node.lvl-1 .heading-title-text { font-size: 0.92rem; font-weight: 700; color: #fff; }
+    .heading-node.lvl-2 .heading-title-text { font-size: 0.86rem; font-weight: 700; color: #f3f4f6; }
+    .heading-node.lvl-3 .heading-title-text { font-size: 0.83rem; font-weight: 600; color: #e5e7eb; }
+
+    .heading-line-no {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 2px 6px;
+      border-radius: 3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .heading-actions-node {
+      display: none;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .heading-node:hover .heading-actions-node {
+      display: flex;
+    }
+
+    .btn-node-action {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-node-action:hover {
+      background: var(--accent-blue);
+    }
+
+    .headings-raw-area {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      color: #93c5fd;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.6;
+      padding: 16px;
+      resize: none;
+      outline: none;
+    }
+    /* Thanh cuộn siêu mảnh (Sleek Minimal Scrollbar) */
+    *::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    *::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.15);
+    }
+    *::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-emerald);
+    }
+
+    /* Bố cục Grid 2 cột hoàn hảo: minmax(0, 1fr) ngăn chặn triệt để mọi lỗi tràn ngang */
+    .export-grid {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    /* Ghim cố định cột bên trái (Sticky Side Panel) khi cuộn bên phải */
+    .export-side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: sticky;
+      top: 16px;
+      align-self: start;
+      z-index: 10;
+    }
+
+    .export-stat-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+    }
+
+    .export-stat-box h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.8rem;
+    }
+
+    .stat-line:last-child {
+      border-bottom: none;
+    }
+
+    .stat-line span {
+      color: var(--text-muted);
+    }
+
+    .stat-line strong {
+      color: var(--text-main);
+    }
+
+    /* Khung xem trước chuẩn mực: min-width: 0 để không bị phình to */
+    .preview-box {
+      background: rgba(11, 15, 25, 0.85);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      height: 640px;
+      min-width: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Chế độ Toàn Màn Hình (Fullscreen Mode) */
+    .preview-box.is-fullscreen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      z-index: 999999 !important;
+      border-radius: 0 !important;
+      border: none !important;
+      background: #090d16 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* Chế độ Xem Liền Mạch (Seamless Flow) */
+    .preview-box.is-expanded {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+
+    .preview-box.is-expanded .preview-content-body {
+      overflow-y: visible !important;
+      height: auto !important;
+      max-height: none !important;
+    }
+
+    .preview-box.is-expanded textarea.preview-content-body {
+      min-height: 700px;
+    }
+
+    /* Thanh Header cân đối, co giãn thông minh không bị tràn */
+    .preview-header {
+      background: rgba(11, 15, 25, 0.95);
+      backdrop-filter: blur(12px);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+
+    .preview-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .preview-badge-lines {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    .preview-mode-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .preview-icon-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .preview-icon-btn:hover, .preview-icon-btn.active {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+
+    .preview-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .preview-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preview-tab-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .preview-content-body {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* Markdown Styling in Preview */
+    .markdown-rendered h1,
+    .markdown-rendered h2,
+    .markdown-rendered h3 {
+      margin-top: 1.2em;
+      margin-bottom: 0.6em;
+      color: #fff;
+    }
+
+    .markdown-rendered h1 {
+      font-size: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 8px;
+    }
+
+    .markdown-rendered h2 {
+      font-size: 1.25rem;
+    }
+
+    .markdown-rendered p {
+      margin-bottom: 1em;
+      color: #d1d5db;
+    }
+
+    .markdown-rendered table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2em 0;
+      font-size: 0.8rem;
+      table-layout: auto;
+    }
+
+    .markdown-rendered th,
+    .markdown-rendered td {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .markdown-rendered th {
+      background: rgba(255, 255, 255, 0.08);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .markdown-rendered tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 20px 32px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      background: rgba(11, 15, 25, 0.9);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .stepper {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .export-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .review-action-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* --- Nút mở Pop-up Anti-GIGO trên Card --- */
+    .btn-gigo-modal {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-gigo-modal:hover {
+      background: rgba(16, 185, 129, 0.25);
+      border-color: #10b981;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* --- Modal Anti-GIGO 17 Đẳng Thức --- */
+    .gigo-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .gigo-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .gigo-modal-container {
+      background: #0b1329;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(16, 185, 129, 0.15);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 950px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform: scale(0.96) translateY(12px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gigo-modal-overlay.active .gigo-modal-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .gigo-modal-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .gigo-modal-title-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gigo-modal-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .gigo-modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.01em;
+    }
+
+    .gigo-modal-subtitle {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .gigo-modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      color: #94a3b8;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .gigo-modal-close:hover {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+      color: #f87171;
+    }
+
+    .gigo-modal-summary {
+      padding: 12px 24px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .gigo-summary-stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+
+    .gigo-stat-label {
+      color: #94a3b8;
+    }
+
+    .gigo-stat-val {
+      font-weight: 700;
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gigo-summary-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(100, 116, 139, 0.2);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .gigo-summary-badge.success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .gigo-summary-badge.warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .gigo-filter-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .gigo-filter-btn {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      transition: all 0.15s;
+    }
+
+    .gigo-filter-btn:hover {
+      color: #f1f5f9;
+      background: rgba(51, 65, 85, 0.8);
+    }
+
+    .gigo-filter-btn.active {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: rgba(16, 185, 129, 0.5);
+      color: #34d399;
+    }
+
+    .gigo-modal-body {
+      padding: 18px 24px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .gigo-item-card {
+      background: rgba(30, 41, 59, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      padding: 12px 16px;
+      transition: all 0.2s;
+    }
+
+    .gigo-item-card:hover {
+      background: rgba(30, 41, 59, 0.6);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .gigo-item-card.pass {
+      border-left: 4px solid #10b981;
+    }
+
+    .gigo-item-card.fail {
+      border-left: 4px solid #ef4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .gigo-item-card.pending {
+      border-left: 4px solid #64748b;
+    }
+
+    .gigo-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .gigo-item-title-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .gigo-item-stt {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gigo-item-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .gigo-item-cat {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .gigo-status-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .gigo-status-badge.pass {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .gigo-status-badge.fail {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .gigo-status-badge.pending {
+      background: rgba(148, 163, 184, 0.1);
+      color: #94a3b8;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .gigo-item-formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #38bdf8;
+      background: rgba(15, 23, 42, 0.65);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin: 6px 0;
+      word-break: break-all;
+    }
+
+    .gigo-item-desc {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+
+    .gigo-item-detail {
+      margin-top: 6px;
+      font-size: 0.76rem;
+      padding: 5px 10px;
+      border-radius: 6px;
+      line-height: 1.4;
+    }
+
+    .gigo-item-detail.pass {
+      background: rgba(16, 185, 129, 0.08);
+      color: #34d399;
+    }
+
+    .gigo-item-detail.fail {
+      background: rgba(239, 68, 68, 0.1);
+      color: #fca5a5;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gigo-modal-footer {
+      padding: 12px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .gigo-modal-hint {
+      font-size: 0.76rem;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .gigo-btn-close {
+      padding: 8px 20px;
+      border-radius: 8px;
+      background: #334155;
+      border: 1px solid #475569;
+      color: #f1f5f9;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .gigo-btn-close:hover {
+      background: #475569;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">📊</div>
+      <div>
+        <div class="brand-title">OpenBCTC AI</div>
+        <div class="brand-subtitle">
+          Bóc Tách & Chuẩn Hóa BCTC PDF sang Markdown
+          <span class="badge">Thông tư 200/2014/TT-BTC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-pills">
+      <div class="pill-item">
+        <span class="dot"></span>
+        <span>Hệ thống: <strong id="hw-gpu">Đang kiểm tra...</strong></span>
+      </div>
+      <div class="pill-item">
+        <span>RAM: <strong id="hw-ram">-- GB</strong></span>
+      </div>
+      <div class="pill-item">
+        <span style="color: var(--accent-emerald);">⚡ &lt; 5 phút • 💰 0 đồng</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Stepper Navigation -->
+    <div class="stepper">
+      <div class="step-item active" id="step-nav-1" onclick="switchStep(1)">
+        <div class="step-num">1</div>
+        <div class="step-info">
+          <div class="step-title">Nạp Tài Liệu PDF</div>
+          <div class="step-desc">Tải lên & Cấu hình</div>
+        </div>
+      </div>
+
+      <div class="step-item" id="step-nav-2" onclick="switchStep(2)">
+        <div class="step-num">2</div>
+        <div class="step-info">
+          <div class="step-title">Xử Lý Toàn Trình</div>
+          <div class="step-desc">LangGraph + Anti-GIGO</div>
+        </div>
+      </div>
+
+      <div class="step-item" id="step-nav-3" onclick="switchStep(3)">
+        <div class="step-num">3</div>
+        <div class="step-info">
+          <div class="step-title">Rà Soát Bảng (Port 8502)</div>
+          <div class="step-desc">Đối chiếu ảnh crop 200 DPI</div>
+        </div>
+      </div>
+
+      <div class="step-item" id="step-nav-4" onclick="switchStep(4)">
+        <div class="step-num">4</div>
+        <div class="step-info">
+          <div class="step-title">Xác Nhận & Xuất File</div>
+          <div class="step-desc">Tải file Markdown chuẩn</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- BƯỚC 1: NẠP TÀI LIỆU PDF & CẤU HÌNH -->
+    <!-- ================================================================= -->
+    <div class="step-content active" id="step-content-1">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>📄 1. Nạp Tập Tin Báo Cáo Tài Chính</h2>
+            <p>Hỗ trợ tài liệu PDF scan độ phân giải cao hoặc PDF văn bản gốc (Digital Native) từ 40 đến 60+ trang.</p>
+          </div>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div class="dropzone-container" id="dropzone" onclick="document.getElementById('file-input').click()">
+          <div class="dropzone-icon">📥</div>
+          <div class="dropzone-text">
+            <h3>Kéo & thả tập tin PDF BCTC vào đây hoặc nhấp để chọn</h3>
+            <p>Hỗ trợ định dạng .pdf (Tối đa 100 MB). Tự động nhận diện ranh giới Cốt lõi & Thuyết minh.</p>
+          </div>
+          <input type="file" id="file-input" class="dropzone-input" accept=".pdf" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- File preview chip -->
+        <div class="file-preview-card" id="file-preview" style="display: none;">
+          <div class="file-preview-left">
+            <span class="file-preview-icon">📑</span>
+            <div class="file-preview-info">
+              <h4 id="preview-name">--</h4>
+              <span id="preview-size">-- MB • -- Trang</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="badge-ready">✓ Đã sẵn sàng</span>
+            <button type="button" class="btn-clear-file" onclick="clearSelectedFile()"
+              title="Hủy chọn file này">✕</button>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <span style="font-size: 0.8rem; color: var(--text-dim);">Chưa có file kiểm thử?</span>
+          <button type="button" class="sample-chip" onclick="useSampleFile()">
+            🥛 Sử dụng file mẫu chuẩn: Vinamilk 2024 (vnm.pdf - 54 trang)
+          </button>
+        </div>
+
+        <!-- Cấu hình bóc tách -->
+        <div class="config-grid">
+          <div class="form-group">
+            <label for="cfg-company">🏢 Mã Doanh Nghiệp (Ticker)</label>
+            <input type="text" id="cfg-company" class="form-control" value=""
+              placeholder="Tự động nhận diện từ PDF (VD: HPG, FPT, VNM...)">
+          </div>
+
+          <div class="form-group">
+            <label for="cfg-year">📅 Năm Tài Chính</label>
+            <input type="number" id="cfg-year" class="form-control" value="" placeholder="Tự động nhận diện (VD: 2024)">
+          </div>
+
+          <div class="form-group">
+            <label for="cfg-notes-limit">📑 Bóc Tách Thuyết Minh (Số trang)</label>
+            <select id="cfg-notes-limit" class="form-control">
+              <option value="-1" id="opt-notes-all" selected>Toàn bộ Thuyết minh (Tự động nhận diện ranh giới & số
+                trang)</option>
+              <option value="5">Chạy nhanh 5 trang đầu thuyết minh</option>
+              <option value="10">Chạy thử nghiệm 10 trang thuyết minh</option>
+              <option value="0">Chỉ bóc tách 4 BCTC Cốt lõi (Bỏ qua Thuyết minh)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cfg-cache">⚡ Chế Độ Tối Ưu Tải / Cache</label>
+            <select id="cfg-cache" class="form-control">
+              <option value="true" selected>BẬT Cache (Tái sử dụng checkpoint đĩa)</option>
+              <option value="false">TẮT Cache (Chạy Fresh Benchmark tải thực tế)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" class="btn btn-primary" id="btn-start-run" onclick="startProcessing()" disabled
+            style="opacity: 0.6; cursor: not-allowed;">
+            <span>⚠️ Vui lòng nạp hoặc chọn tài liệu PDF ở trên để bắt đầu</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- BƯỚC 2: XỬ LÝ TOÀN TRÌNH & TIẾN ĐỘ THỜI GIAN THỰC -->
+    <!-- ================================================================= -->
+    <div class="step-content" id="step-content-2">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>⚡ 2. Tiến Trình Bóc Tách & Tự Kiểm Toán Anti-GIGO</h2>
+            <p id="process-sub-status">Hệ thống đang điều phối song song các agent qua đồ thị LangGraph...</p>
+          </div>
+          <div>
+            <span class="badge" id="elapsed-time-badge"
+              style="background: rgba(255,255,255,0.08); padding: 6px 12px; border-radius: var(--radius-full); font-family: var(--font-mono); font-size: 0.85rem;">
+              ⏱️ 00:00
+            </span>
+          </div>
+        </div>
+
+        <!-- Node Stepper Grid -->
+        <div class="processing-timeline">
+          <div class="node-card" id="node-detect">
+            <div class="node-icon">🔍</div>
+            <div class="node-name">Phân Loại PDF</div>
+            <div class="node-status" id="status-detect">Chờ kích hoạt</div>
+          </div>
+
+          <div class="node-card" id="node-toc">
+            <div class="node-icon">📑</div>
+            <div class="node-name">Trinh Sát Mục Lục</div>
+            <div class="node-status" id="status-toc">Chờ kích hoạt</div>
+          </div>
+
+          <div class="node-card" id="node-core">
+            <div class="node-icon">🤖</div>
+            <div class="node-name">Vision LLM Core</div>
+            <div class="node-status" id="status-core">Chờ kích hoạt</div>
+          </div>
+
+          <div class="node-card" id="node-notes">
+            <div class="node-icon">⚡</div>
+            <div class="node-name">Local OCR Notes</div>
+            <div class="node-status" id="status-notes">Chờ kích hoạt</div>
+          </div>
+
+          <div class="node-card" id="node-verifier">
+            <div class="node-icon">⚖️</div>
+            <div class="node-name">Anti-GIGO 17 Đẳng Thức</div>
+            <div class="node-status" id="status-verifier">Chờ kích hoạt</div>
+          </div>
+
+          <div class="node-card" id="node-tables">
+            <div class="node-icon">📊</div>
+            <div class="node-name">Crop 39 Bảng 200 DPI</div>
+            <div class="node-status" id="status-tables">Chờ kích hoạt</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+
+        <!-- Terminal Log Console -->
+        <div class="terminal-window">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+            </div>
+            <div class="terminal-title">LangGraph Real-time Execution Stream</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim);" id="log-count">0 logs</div>
+          </div>
+          <div class="terminal-body" id="terminal-body">
+            <div class="log-line"><span class="log-time">[00:00:00]</span> <span class="log-info">Khởi tạo sẵn sàng.
+                Nhấn nút để bắt đầu bóc tách...</span></div>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" class="btn btn-secondary" onclick="switchStep(1)">
+            <span>Quay lại Cấu hình</span>
+          </button>
+          <button type="button" class="btn btn-primary" id="btn-goto-review" onclick="switchStep(3)" disabled>
+            <span>Tiếp Tục Rà Soát Bảng (Port 8502) ➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- BƯỚC 3: RÀ SOÁT BẢNG BIỂU ĐỐI CHIẾU ẢNH CROP (PORT 8502) -->
+    <!-- ================================================================= -->
+    <div class="step-content" id="step-content-3">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>🔍 3. Rà Soát & Chỉnh Sửa Bảng Biểu (Human-in-the-Loop)</h2>
+            <p id="step3-sub-desc">Hệ thống tự động cắt các ảnh crop độ phân giải cao 200 DPI đối chiếu trực quan từng
+              con số.</p>
+          </div>
+        </div>
+
+        <!-- Quality Metrics Row -->
+        <div class="metric-summary-row">
+          <div class="metric-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+              <div class="label">Trạng Thái Số Học Anti-GIGO</div>
+              <button type="button" class="btn-gigo-modal" onclick="openGigoModal()"
+                title="Xem chi tiết 17 bài kiểm tra đẳng thức số học">
+                📋 Chi tiết 17 bài test
+              </button>
+            </div>
+            <div class="val" id="metric-anti-gigo" style="color: var(--accent-emerald);">--</div>
+            <div class="note" id="metric-anti-gigo-sub">Đẳng thức kế toán kiểm tra</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="label">Kiểm Toán Cấu Trúc Bảng</div>
+            <div class="val" id="metric-tables">-- / --</div>
+            <div class="note">Bảng biểu được trích xuất</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="label">Financial Facts Trích Xuất</div>
+            <div class="val" id="metric-facts">-- Facts</div>
+            <div class="note">Chuẩn hóa Thông tư 200</div>
+          </div>
+
+          <div class="metric-card">
+            <div class="label">Thời Gian Xử Lý Toàn Trình</div>
+            <div class="val" id="metric-duration">-- s</div>
+            <div class="note">Năng suất bóc tách tự động</div>
+          </div>
+        </div>
+
+        <!-- Action Banner to Launch Web Editor -->
+        <div class="review-action-banner">
+          <div class="review-banner-text">
+            <h3>🌐 Công Cụ Web Reviewer Bảng Biểu (Port 8502)</h3>
+            <p>Xem ảnh crop riêng từng bảng (không hiển thị cả trang giấy), sửa số trực tiếp như Excel và tự động bảo
+              toàn văn bản xung quanh.</p>
+          </div>
+          <div style="display: flex; gap: 12px; flex-shrink: 0;">
+            <button type="button" class="btn btn-secondary" onclick="openEditorInNewTab()">
+              <span>🔗 Mở Tab Mới (Port 8502)</span>
+            </button>
+            <button type="button" class="btn btn-accent" id="btn-load-iframe" onclick="toggleEmbedEditor()">
+              <span>📱 Nhúng Trực Tiếp Tại Đây</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Embedded Iframe (Optional) -->
+        <div class="iframe-wrapper" id="editor-iframe-wrap" style="display: none;">
+          <iframe id="editor-iframe" src="" title="Table Editor"></iframe>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" class="btn btn-secondary" onclick="switchStep(2)">
+            <span>⬅ Xem lại Logs</span>
+          </button>
+          <button type="button" class="btn btn-primary" onclick="confirmAndGoToExport()">
+            <span>✅ Xác Nhận Đạt Chuẩn & Xuất Markdown ➔</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- BƯỚC 4: XÁC NHẬN & XUẤT FILE MARKDOWN HOÀN THIỆN -->
+    <!-- ================================================================= -->
+    <div class="step-content" id="step-content-4">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>📝 4. Xuất Bản & Tải Về File Markdown Hoàn Thiện</h2>
+            <p>Tài liệu BCTC Markdown chuẩn hóa Thông tư 200, sạch rác OCR, sẵn sàng nạp vào LLM / RAG / SQL Database.
+            </p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button type="button" class="btn btn-secondary" onclick="copyMarkdownContent()">
+              <span id="btn-copy-text">📋 Sao Chép Markdown</span>
+            </button>
+            <button type="button" class="btn btn-primary" onclick="downloadMarkdownFile()">
+              <span>📥 Tải File .md Xuống</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="export-grid">
+          <!-- Side Panel -->
+          <div class="export-side-panel">
+            <div class="export-stat-box">
+              <h4>📊 Thống Kê Tài Liệu</h4>
+              <div class="stat-line">
+                <span>Tên tài liệu:</span>
+                <strong id="final-file-name">financial_report.md</strong>
+              </div>
+              <div class="stat-line">
+                <span>Kích thước file:</span>
+                <strong id="final-file-size">-- KB</strong>
+              </div>
+              <div class="stat-line">
+                <span>Tổng số bảng:</span>
+                <strong id="final-table-count">-- bảng</strong>
+              </div>
+              <div class="stat-line">
+                <span>Đẳng thức kế toán:</span>
+                <strong id="final-invariants" style="color: var(--accent-emerald);">Đang chờ xử lý</strong>
+              </div>
+              <div class="stat-line">
+                <span>Trạng thái kiểm định:</span>
+                <strong id="final-tt200-status" style="color: var(--accent-emerald);">Đạt chuẩn TT 200</strong>
+              </div>
+              <div class="stat-line" style="cursor: pointer;" onclick="togglePreviewTab('headings')">
+                <span>Tiêu đề gốc (Parser):</span>
+                <strong id="final-headings-count" style="color: #38bdf8; text-decoration: underline;">-- tiêu đề</strong>
+              </div>
+            </div>
+
+            <div class="export-stat-box">
+              <h4>🎯 Tài Liệu Kèm Theo</h4>
+              <button type="button" class="btn btn-secondary"
+                style="width: 100%; margin-bottom: 8px; font-size: 0.85rem; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;" onclick="togglePreviewTab('headings')">
+                📑 Xem Tiêu Đề MD Gốc
+              </button>
+              <button type="button" class="btn btn-secondary"
+                style="width: 100%; margin-bottom: 8px; font-size: 0.85rem;" onclick="downloadBenchmarkReport()">
+                📄 Tải Báo Cáo Benchmark (.md)
+              </button>
+              <button type="button" class="btn btn-secondary" style="width: 100%; font-size: 0.85rem;"
+                onclick="switchStep(1)">
+                🔄 Bóc Tách BCTC Mới
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview Box -->
+          <div class="preview-box">
+            <div class="preview-header">
+              <div class="preview-tabs">
+                <button type="button" class="preview-tab-btn active" id="tab-btn-render"
+                  onclick="togglePreviewTab('render')">
+                  👁️ Trực Quan
+                </button>
+                <button type="button" class="preview-tab-btn" id="tab-btn-raw" onclick="togglePreviewTab('raw')">
+                  📄 Mã Thô
+                </button>
+                <button type="button" class="preview-tab-btn" id="tab-btn-headings" onclick="togglePreviewTab('headings')">
+                  📑 Mục Lục
+                </button>
+              </div>
+              <div class="preview-header-right">
+                <span id="save-status-indicator" style="font-size: 0.75rem; color: var(--text-dim); display: none;"></span>
+                <button type="button" class="btn btn-save-editor" id="btn-save-markdown"
+                  style="display: none; padding: 4px 10px; font-size: 0.75rem; height: 28px; line-height: 1; align-items: center; gap: 4px; border-radius: var(--radius-sm);"
+                  onclick="saveMarkdownChanges()">
+                  <span>💾 Lưu (Ctrl+S)</span>
+                </button>
+                <span class="preview-badge-lines" id="preview-lines-count">Đang nạp...</span>
+                
+                <div class="preview-mode-buttons">
+                  <button type="button" class="preview-icon-btn" id="btn-toggle-expand" onclick="togglePreviewExpand()" title="Xem liền mạch (cuộn một mạch bằng chuột)">
+                    ↕️ Tràn Trang
+                  </button>
+                  <button type="button" class="preview-icon-btn" id="btn-toggle-fullscreen" onclick="togglePreviewFullscreen()" title="Toàn màn hình để rà soát tập trung (phím Esc để thoát)">
+                    ⛶ Toàn Màn Hình
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-content-body markdown-rendered" id="preview-rendered"
+              ondblclick="handleRenderedDblClick(event)"
+              title="Nhấp đúp (Double-click) vào bất kỳ đoạn nào để nhảy sang sửa trong Markdown thô">
+              <div class="preview-hint-bar" id="preview-dblclick-hint">
+                <span>💡 <strong>Mẹo:</strong> Nhấp đúp (Double-click) vào bất kỳ dòng nào để chuyển nhanh sang sửa mã thô.</span>
+              </div>
+              <div id="preview-rendered-body">
+                <p style="color: var(--text-dim); text-align: center; margin-top: 100px;">
+                  Đang nạp bản xem trước Markdown...
+                </p>
+              </div>
+            </div>
+
+            <textarea class="preview-content-body" id="preview-raw"
+              style="display: none; width: 100%; height: 100%; background: rgba(9, 13, 22, 0.95); border: 1px solid rgba(255, 255, 255, 0.08); color: #f3f4f6; font-family: var(--font-mono); font-size: 0.83rem; line-height: 1.65; padding: 20px; resize: none; outline: none; border-radius: var(--radius-sm);"
+              placeholder="Nhập hoặc chỉnh sửa trực tiếp nội dung Markdown tại đây... Nhấn Ctrl+S hoặc nhấp 'Lưu Thay Đổi' để lưu lại."
+              oninput="onMarkdownInputChanged()"
+              onkeydown="handleMarkdownKeydown(event)"></textarea>
+
+            <!-- Nút nổi thao tác nhanh ở góc dưới khi xem/sửa Markdown thô -->
+            <div class="floating-editor-bar" id="floating-raw-bar" style="display: none;">
+              <button type="button" class="btn-floating-view" onclick="switchFromRawToRendered()" title="Xem trực quan ngay tại vị trí này (không cần kéo chuột lên trên)">
+                <span>👁️ Xem Trực Quan</span>
+              </button>
+              <button type="button" class="btn-floating-save" id="btn-floating-save" onclick="saveMarkdownChanges()" title="Lưu nhanh nội dung (Ctrl+S)">
+                <span>💾 Lưu</span>
+              </button>
+              <button type="button" class="btn-floating-top" onclick="scrollToTopRaw()" title="Lên đầu trang">
+                <span>⬆️</span>
+              </button>
+            </div>
+
+            <!-- Container Xem Tiêu Đề MD Gốc (Nguyên bản từ parser hệ thống) -->
+            <div class="preview-content-body" id="preview-headings" style="display: none; padding: 18px; overflow-y: auto; height: 100%; flex-direction: column; gap: 14px;">
+              <!-- Toolbar -->
+              <div class="headings-toolbar">
+                <div class="headings-meta">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span class="badge-orig">
+                      <span class="pulse-dot"></span>
+                      PARSER HỆ THỐNG GỐC • 100% NGUYÊN BẢN (KHÔNG CHỈNH SỬA)
+                    </span>
+                    <span class="headings-file-info">
+                      Tệp: <code id="orig-md-filename">financial_report.md</code>
+                    </span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px; flex-wrap: wrap;">
+                    <span style="font-size: 0.82rem; color: #fff; font-weight: 600;" id="orig-md-total-count">
+                      -- Tiêu đề
+                    </span>
+                    <div class="headings-level-tags" id="orig-md-level-tags"></div>
+                  </div>
+                </div>
+
+                <div class="headings-actions">
+                  <div class="headings-search">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="headings-search-input" placeholder="Lọc nhanh tiêu đề (vd: Doanh thu, Vay, Phải thu...)" oninput="filterHeadingsList()" />
+                  </div>
+                  <div class="headings-view-toggle">
+                    <button type="button" class="headings-view-btn active" id="btn-view-tree" onclick="setHeadingsView('tree')">🌲 Cây Thư Mục</button>
+                    <button type="button" class="headings-view-btn" id="btn-view-raw" onclick="setHeadingsView('raw')">📝 Mã Markdown Thô</button>
+                  </div>
+                  <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.75rem;" onclick="copyHeadingsText()">
+                    <span id="btn-copy-headings-text">📋 Sao Chép Mục Lục</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Filter Pills -->
+              <div class="headings-filter-pills" id="headings-filter-bar">
+                <button type="button" class="filter-pill active" onclick="setHeadingLevelFilter('all', this)">Tất cả cấp độ</button>
+                <button type="button" class="filter-pill" onclick="setHeadingLevelFilter('1-2', this)">H1 - H2 (Phần Lớn)</button>
+                <button type="button" class="filter-pill" onclick="setHeadingLevelFilter('3-4', this)">H3 - H4 (Báo Cáo & Thuyết Minh)</button>
+                <button type="button" class="filter-pill" onclick="setHeadingLevelFilter('5-6', this)">H5 - H6 (Tiểu Mục Chi Tiết)</button>
+              </div>
+
+              <!-- Tree View -->
+              <div id="headings-tree-container" class="headings-tree-list">
+                <p style="color: var(--text-dim); text-align: center; margin-top: 40px;">
+                  Đang nạp cấu trúc tiêu đề từ parser hệ thống...
+                </p>
+              </div>
+
+              <!-- Raw Lines Textarea -->
+              <textarea id="headings-raw-container" class="headings-raw-area" readonly style="display: none;"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    OpenBCTC AI • Giải pháp Bóc Tách & Chuẩn Hóa Báo Cáo Tài Chính Việt Nam Chuẩn Mực TT 200/2014/TT-BTC • 100% Offline
+    Local Engine
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    let currentStep = 1;
+    let selectedPdfPath = null;
+    let isProcessing = false;
+    let pollInterval = null;
+    let startTime = null;
+    let timerInterval = null;
+    let rawMarkdownContent = "";
+
+    // 1. Khi tải trang
+    window.addEventListener("DOMContentLoaded", () => {
+      fetchSystemInfo();
+      // Giao diện trung lập, sẵn sàng đón nhận bất kỳ file PDF nào người dùng nạp vào
+      clearSelectedFile();
+    });
+
+    // 2. Chuyển bước Stepper
+    function switchStep(step) {
+      currentStep = step;
+      document.querySelectorAll(".step-item").forEach((el, idx) => {
+        el.classList.toggle("active", idx + 1 === step);
+      });
+      document.querySelectorAll(".step-content").forEach((el, idx) => {
+        el.classList.toggle("active", idx + 1 === step);
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (step === 4) {
+        loadMarkdownPreview();
+        loadOriginalHeadings();
+      }
+    }
+
+    let hasCompletedRun = false;
+
+    // 3. Lấy thông số phần cứng hệ thống
+    async function fetchSystemInfo() {
+      try {
+        const res = await fetch("/api/system_info");
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById("hw-gpu").textContent = data.gpu?.gpu_name || "CPU Standard";
+          document.getElementById("hw-ram").textContent = `${data.ram_total_gb} GB`;
+        }
+      } catch (e) {
+        console.warn("Không lấy được system info:", e);
+      }
+    }
+
+    // 4. Hủy/Xóa file đang chọn
+    function clearSelectedFile() {
+      selectedPdfPath = null;
+      const fileInput = document.getElementById("file-input");
+      if (fileInput) fileInput.value = "";
+      document.getElementById("file-preview").style.display = "none";
+      document.getElementById("cfg-company").value = "";
+      document.getElementById("cfg-year").value = "";
+      document.getElementById("opt-notes-all").textContent = "Toàn bộ Thuyết minh (Tự động nhận diện ranh giới & số trang)";
+
+      const btnStart = document.getElementById("btn-start-run");
+      btnStart.disabled = true;
+      btnStart.style.opacity = "0.6";
+      btnStart.style.cursor = "not-allowed";
+      btnStart.innerHTML = `<span>⚠️ Vui lòng nạp hoặc chọn tài liệu PDF ở trên để bắt đầu</span>`;
+    }
+
+    // 5. Cập nhật thông số tài liệu khi người dùng nạp bất kỳ file nào
+    function applyDocumentData(data) {
+      selectedPdfPath = data.file_path;
+
+      // Card hiển thị tệp
+      const preview = document.getElementById("file-preview");
+      preview.style.display = "flex";
+      document.getElementById("preview-name").textContent = data.filename;
+      document.getElementById("preview-size").textContent = `${data.file_size_mb} MB • ${data.total_pages} Trang PDF`;
+
+      // Ticker & Năm tài chính
+      const compInput = document.getElementById("cfg-company");
+      const yearInput = document.getElementById("cfg-year");
+
+      if (data.suggested_company) {
+        compInput.value = data.suggested_company;
+      } else if (!compInput.value) {
+        compInput.placeholder = "Nhập mã CK hoặc để trống tự đặt tên";
+      }
+
+      if (data.suggested_year) {
+        yearInput.value = data.suggested_year;
+      } else if (!yearInput.value) {
+        yearInput.value = new Date().getFullYear();
+      }
+
+      // Dropdown Thuyết minh theo số trang thực tế của tài liệu
+      const optAll = document.getElementById("opt-notes-all");
+      if (data.total_pages > 0) {
+        const estNotes = Math.max(1, data.total_pages - 10);
+        optAll.textContent = `Toàn bộ Thuyết minh (Tất cả ~${estNotes} trang Notes)`;
+      } else {
+        optAll.textContent = "Toàn bộ Thuyết minh (Tự động nhận diện ranh giới & số trang)";
+      }
+
+      // Kích hoạt nút Bắt Đầu
+      const btnStart = document.getElementById("btn-start-run");
+      btnStart.disabled = false;
+      btnStart.style.opacity = "1";
+      btnStart.style.cursor = "pointer";
+      btnStart.innerHTML = `<span>🚀 Bắt Đầu Bóc Tách BCTC (${escapeHtml(data.filename)})</span>`;
+    }
+
+    // 6. Tùy chọn sử dụng file mẫu Vinamilk 2024
+    async function useSampleFile() {
+      try {
+        const res = await fetch("/api/sample_info");
+        const data = await res.json();
+        if (data.success) {
+          applyDocumentData(data);
+          document.getElementById("preview-name").textContent = "vnm.pdf (Vinamilk BCTC 2024 - Mẫu Chuẩn)";
+          document.getElementById("preview-size").textContent = `${data.file_size_mb || 2.62} MB • 54 Trang Chuẩn Mực TT 200`;
+          document.getElementById("opt-notes-all").textContent = "Toàn bộ Thuyết minh (Tất cả 42 trang Notes)";
+          const btnStart = document.getElementById("btn-start-run");
+          btnStart.disabled = false;
+          btnStart.style.opacity = "1";
+          btnStart.style.cursor = "pointer";
+          btnStart.innerHTML = `<span>🚀 Bắt Đầu Bóc Tách BCTC (Vinamilk 2024)</span>`;
+        } else {
+          alert(data.error || "Không tìm thấy file mẫu vnm.pdf");
+        }
+      } catch (e) {
+        console.warn("Lỗi load sample:", e);
+      }
+    }
+
+    // 7. Xử lý tải tập tin PDF bất kỳ
+    async function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const btnStart = document.getElementById("btn-start-run");
+      btnStart.disabled = true;
+      btnStart.style.opacity = "0.7";
+      btnStart.innerHTML = `<span>⏳ Đang phân tích ${escapeHtml(file.name)}...</span>`;
+
+      try {
+        const res = await fetch(`/api/upload?filename=${encodeURIComponent(file.name)}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/pdf" },
+          body: file
+        });
+        const data = await res.json();
+        if (data.success) {
+          applyDocumentData(data);
+        } else {
+          alert("Lỗi tải file: " + (data.error || "Không xác định"));
+          clearSelectedFile();
+        }
+      } catch (err) {
+        alert("Lỗi kết nối khi tải file: " + err.message);
+        clearSelectedFile();
+      }
+    }
+
+    // 8. Kéo thả file
+    const dropzone = document.getElementById("dropzone");
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      if (e.dataTransfer.files.length > 0) {
+        document.getElementById("file-input").files = e.dataTransfer.files;
+        handleFileSelect({ target: { files: e.dataTransfer.files } });
+      }
+    });
+
+    // 9. Bắt đầu xử lý (Start Pipeline)
+    async function startProcessing() {
+      if (!selectedPdfPath) {
+        alert("Vui lòng chọn hoặc nạp một tập tin PDF BCTC trước khi bắt đầu.");
+        return;
+      }
+
+      const company = document.getElementById("cfg-company").value.trim();
+      let year = parseInt(document.getElementById("cfg-year").value);
+      if (isNaN(year) || year < 1990 || year > 2100) {
+        year = new Date().getFullYear();
+      }
+      const notesLimit = parseInt(document.getElementById("cfg-notes-limit").value);
+      const useCache = document.getElementById("cfg-cache").value === "true";
+
+      switchStep(2);
+      isProcessing = true;
+      hasCompletedRun = false;
+      document.getElementById("btn-goto-review").disabled = true;
+
+      // Reset node status
+      resetNodes();
+
+      // Bắt đầu timer
+      startTime = Date.now();
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        const sec = Math.floor((Date.now() - startTime) / 1000);
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        document.getElementById("elapsed-time-badge").textContent = `⏱️ ${m}:${s}`;
+      }, 500);
+
+      try {
+        const res = await fetch("/api/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pdf_path: selectedPdfPath,
+            company: company,
+            year: year,
+            notes_limit: notesLimit,
+            fresh: !useCache
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || "Không thể khởi động tiến trình trên server.");
+        }
+
+        // Bắt đầu polling
+        pollStatus();
+      } catch (err) {
+        alert("Lỗi kích hoạt tiến trình: " + err.message);
+        isProcessing = false;
+        clearInterval(timerInterval);
+      }
+    }
+
+    function resetNodes() {
+      const nodes = ["detect", "toc", "core", "notes", "verifier", "tables"];
+      nodes.forEach(n => {
+        const card = document.getElementById(`node-${n}`);
+        const status = document.getElementById(`status-${n}`);
+        card.className = "node-card";
+        status.textContent = "Chờ kích hoạt";
+      });
+      document.getElementById("terminal-body").innerHTML = "";
+      document.getElementById("progress-fill").style.width = "5%";
+    }
+
+    // 8. Polling trạng thái tiến trình
+    function pollStatus() {
+      if (pollInterval) clearInterval(pollInterval);
+
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch("/api/status");
+          if (!res.ok) return;
+          const data = await res.json();
+
+          updateUIWithStatus(data);
+
+          if (data.status === "COMPLETED" || data.status === "ERROR") {
+            clearInterval(pollInterval);
+            clearInterval(timerInterval);
+            isProcessing = false;
+            hasCompletedRun = true;
+            document.getElementById("btn-goto-review").disabled = false;
+
+            if (data.status === "COMPLETED") {
+              // Tự động cập nhật metric tab 3 & 4
+              updateMetricsTab(data);
+              document.getElementById("process-sub-status").textContent = "✓ Hoàn thành bóc tách xuất sắc! Báo cáo đã sẵn sàng rà soát.";
+            } else {
+              document.getElementById("process-sub-status").textContent = "❌ Có lỗi xảy ra trong quá trình xử lý: " + (data.error || "");
+            }
+          }
+        } catch (err) {
+          console.warn("Polling error:", err);
+        }
+      }, 700);
+    }
+
+    // 9. Cập nhật UI theo tiến độ
+    function updateUIWithStatus(data) {
+      const progress = data.progress || 0;
+      document.getElementById("progress-fill").style.width = `${progress}%`;
+
+      // Cập nhật các node card
+      const step = data.current_step || "";
+      if (step.includes("detect")) {
+        setNodeActive("detect", "Đang phân loại");
+      } else if (step.includes("toc")) {
+        setNodeDone("detect");
+        setNodeActive("toc", "Đang trinh sát");
+      } else if (step.includes("core")) {
+        setNodeDone("detect"); setNodeDone("toc");
+        setNodeActive("core", "Vision LLM Đọc Bảng");
+      } else if (step.includes("notes")) {
+        setNodeDone("detect"); setNodeDone("toc"); setNodeDone("core");
+        setNodeActive("notes", "Local OCR Thuyết minh");
+      } else if (step.includes("verifier")) {
+        setNodeDone("detect"); setNodeDone("toc"); setNodeDone("core"); setNodeDone("notes");
+        setNodeActive("verifier", "Kiểm toán 17 Đẳng thức");
+      } else if (step.includes("tables") || step.includes("capture")) {
+        setNodeDone("detect"); setNodeDone("toc"); setNodeDone("core"); setNodeDone("notes"); setNodeDone("verifier");
+        setNodeActive("tables", "Crop ảnh bảng đối chiếu");
+      } else if (data.status === "COMPLETED") {
+        ["detect", "toc", "core", "notes", "verifier", "tables"].forEach(n => setNodeDone(n));
+      }
+
+      // Render logs
+      if (data.logs && Array.isArray(data.logs)) {
+        const terminal = document.getElementById("terminal-body");
+        document.getElementById("log-count").textContent = `${data.logs.length} logs`;
+        terminal.innerHTML = data.logs.map(l => {
+          let cls = "log-info";
+          if (l.includes("✓") || l.includes("CÂN ĐỐI") || l.includes("thành công")) cls = "log-success";
+          if (l.includes("⚠️") || l.includes("cảnh báo")) cls = "log-warn";
+          if (l.includes("❌") || l.includes("LỖI")) cls = "log-error";
+          return `<div class="log-line"><span class="log-time">[LOG]</span> <span class="${cls}">${escapeHtml(l)}</span></div>`;
+        }).join("");
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+    }
+
+    function setNodeActive(id, text) {
+      const card = document.getElementById(`node-${id}`);
+      const status = document.getElementById(`status-${id}`);
+      card.className = "node-card running";
+      status.textContent = text;
+    }
+
+    function setNodeDone(id) {
+      const card = document.getElementById(`node-${id}`);
+      const status = document.getElementById(`status-${id}`);
+      card.className = "node-card done";
+      status.textContent = "✓ Hoàn tất";
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // 10. Cập nhật số liệu Metrics ở Bước 3 & 4
+    function updateMetricsTab(data) {
+      if (data && data.anti_gigo) {
+        window.lastAntiGigoData = data.anti_gigo;
+      }
+      const audit = data.anti_gigo || {};
+      const tables = data.table_audit || {};
+      const perf = data.performance || {};
+
+      if (audit.is_balanced) {
+        document.getElementById("metric-anti-gigo").textContent = "✅ CÂN ĐỐI 100%";
+        document.getElementById("metric-anti-gigo").style.color = "var(--accent-emerald)";
+      } else {
+        document.getElementById("metric-anti-gigo").textContent = "⚠️ CÓ CHÊNH LỆCH";
+        document.getElementById("metric-anti-gigo").style.color = "var(--accent-amber)";
+      }
+      const passed = audit.passed_checks !== undefined ? audit.passed_checks : 0;
+      const totalChecks = audit.total_checks !== undefined ? audit.total_checks : 0;
+      document.getElementById("metric-anti-gigo-sub").textContent = `${passed}/${totalChecks} Invariants Pass`;
+
+      const validTbl = tables.valid_tables !== undefined ? tables.valid_tables : 0;
+      const totalTbl = tables.total_tables !== undefined ? tables.total_tables : 0;
+      document.getElementById("metric-tables").textContent = `${validTbl} / ${totalTbl}`;
+      document.getElementById("metric-facts").textContent = `${audit.facts_count || 0} Facts`;
+      document.getElementById("metric-duration").textContent = `${perf.total_duration ? perf.total_duration.toFixed(2) : '--'} s`;
+
+      // Cập nhật text Bước 3
+      const step3Desc = document.getElementById("step3-sub-desc");
+      if (step3Desc) {
+        step3Desc.textContent = `Hệ thống đã tự động cắt trước ${totalTbl} ảnh crop độ phân giải cao 200 DPI để đối chiếu trực quan từng con số.`;
+      }
+
+      // Cập nhật Bước 4
+      if (data.output_md_name) {
+        document.getElementById("final-file-name").textContent = data.output_md_name;
+      }
+      document.getElementById("final-table-count").textContent = `${totalTbl} bảng`;
+      const invarElem = document.getElementById("final-invariants");
+      if (invarElem) {
+        invarElem.textContent = `${passed}/${totalChecks} Invariants Pass`;
+      }
+    }
+
+    // 11. Thao tác với Web Editor (Port 8502)
+    async function startEditorServer() {
+      try {
+        const res = await fetch("/api/start_editor", { method: "POST" });
+        return await res.json();
+      } catch (e) {
+        return { success: false, url: "http://localhost:8502" };
+      }
+    }
+
+    async function openEditorInNewTab() {
+      const data = await startEditorServer();
+      const targetUrl = data.url || "http://localhost:8502";
+      window.open(targetUrl, "_blank");
+    }
+
+    async function toggleEmbedEditor() {
+      const wrap = document.getElementById("editor-iframe-wrap");
+      const iframe = document.getElementById("editor-iframe");
+      const btn = document.getElementById("btn-load-iframe");
+
+      if (wrap.style.display === "none") {
+        const data = await startEditorServer();
+        const targetUrl = data.url || "http://localhost:8502";
+        iframe.src = targetUrl;
+        wrap.style.display = "block";
+        btn.textContent = "✖ Đóng Khung Xem Nhúng";
+      } else {
+        wrap.style.display = "none";
+        iframe.src = "";
+        btn.textContent = "📱 Nhúng Trực Tiếp Tại Đây";
+      }
+    }
+
+    function confirmAndGoToExport() {
+      switchStep(4);
+    }
+
+    // 12. Nạp và hiển thị Markdown Preview
+    async function loadMarkdownPreview() {
+      try {
+        const res = await fetch("/api/files/content?type=md");
+        if (res.ok) {
+          const text = await res.text();
+          rawMarkdownContent = text;
+
+          document.getElementById("preview-raw").value = text;
+          const bodyEl = document.getElementById("preview-rendered-body") || document.getElementById("preview-rendered");
+          if (window.marked) {
+            bodyEl.innerHTML = marked.parse(text);
+          } else {
+            bodyEl.innerHTML = `<pre>${escapeHtml(text)}</pre>`;
+          }
+
+          const lineCount = text.split("\n").length;
+          document.getElementById("preview-lines-count").textContent = `${lineCount} dòng • Sẵn sàng`;
+        }
+      } catch (err) {
+        console.warn("Lỗi load markdown:", err);
+      }
+    }
+
+    let originalHeadingsData = null;
+    let activeHeadingsView = "tree";
+    let activeLevelFilter = "all";
+
+    function togglePreviewTab(tab) {
+      const rendered = document.getElementById("preview-rendered");
+      const raw = document.getElementById("preview-raw");
+      const headings = document.getElementById("preview-headings");
+      const btnRender = document.getElementById("tab-btn-render");
+      const btnRaw = document.getElementById("tab-btn-raw");
+      const btnHeadings = document.getElementById("tab-btn-headings");
+
+      // Reset
+      if (rendered) rendered.style.display = "none";
+      if (raw) raw.style.display = "none";
+      if (headings) headings.style.display = "none";
+      if (btnRender) btnRender.classList.remove("active");
+      if (btnRaw) btnRaw.classList.remove("active");
+      if (btnHeadings) btnHeadings.classList.remove("active");
+
+      const btnSave = document.getElementById("btn-save-markdown");
+      const statusIndicator = document.getElementById("save-status-indicator");
+
+      // Ẩn thanh công cụ nổi khi không ở tab mã thô
+      const floatBar = document.getElementById("floating-raw-bar");
+      if (floatBar && tab !== "raw") floatBar.style.display = "none";
+
+      if (tab === "render") {
+        if (rendered) rendered.style.display = "block";
+        if (btnRender) btnRender.classList.add("active");
+        if (btnSave) btnSave.style.display = "none";
+        if (statusIndicator) statusIndicator.style.display = "none";
+        if (rawMarkdownContent) {
+          const lineCount = rawMarkdownContent.split("\n").length;
+          document.getElementById("preview-lines-count").textContent = `${lineCount} dòng • Sẵn sàng`;
+        }
+      } else if (tab === "raw") {
+        if (raw) raw.style.display = "block";
+        if (btnRaw) btnRaw.classList.add("active");
+        if (btnSave) btnSave.style.display = "inline-flex";
+        
+        // Hiện thanh công cụ nổi ở góc dưới
+        const floatBar = document.getElementById("floating-raw-bar");
+        if (floatBar) floatBar.style.display = "flex";
+
+        if (raw) {
+          const lineCount = (raw.value || "").split("\n").length;
+          const isModified = raw.value !== rawMarkdownContent;
+          document.getElementById("preview-lines-count").textContent = `${lineCount} dòng thô`;
+          if (statusIndicator) {
+            statusIndicator.style.display = isModified ? "inline" : "none";
+            statusIndicator.innerHTML = isModified ? '<span style="color: var(--accent-amber);">● Có thay đổi chưa lưu</span>' : '';
+          }
+        }
+      } else if (tab === "headings") {
+        if (headings) headings.style.display = "flex";
+        if (btnHeadings) btnHeadings.classList.add("active");
+        if (btnSave) btnSave.style.display = "none";
+        if (statusIndicator) statusIndicator.style.display = "none";
+        
+        // Luôn đồng bộ tức thì tiêu đề theo nội dung Markdown hiện tại
+        const currentMd = (raw && raw.value) ? raw.value : (rawMarkdownContent || "");
+        if (currentMd && typeof updateHeadingsFromContent === "function") {
+          updateHeadingsFromContent(currentMd);
+        } else if (!originalHeadingsData) {
+          loadOriginalHeadings();
+        } else {
+          renderHeadingsTree();
+        }
+        
+        const count = originalHeadingsData?.total_headings || 0;
+        document.getElementById("preview-lines-count").textContent = `${count} tiêu đề`;
+      }
+    }
+
+
+    // =========================================================================
+    // ĐỒNG BỘ CÂY TIÊU ĐỀ THEO NỘI DUNG MARKDOWN VỪA SỬA (INSTANT CLIENT SYNC)
+    // =========================================================================
+    function updateHeadingsFromContent(content) {
+      if (!content) return;
+      const lines = content.split("\n");
+      const headings = [];
+      const levelCounts = {};
+
+      lines.forEach((line, idx) => {
+        const stripped = line.trim();
+        const m = stripped.match(/^(#{1,6})\s+(.+)$/);
+        if (m) {
+          const level = m[1].length;
+          const title = m[2].trim();
+          const lvlKey = `H${level}`;
+          levelCounts[lvlKey] = (levelCounts[lvlKey] || 0) + 1;
+          headings.push({
+            line: idx + 1,
+            level: level,
+            title: title,
+            raw: stripped
+          });
+        }
+      });
+
+      const totalCount = headings.length;
+      originalHeadingsData = {
+        file_name: originalHeadingsData?.file_name || "financial_report.md",
+        total_headings: totalCount,
+        level_counts: levelCounts,
+        headings: headings,
+        is_original: false
+      };
+
+      // Cập nhật số đếm ở bảng thống kê bên trái
+      const statCountEl = document.getElementById("final-headings-count");
+      if (statCountEl) statCountEl.textContent = `${totalCount} tiêu đề`;
+
+      // Cập nhật số đếm ở thanh header mục tiêu đề
+      const origCountEl = document.getElementById("orig-md-total-count");
+      if (origCountEl) origCountEl.textContent = `${totalCount} Tiêu đề`;
+
+      // Cập nhật chip tags H1..H6
+      const tagsEl = document.getElementById("orig-md-level-tags");
+      if (tagsEl) {
+        tagsEl.innerHTML = Object.entries(levelCounts)
+          .map(([lvl, cnt]) => `<span class="level-tag">${lvl}: <strong>${cnt}</strong></span>`)
+          .join("");
+      }
+
+      // Cập nhật textarea mã thô ở tab tiêu đề
+      const rawArea = document.getElementById("headings-raw-container");
+      if (rawArea) {
+        rawArea.value = headings.map(h => `${h.raw}  <!-- Dòng ${h.line} -->`).join("\n");
+      }
+
+      // Render lại danh sách Cây Tiêu Đề
+      renderHeadingsTree();
+    }
+
+    async function loadOriginalHeadings() {
+      try {
+        const res = await fetch("/api/files/headings?type=orig_md");
+        if (res.ok) {
+          const data = await res.json();
+          originalHeadingsData = data;
+
+          // Cập nhật thống kê
+          const totalCount = data.total_headings || 0;
+          const statCountEl = document.getElementById("final-headings-count");
+          if (statCountEl) statCountEl.textContent = `${totalCount} tiêu đề`;
+
+          const origCountEl = document.getElementById("orig-md-total-count");
+          if (origCountEl) origCountEl.textContent = `${totalCount} Tiêu đề gốc`;
+
+          const filenameEl = document.getElementById("orig-md-filename");
+          if (filenameEl) filenameEl.textContent = data.file_name || "financial_report.md";
+
+          // Render tags level counts
+          const tagsEl = document.getElementById("orig-md-level-tags");
+          if (tagsEl && data.level_counts) {
+            tagsEl.innerHTML = Object.entries(data.level_counts)
+              .map(([lvl, cnt]) => `<span class="level-tag">${lvl}: <strong>${cnt}</strong></span>`)
+              .join("");
+          }
+
+          // Cập nhật raw textarea
+          const rawArea = document.getElementById("headings-raw-container");
+          if (rawArea) {
+            rawArea.value = (data.headings || []).map(h => `${h.raw}  <!-- Dòng ${h.line} -->`).join("\n");
+          }
+
+          // Render Cây thư mục
+          renderHeadingsTree();
+
+          // Nếu đang ở tab headings thì cập nhật header line count
+          const btnHeadings = document.getElementById("tab-btn-headings");
+          if (btnHeadings && btnHeadings.classList.contains("active")) {
+            document.getElementById("preview-lines-count").textContent = `${totalCount} tiêu đề`;
+          }
+        }
+      } catch (err) {
+        console.warn("Lỗi tải headings gốc:", err);
+      }
+    }
+
+    function renderHeadingsTree() {
+      const container = document.getElementById("headings-tree-container");
+      if (!container || !originalHeadingsData || !originalHeadingsData.headings) return;
+
+      const searchTerm = (document.getElementById("headings-search-input")?.value || "").toLowerCase().trim();
+      const list = originalHeadingsData.headings;
+
+      let filtered = list.filter(item => {
+        // Lọc level
+        if (activeLevelFilter === "1-2" && item.level > 2) return false;
+        if (activeLevelFilter === "3-4" && (item.level < 3 || item.level > 4)) return false;
+        if (activeLevelFilter === "5-6" && item.level < 5) return false;
+
+        // Lọc từ khóa search
+        if (searchTerm) {
+          const matchTitle = item.title.toLowerCase().includes(searchTerm);
+          const matchRaw = item.raw.toLowerCase().includes(searchTerm);
+          const matchLine = String(item.line).includes(searchTerm);
+          return matchTitle || matchRaw || matchLine;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: var(--text-dim);">
+            <p style="font-size: 1rem; margin-bottom: 6px;">🔍 Không tìm thấy tiêu đề phù hợp</p>
+            <p style="font-size: 0.8rem;">Hãy thử xóa bộ lọc hoặc đổi từ khóa tìm kiếm.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const indentPx = (item.level - 1) * 20;
+        const badgeClass = `badge-h${item.level}`;
+        const escapedTitle = escapeHtml(item.title);
+        const safeTitle = item.title.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+        return `
+          <div class="heading-node lvl-${item.level}" style="margin-left: ${indentPx}px;" onclick="jumpToHeadingInMarkdown('${safeTitle}', ${item.line})" title="Nhấp để xem vị trí trong tài liệu">
+            <span class="heading-badge ${badgeClass}">H${item.level}</span>
+            <span class="heading-title-text">${escapedTitle}</span>
+            <span class="heading-line-no">Dòng ${item.line}</span>
+            <div class="heading-actions-node" onclick="event.stopPropagation()">
+              <button type="button" class="btn-node-action" onclick="jumpToHeadingInMarkdown('${safeTitle}', ${item.line}, 'render')" title="Xem trong bản trực quan">👁️</button>
+              <button type="button" class="btn-node-action" onclick="jumpToHeadingInMarkdown('${safeTitle}', ${item.line}, 'raw')" title="Xem trong mã thô">📄</button>
+              <button type="button" class="btn-node-action" onclick="copySingleHeadingText('${safeTitle}', this)" title="Sao chép tiêu đề">📋</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function filterHeadingsList() {
+      renderHeadingsTree();
+    }
+
+    function setHeadingLevelFilter(filter, btn) {
+      activeLevelFilter = filter;
+      document.querySelectorAll(".headings-filter-pills .filter-pill").forEach(el => el.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+      renderHeadingsTree();
+    }
+
+    function setHeadingsView(view) {
+      activeHeadingsView = view;
+      const treeCont = document.getElementById("headings-tree-container");
+      const rawCont = document.getElementById("headings-raw-container");
+      const filterBar = document.getElementById("headings-filter-bar");
+      const btnTree = document.getElementById("btn-view-tree");
+      const btnRaw = document.getElementById("btn-view-raw");
+
+      if (view === "tree") {
+        if (treeCont) treeCont.style.display = "flex";
+        if (rawCont) rawCont.style.display = "none";
+        if (filterBar) filterBar.style.display = "flex";
+        if (btnTree) btnTree.classList.add("active");
+        if (btnRaw) btnRaw.classList.remove("active");
+      } else {
+        if (treeCont) treeCont.style.display = "none";
+        if (rawCont) rawCont.style.display = "block";
+        if (filterBar) filterBar.style.display = "none";
+        if (btnTree) btnTree.classList.remove("active");
+        if (btnRaw) btnRaw.classList.add("active");
+      }
+    }
+
+    function copyHeadingsText() {
+      if (!originalHeadingsData || !originalHeadingsData.headings) return;
+      const text = originalHeadingsData.headings.map(h => `${h.raw}  (Dòng ${h.line})`).join("\n");
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById("btn-copy-headings-text");
+        if (btn) {
+          btn.textContent = "✓ Đã Chép Mục Lục!";
+          setTimeout(() => {
+            btn.textContent = "📋 Sao Chép Mục Lục";
+          }, 2000);
+        }
+      });
+    }
+
+    function copySingleHeadingText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = "✓";
+        setTimeout(() => { btn.textContent = orig; }, 1500);
+      });
+    }
+
+    function jumpToHeadingInMarkdown(title, lineNo, preferredTab = "render") {
+      togglePreviewTab(preferredTab);
+
+      setTimeout(() => {
+        if (preferredTab === "render") {
+          const renderedBox = document.getElementById("preview-rendered");
+          if (!renderedBox) return;
+
+          const headings = renderedBox.querySelectorAll("h1, h2, h3, h4, h5, h6");
+          let targetEl = null;
+          const cleanTitle = title.trim().toLowerCase();
+
+          for (const el of headings) {
+            const hText = el.textContent.trim().toLowerCase();
+            if (hText.includes(cleanTitle) || cleanTitle.includes(hText)) {
+              targetEl = el;
+              break;
+            }
+          }
+
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            const origBg = targetEl.style.backgroundColor;
+            targetEl.style.transition = "all 0.3s ease";
+            targetEl.style.backgroundColor = "rgba(16, 185, 129, 0.35)";
+            targetEl.style.borderRadius = "6px";
+            targetEl.style.padding = "4px 8px";
+            setTimeout(() => {
+              targetEl.style.backgroundColor = origBg;
+            }, 2500);
+          }
+        } else if (preferredTab === "raw") {
+          const rawBox = document.getElementById("preview-raw");
+          if (!rawBox) return;
+
+          const lines = rawBox.value.split("\n");
+          if (lineNo > 0 && lineNo <= lines.length) {
+            let charIndex = 0;
+            for (let i = 0; i < lineNo - 1; i++) {
+              charIndex += lines[i].length + 1;
+            }
+            rawBox.focus();
+            rawBox.setSelectionRange(charIndex, charIndex + lines[lineNo - 1].length);
+            const lineHeight = 20;
+            rawBox.scrollTop = Math.max(0, (lineNo - 5) * lineHeight);
+          }
+        }
+      }, 120);
+    }
+
+
+    // =========================================================================
+    // TÍNH NĂNG DOUBLE-CLICK NHẢY SANG SỬA & LƯU MARKDOWN THÔ
+    // =========================================================================
+
+    function showToast(message, type = "info") {
+      let container = document.getElementById("toast-container");
+      if (!container) {
+        container = document.createElement("div");
+        container.id = "toast-container";
+        container.className = "toast-container";
+        document.body.appendChild(container);
+      }
+
+      const item = document.createElement("div");
+      item.className = `toast-item ${type}`;
+      const icon = type === "success" ? "✓" : (type === "warning" ? "⚠️" : "ℹ️");
+      item.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      container.appendChild(item);
+
+      setTimeout(() => {
+        item.style.opacity = "0";
+        item.style.transform = "translateX(30px)";
+        setTimeout(() => {
+          if (item.parentNode) item.parentNode.removeChild(item);
+        }, 300);
+      }, 3200);
+    }
+
+    function getCaretTopPosition(textarea, charIndex) {
+      const text = textarea.value || "";
+      if (!text || charIndex <= 0) return 0;
+
+      try {
+        const div = document.createElement("div");
+        const style = div.style;
+        const computed = window.getComputedStyle(textarea);
+
+        style.position = "absolute";
+        style.top = "-99999px";
+        style.left = "-99999px";
+        style.visibility = "hidden";
+        style.overflow = "hidden";
+        style.whiteSpace = "pre-wrap";
+        style.wordBreak = "break-word";
+        style.overflowWrap = "break-word";
+        style.boxSizing = "border-box";
+        style.width = (textarea.clientWidth || 800) + "px";
+        style.padding = computed.padding;
+        style.border = computed.border;
+        style.fontFamily = computed.fontFamily;
+        style.fontSize = computed.fontSize;
+        style.lineHeight = computed.lineHeight;
+        style.letterSpacing = computed.letterSpacing;
+
+        const spanBefore = document.createElement("span");
+        spanBefore.textContent = text.substring(0, charIndex);
+        const marker = document.createElement("span");
+        marker.textContent = "█";
+
+        div.appendChild(spanBefore);
+        div.appendChild(marker);
+        document.body.appendChild(div);
+
+        const top = marker.offsetTop;
+        document.body.removeChild(div);
+        if (top > 0) return top;
+      } catch (e) {
+        console.warn("Lỗi tính caret top:", e);
+      }
+
+      // Fallback: Ước tính theo tỷ lệ ký tự trên tổng chiều cao scrollHeight thực tế của textarea
+      const charRatio = charIndex / Math.max(1, text.length);
+      const scrollH = textarea.scrollHeight || 1000;
+      return charRatio * scrollH;
+    }
+
+    function scrollTextareaToSelection(textarea, startChar, endChar) {
+      if (!textarea) return;
+
+      const executeScroll = () => {
+        const text = textarea.value || "";
+        const caretTop = getCaretTopPosition(textarea, startChar);
+        const clientH = textarea.clientHeight || 500;
+
+        // Đưa vị trí ký tự được chọn vào vị trí 1/3 thuận mắt từ trên xuống của textarea
+        const targetScrollTop = Math.max(0, caretTop - (clientH / 3));
+
+        textarea.focus();
+        textarea.setSelectionRange(startChar, endChar);
+        textarea.scrollTop = targetScrollTop;
+      };
+
+      // Cuộn nhiều nấc (multi-tick) để khắc phục triệt để layout reflow / reset của trình duyệt
+      executeScroll();
+      requestAnimationFrame(executeScroll);
+      setTimeout(executeScroll, 40);
+      setTimeout(executeScroll, 100);
+      setTimeout(executeScroll, 220);
+      setTimeout(executeScroll, 400);
+
+      // Đảm bảo cả khung preview-box cũng cuộn vào tầm nhìn nếu đang ở ngoài viewport
+      const previewBox = document.querySelector(".preview-box");
+      if (previewBox) {
+        previewBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+
+    function handleRenderedDblClick(event) {
+      // Bỏ qua nếu click vào chính thanh hint bar
+      if (event.target.closest("#preview-dblclick-hint")) return;
+
+      const selection = window.getSelection();
+      let selectedText = selection ? selection.toString().trim() : "";
+      let fullElementText = "";
+
+      const targetEl = event.target;
+      if (targetEl) {
+        fullElementText = (targetEl.innerText || targetEl.textContent || "").trim();
+      }
+
+      if (!selectedText && fullElementText) {
+        selectedText = fullElementText;
+      }
+
+      const textarea = document.getElementById("preview-raw");
+      const rawText = textarea ? textarea.value : (rawMarkdownContent || "");
+      if (!rawText) return;
+
+      const match = findTextPositionInMarkdown(rawText, selectedText, fullElementText);
+
+      // Chuyển ngay sang tab Markdown thô
+      togglePreviewTab("raw");
+
+      setTimeout(() => {
+        if (!textarea) return;
+
+        if (match && match.start !== -1) {
+          scrollTextareaToSelection(textarea, match.start, match.start + match.length);
+          const lineNo = rawText.substring(0, match.start).split("\n").length;
+          showToast(`📍 Đã nhảy đến dòng ${lineNo} trong Markdown thô. Bạn có thể sửa trực tiếp và nhấn Ctrl+S để lưu!`, "info");
+        } else {
+          textarea.focus();
+          showToast("Đã chuyển sang chế độ sửa Markdown thô!", "info");
+        }
+      }, 50);
+    }
+
+    function findTextPositionInMarkdown(rawMarkdown, selectedText, fullElementText) {
+      if (!rawMarkdown) return null;
+
+      // 1. Nếu fullElementText ngắn gọn (tiêu đề, số liệu bảng, câu ngắn <= 120 ký tự)
+      if (fullElementText && fullElementText.length <= 120) {
+        // Tìm chính xác
+        let idx = rawMarkdown.indexOf(fullElementText);
+        if (idx !== -1) return { start: idx, length: fullElementText.length };
+
+        // Tìm không phân biệt hoa thường
+        idx = rawMarkdown.toLowerCase().indexOf(fullElementText.toLowerCase());
+        if (idx !== -1) return { start: idx, length: fullElementText.length };
+
+        // Lấy 30 ký tự đầu của element
+        const cleanWords = fullElementText.replace(/\s+/g, " ").trim();
+        const prefix = cleanWords.substring(0, Math.min(35, cleanWords.length));
+        idx = rawMarkdown.indexOf(prefix);
+        if (idx !== -1) return { start: idx, length: prefix.length };
+      }
+
+      // 2. Tìm theo selectedText (từ ngữ hoặc cụm từ người dùng double-click bôi đen)
+      if (selectedText && selectedText.length >= 2) {
+        let idx = rawMarkdown.indexOf(selectedText);
+        if (idx !== -1) return { start: idx, length: selectedText.length };
+
+        idx = rawMarkdown.toLowerCase().indexOf(selectedText.toLowerCase());
+        if (idx !== -1) return { start: idx, length: selectedText.length };
+      }
+
+      // 3. Fallback: Lấy 4 từ đầu tiên của fullElementText
+      if (fullElementText && fullElementText.length > 5) {
+        const words = fullElementText.split(/\s+/).slice(0, 4).join(" ");
+        if (words.length >= 4) {
+          let idx = rawMarkdown.toLowerCase().indexOf(words.toLowerCase());
+          if (idx !== -1) return { start: idx, length: words.length };
+        }
+      }
+
+      return null;
+    }
+
+    function onMarkdownInputChanged() {
+      const textarea = document.getElementById("preview-raw");
+      const btnSave = document.getElementById("btn-save-markdown");
+      const statusIndicator = document.getElementById("save-status-indicator");
+      if (!textarea || !btnSave) return;
+
+      const currentVal = textarea.value;
+      const isModified = currentVal !== rawMarkdownContent;
+
+      const btnFloatSave = document.getElementById("btn-floating-save");
+      if (isModified) {
+        btnSave.classList.add("unsaved");
+        btnSave.innerHTML = "<span>💾 Lưu Thay Đổi * (Ctrl+S)</span>";
+        if (btnFloatSave) {
+          btnFloatSave.classList.add("unsaved");
+          btnFloatSave.innerHTML = "<span>💾 Lưu *</span>";
+        }
+        if (statusIndicator) {
+          statusIndicator.style.display = "inline";
+          statusIndicator.innerHTML = '<span style="color: var(--accent-amber); font-weight: 600;">● Có thay đổi chưa lưu</span>';
+        }
+      } else {
+        btnSave.classList.remove("unsaved");
+        btnSave.innerHTML = "<span>💾 Lưu Thay Đổi (Ctrl+S)</span>";
+        if (statusIndicator) statusIndicator.style.display = "none";
+      }
+
+      const lineCount = currentVal.split("\n").length;
+      document.getElementById("preview-lines-count").textContent = `${lineCount} dòng thô${isModified ? " • Chưa lưu" : ""}`;
+    }
+
+    function handleMarkdownKeydown(event) {
+      // Phím tắt Ctrl + S hoặc Cmd + S để lưu
+      if ((event.ctrlKey || event.metaKey) && (event.key === "s" || event.key === "S")) {
+        event.preventDefault();
+        saveMarkdownChanges();
+        return;
+      }
+
+      // Hỗ trợ phím Tab thụt lề 2 spaces
+      if (event.key === "Tab") {
+        event.preventDefault();
+        const textarea = event.target;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        textarea.value = textarea.value.substring(0, start) + "  " + textarea.value.substring(end);
+        textarea.selectionStart = textarea.selectionEnd = start + 2;
+        onMarkdownInputChanged();
+      }
+    }
+
+    async function saveMarkdownChanges() {
+      const textarea = document.getElementById("preview-raw");
+      if (!textarea) return;
+
+      const newContent = textarea.value;
+      const btnSave = document.getElementById("btn-save-markdown");
+      const statusIndicator = document.getElementById("save-status-indicator");
+
+      const btnFloatSave = document.getElementById("btn-floating-save");
+      if (btnSave) {
+        btnSave.innerHTML = "<span>⏳ Đang Lưu...</span>";
+        btnSave.disabled = true;
+      }
+      if (btnFloatSave) {
+        btnFloatSave.innerHTML = "<span>⏳ Đang Lưu...</span>";
+        btnFloatSave.disabled = true;
+      }
+
+      try {
+        const res = await fetch("/api/files/save", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: newContent })
+        });
+
+        if (res.ok) {
+          const result = await res.json();
+          rawMarkdownContent = newContent;
+
+          // Cập nhật preview rendered ngay lập tức
+          const bodyEl = document.getElementById("preview-rendered-body") || document.getElementById("preview-rendered");
+          if (window.marked && bodyEl) {
+            bodyEl.innerHTML = marked.parse(newContent);
+          }
+
+          // Cập nhật số dòng & kích thước
+          const lineCount = newContent.split("\n").length;
+          document.getElementById("preview-lines-count").textContent = `${lineCount} dòng • Đã lưu`;
+          if (result.file_size_kb) {
+            const finalSizeEl = document.getElementById("final-file-size");
+            if (finalSizeEl) finalSizeEl.textContent = `${result.file_size_kb} KB`;
+          }
+
+          if (btnSave) {
+            btnSave.classList.remove("unsaved");
+            btnSave.innerHTML = "<span>✓ Đã Lưu Xong!</span>";
+            btnSave.style.background = "var(--accent-emerald)";
+            btnSave.style.borderColor = "var(--accent-emerald)";
+            btnSave.style.color = "#fff";
+            setTimeout(() => {
+              btnSave.innerHTML = "<span>💾 Lưu Thay Đổi (Ctrl+S)</span>";
+              btnSave.style.background = "";
+              btnSave.style.borderColor = "";
+              btnSave.style.color = "";
+              btnSave.disabled = false;
+            }, 2000);
+          }
+
+          if (btnFloatSave) {
+            btnFloatSave.classList.remove("unsaved");
+            btnFloatSave.innerHTML = "<span>✓ Đã Lưu</span>";
+            btnFloatSave.style.background = "var(--accent-emerald)";
+            btnFloatSave.style.borderColor = "var(--accent-emerald)";
+            btnFloatSave.style.color = "#fff";
+            setTimeout(() => {
+              btnFloatSave.innerHTML = "<span>💾 Lưu</span>";
+              btnFloatSave.style.background = "";
+              btnFloatSave.style.borderColor = "";
+              btnFloatSave.style.color = "";
+              btnFloatSave.disabled = false;
+            }, 2000);
+          }
+
+          if (statusIndicator) {
+            statusIndicator.style.display = "inline";
+            statusIndicator.innerHTML = '<span style="color: var(--accent-emerald); font-weight: 600;">✓ Đã lưu thành công</span>';
+            setTimeout(() => {
+              if (textarea.value === rawMarkdownContent) {
+                statusIndicator.style.display = "none";
+              }
+            }, 3000);
+          }
+
+          // Cập nhật ngay lập tức Cây Tiêu Đề theo nội dung vừa lưu
+          if (typeof updateHeadingsFromContent === "function") {
+            updateHeadingsFromContent(newContent);
+          }
+          if (typeof loadOriginalHeadings === "function") {
+            loadOriginalHeadings();
+          }
+
+          showToast("✓ Đã lưu thành công! Nội dung xem trước và Cây Tiêu Đề đã được cập nhật.", "success");
+        } else {
+          throw new Error("Lỗi khi lưu từ server (HTTP " + res.status + ")");
+        }
+      } catch (err) {
+        console.error("Lỗi lưu markdown:", err);
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = "<span>❌ Lỗi Khi Lưu (Thử lại)</span>";
+        }
+        if (btnFloatSave) {
+          btnFloatSave.disabled = false;
+          btnFloatSave.innerHTML = "<span>❌ Lỗi</span>";
+        }
+        showToast("❌ Không thể lưu file Markdown: " + err.message, "warning");
+      }
+    }
+
+
+    // =========================================================================
+    // NÂNG CẤP UX: TOÀN MÀN HÌNH & CHẾ ĐỘ CUỘN LIỀN MẠCH (CHỐNG LỒNG THANH CUỘN)
+    // =========================================================================
+
+    // =========================================================================
+    // NÚT TRỰC QUAN Ở GÓC DƯỚI (NHẢY TỪ MÃ THÔ SANG TRỰC QUAN KHÔNG CẦN CUỘN LÊN)
+    // =========================================================================
+    function switchFromRawToRendered() {
+      const textarea = document.getElementById("preview-raw");
+      if (!textarea) return;
+
+      const text = textarea.value || "";
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      let targetText = "";
+
+      // 1. Nếu người dùng đang bôi đen một đoạn text (như 'nhuận' hoặc câu)
+      if (start !== end) {
+        targetText = text.substring(start, end).trim();
+      }
+
+      // 2. Nếu không bôi đen, lấy dòng hiện tại quanh con trỏ chuột
+      if (!targetText) {
+        const textBefore = text.substring(0, start);
+        const textAfter = text.substring(start);
+        const lastNewline = textBefore.lastIndexOf("\n");
+        const nextNewline = textAfter.indexOf("\n");
+
+        const lineStart = lastNewline === -1 ? 0 : lastNewline + 1;
+        const lineEnd = nextNewline === -1 ? text.length : start + nextNewline;
+        const currentLine = text.substring(lineStart, lineEnd).trim();
+
+        // Lọc bỏ ký tự markdown đầu dòng (#, *, -, |, khoảng trắng)
+        targetText = currentLine.replace(/^[#\*\-\|\s]+/, "").trim();
+        // Nếu dòng dài, lấy 4 từ đầu
+        if (targetText.length > 50) {
+          targetText = targetText.split(/\s+/).slice(0, 4).join(" ");
+        }
+      }
+
+      // Chuyển sang tab Trực Quan
+      togglePreviewTab("render");
+
+      // Cuộn đến vị trí tương ứng trong Xem Trước Trực Quan
+      setTimeout(() => {
+        const renderedBox = document.getElementById("preview-rendered-body") || document.getElementById("preview-rendered");
+        if (!renderedBox) return;
+
+        if (targetText && targetText.length >= 2) {
+          const elements = renderedBox.querySelectorAll("h1, h2, h3, h4, h5, h6, p, tr, li, td, th");
+          let matchedEl = null;
+          const cleanTarget = targetText.toLowerCase();
+
+          for (const el of elements) {
+            if (el.textContent.toLowerCase().includes(cleanTarget)) {
+              matchedEl = el;
+              break;
+            }
+          }
+
+          if (matchedEl) {
+            matchedEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            const origBg = matchedEl.style.backgroundColor;
+            matchedEl.style.transition = "all 0.3s ease";
+            matchedEl.style.backgroundColor = "rgba(16, 185, 129, 0.35)";
+            matchedEl.style.borderRadius = "6px";
+            setTimeout(() => {
+              matchedEl.style.backgroundColor = origBg;
+            }, 2200);
+          }
+        }
+
+        showToast("👁️ Đã chuyển sang chế độ Trực Quan ngay tại vị trí này!", "info");
+      }, 70);
+    }
+
+    function scrollToTopRaw() {
+      const textarea = document.getElementById("preview-raw");
+      if (textarea) {
+        textarea.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function togglePreviewFullscreen() {
+      const box = document.querySelector(".preview-box");
+      const btn = document.getElementById("btn-toggle-fullscreen");
+      if (!box) return;
+
+      const isFs = box.classList.toggle("is-fullscreen");
+      if (btn) {
+        btn.textContent = isFs ? "❌ Thu Nhỏ" : "⛶ Toàn Màn Hình";
+        btn.classList.toggle("active", isFs);
+      }
+
+      if (isFs) {
+        showToast("⛶ Đã mở Toàn Màn Hình. Nhấn Esc hoặc bấm nút để thu nhỏ.", "info");
+      }
+    }
+
+    function togglePreviewExpand() {
+      const box = document.querySelector(".preview-box");
+      const btn = document.getElementById("btn-toggle-expand");
+      if (!box) return;
+
+      const isExp = box.classList.toggle("is-expanded");
+      if (btn) {
+        btn.textContent = isExp ? "📏 Thu Khung" : "↕️ Tràn Trang";
+        btn.classList.toggle("active", isExp);
+      }
+
+      showToast(isExp ? "📜 Đã mở rộng tràn trang. Bạn có thể cuộn một mạch bằng chuột!" : "📏 Đã thu về khung cố định.", "info");
+    }
+
+    // Nhấn phím Escape để thoát Fullscreen
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        const box = document.querySelector(".preview-box");
+        if (box && box.classList.contains("is-fullscreen")) {
+          togglePreviewFullscreen();
+        }
+      }
+    });
+
+    // 13. Tải về và sao chép
+    function downloadMarkdownFile() {
+      window.location.href = "/api/files/download?type=md";
+    }
+
+    function downloadBenchmarkReport() {
+      window.location.href = "/api/files/download?type=report";
+    }
+
+    function copyMarkdownContent() {
+      if (!rawMarkdownContent) return;
+      navigator.clipboard.writeText(rawMarkdownContent).then(() => {
+        const btn = document.getElementById("btn-copy-text");
+        btn.textContent = "✓ Đã Sao Chép!";
+        setTimeout(() => {
+          btn.textContent = "📋 Sao Chép Markdown";
+        }, 2000);
+      });
+    }
+
+
+    // =========================================================================
+    // =========================================================================
+    // ANTI-GIGO 17 BÀI TEST MODAL LOGIC
+    // =========================================================================
+    const GIGO_INVARIANTS = [
+      {
+        id: 1,
+        name: "Cân đối Tổng Tài Sản == Tổng Nguồn Vốn",
+        category: "BẢNG CĐKT",
+        formula: "Mã 270 (Tổng TS) == Mã 440 (Tổng NV)",
+        desc: "Nguyên lý bất biến của bảng CĐKT: Toàn bộ giá trị tài sản doanh nghiệp sở hữu phải cân bằng tuyệt đối với tổng nguồn vốn hình thành (Nợ phải trả + Vốn CSH).",
+        keywords: ["CÂN_ĐỐI_TÀI_SẢN_NGUỒN_VỐN", "Mã 270 == Mã 440", "Tổng tài sản (270) == Tổng nguồn vốn"],
+        failKeywords: ["LỆCH_CÂN_ĐỐI"]
+      },
+      {
+        id: 2,
+        name: "Tổng Tài Sản = Ngắn Hạn + Dài Hạn",
+        category: "BẢNG CĐKT",
+        formula: "Mã 270 == Mã 100 (TS Ngắn hạn) + Mã 200 (TS Dài hạn)",
+        desc: "Tài sản ngắn hạn và tài sản dài hạn phải cấu thành chính xác 100% Tổng cộng tài sản.",
+        keywords: ["CỘNG_TỔNG_TÀI_SẢN", "TỔNG_TÀI_SẢN", "270 == 100 + 200"],
+        failKeywords: ["LỆCH_CỘNG_TỔNG_TÀI_SẢN", "LỆCH_TỔNG_TÀI_SẢN"]
+      },
+      {
+        id: 3,
+        name: "Cấu thành Tài Sản Ngắn Hạn",
+        category: "BẢNG CĐKT",
+        formula: "Mã 100 == Mã 110 (Tiền) + 120 (ĐTTC) + 130 (Phải thu) + 140 (Tồn kho) + 150 (TS khác)",
+        desc: "Tổng các khoản mục ngắn hạn phải cân bằng với chỉ tiêu Tài sản ngắn hạn (Mã 100).",
+        keywords: ["CỘNG_DỌC_NGẮN_HẠN", "TS Ngắn hạn (100) =="],
+        failKeywords: ["LỆCH_CỘNG_DỌC_NGẮN_HẠN"]
+      },
+      {
+        id: 4,
+        name: "Cấu thành Tài Sản Dài Hạn",
+        category: "BẢNG CĐKT",
+        formula: "Mã 200 == Mã 210 (Phải thu DH) + 220 (TSCĐ) + 230 (BĐSĐT) + 240 (Dở dang) + 250 (ĐTTC) + 260 (TS khác)",
+        desc: "Tổng các khoản mục dài hạn phải cân bằng với chỉ tiêu Tài sản dài hạn (Mã 200).",
+        keywords: ["CỘNG_DỌC_DÀI_HẠN", "TS Dài hạn (200) =="],
+        failKeywords: ["LỆCH_CỘNG_DỌC_DÀI_HẠN"]
+      },
+      {
+        id: 5,
+        name: "Tổng Nguồn Vốn = Nợ Phải Trả + Vốn CSH",
+        category: "BẢNG CĐKT",
+        formula: "Mã 440 == Mã 300 (Nợ phải trả) + Mã 400 (Vốn chủ sở hữu)",
+        desc: "Hai nguồn vốn tài trợ tài sản: Nợ phải trả và Vốn CSH phải tạo nên 100% Tổng nguồn vốn.",
+        keywords: ["CỘNG_NGUỒN_VỐN", "Nguồn vốn (440) == Nợ phải trả"],
+        failKeywords: ["LỆCH_CỘNG_NGUỒN_VỐN"]
+      },
+      {
+        id: 6,
+        name: "Cấu thành Nợ Phải Trả",
+        category: "BẢNG CĐKT",
+        formula: "Mã 300 == Mã 310 (Nợ ngắn hạn) + Mã 330 (Nợ dài hạn)",
+        desc: "Phân loại kỳ hạn nghĩa vụ tài chính: Nợ ngắn hạn + Nợ dài hạn = Tổng nợ phải trả.",
+        keywords: ["CỘNG_NỢ_PHẢI_TRẢ", "Nợ phải trả (300) =="],
+        failKeywords: ["LỆCH_CỘNG_NỢ_PHẢI_TRẢ"]
+      },
+      {
+        id: 7,
+        name: "Doanh Thu Thuần Bán Hàng & CCDV",
+        category: "BÁO CÁO KQKD",
+        formula: "Mã 10 (Doanh thu thuần) == Mã 01 (Doanh thu gộp) - Mã 02 (Các khoản giảm trừ)",
+        desc: "Doanh thu sau khi trừ chiết khấu thương mại, giảm giá hàng bán và hàng bán bị trả lại.",
+        keywords: ["CÂN_ĐỐI_DOANH_THU", "Doanh thu thuần (10) == Doanh thu gộp"],
+        failKeywords: ["LỆCH_DOANH_THU"]
+      },
+      {
+        id: 8,
+        name: "Lợi Nhuận Gộp Về Bán Hàng & CCDV",
+        category: "BÁO CÁO KQKD",
+        formula: "Mã 20 (Lợi nhuận gộp) == Mã 10 (Doanh thu thuần) - Mã 11 (Giá vốn hàng bán)",
+        desc: "Lợi nhuận gộp từ mảng kinh doanh hàng hóa/dịch vụ trước các chi phí bán hàng & quản lý.",
+        keywords: ["CÂN_ĐỐI_LỢI_NHUẬN_GỘP", "LN Gộp (20) == Doanh thu thuần"],
+        failKeywords: ["LỆCH_LỢI_NHUẬN_GỘP"]
+      },
+      {
+        id: 9,
+        name: "Lợi Nhuận Thuần Từ Hoạt Động Kinh Doanh",
+        category: "BÁO CÁO KQKD",
+        formula: "Mã 30 == Mã 20 (LN gộp) + 21 (DT tài chính) - 22 (CP tài chính) - 25 (CP bán hàng) - 26 (CP QLDN)",
+        desc: "Lợi nhuận kinh doanh cốt lõi sau khi hạch toán doanh thu/chi phí tài chính và chi phí vận hành.",
+        keywords: ["CÂN_ĐỐI_LN_THUẦN_HĐKD", "LN Thuần (30) =="],
+        failKeywords: ["LỆCH_LN_THUẦN"]
+      },
+      {
+        id: 10,
+        name: "Kết Quả Hoạt Động Khác",
+        category: "BÁO CÁO KQKD",
+        formula: "Mã 40 (Lợi nhuận khác) == Mã 31 (Thu nhập khác) - Mã 32 (Chi phí khác)",
+        desc: "Chênh lệch giữa thu nhập và chi phí từ các hoạt động phi kinh doanh chính (thanh lý tài sản, tiền phạt...).",
+        keywords: ["CÂN_ĐỐI_LN_KHÁC", "LN Khác (40) =="],
+        failKeywords: ["LỆCH_LN_KHÁC"]
+      },
+      {
+        id: 11,
+        name: "Tổng Lợi Nhuận Kế Toán Trước Thuế",
+        category: "BÁO CÁO KQKD",
+        formula: "Mã 50 (LN trước thuế) == Mã 30 (LN thuần HĐKD) + Mã 40 (Lợi nhuận khác)",
+        desc: "Tổng lợi nhuận doanh nghiệp tạo ra trong niên độ tài chính trước khi thực hiện nghĩa vụ thuế.",
+        keywords: ["CỘNG_LN_TRƯỚC_THUẾ", "LN Trước thuế (50) == LN Thuần HĐKD"],
+        failKeywords: ["LỆCH_LN_TRƯỚC_THUẾ"]
+      },
+      {
+        id: 12,
+        name: "Lợi Nhuận Sau Thuế Thu Nhập Doanh Nghiệp",
+        category: "BÁO CÁO KQKD",
+        formula: "Mã 60 == Mã 50 (LN trước thuế) - Mã 51 (Thuế TNDN hiện hành) ± Mã 52 (Thuế TNDN hoãn lại)",
+        desc: "Lợi nhuận ròng cuối cùng của doanh nghiệp thuộc về cổ đông sau nghĩa vụ thuế.",
+        keywords: ["CÂN_ĐỐI_LN_SAU_THUẾ", "LN Sau thuế (60) =="],
+        failKeywords: ["LỆCH_LN_SAU_THUẾ"]
+      },
+      {
+        id: 13,
+        name: "Lưu Chuyển Tiền Thuần Từ HĐ Tài Chính",
+        category: "BÁO CÁO LCTT",
+        formula: "Mã 40 == Mã 31 (Thu phát hành CP) - 32 (Trả vốn góp) + 33 (Vay) - 34 (Trả nợ gốc) - 35 (Thuê TC) - 36 (Cổ tức đã trả)",
+        desc: "Tổng hợp toàn bộ dòng tiền thu/chi liên quan đến cấu trúc vốn và nợ vay tài chính.",
+        keywords: ["CÂN_ĐỐI_LCTT_HĐTC", "LCTT HĐTC (40) =="],
+        failKeywords: ["LỆCH_LCTT_HĐTC"]
+      },
+      {
+        id: 14,
+        name: "Lưu Chuyển Tiền Thuần Trong Kỳ (Tổng Hợp)",
+        category: "BÁO CÁO LCTT",
+        formula: "Mã 50 == Mã 20 (LCTT Kinh doanh) + Mã 30 (LCTT Đầu tư) + Mã 40 (LCTT Tài chính)",
+        desc: "Tổng biến động tiền mặt và tương đương tiền thuần phát sinh từ cả 3 hoạt động trong kỳ.",
+        keywords: ["CÂN_ĐỐI_LCTT_THUẦN", "LCTT Thuần (50) =="],
+        failKeywords: ["LỆCH_LCTT_THUẦN"]
+      },
+      {
+        id: 15,
+        name: "Cân Đối Tiền Cuối Kỳ Trên Báo Cáo LCTT",
+        category: "BÁO CÁO LCTT",
+        formula: "Mã 70 (Tiền cuối kỳ) == Mã 60 (Tiền đầu kỳ) + Mã 50 (LCTT thuần) + Mã 61 (Ảnh hưởng tỷ giá)",
+        desc: "Tính liên tục của dòng tiền: Tiền cuối kỳ phải bằng tiền đầu kỳ cộng dòng tiền thuần phát sinh.",
+        keywords: ["CÂN_ĐỐI_TIỀN_CUỐI_KỲ", "Tiền cuối kỳ LCTT (70) =="],
+        failKeywords: ["LỆCH_TIỀN_CUỐI_KỲ"]
+      },
+      {
+        id: 16,
+        name: "Đối Chiếu Chéo Tiền Cuối Kỳ (LCTT ↔ CĐKT)",
+        category: "ĐỐI CHIẾU CHÉO",
+        formula: "Mã 70 (Tiền cuối kỳ trên LCTT) == Mã 110 (Tiền & tương đương tiền trên Bảng CĐKT)",
+        desc: "Đối chiếu chéo bắt buộc giữa 2 báo cáo tài chính độc lập: Số dư tiền cuối kỳ phải trùng khớp tuyệt đối.",
+        keywords: ["ĐỐI_CHIẾU_CHÉO_TIỀN", "Tiền & TĐ tiền trên Bảng CĐKT (110)"],
+        failKeywords: ["LỆCH_ĐỐI_CHIẾU_CHÉO_TIỀN"]
+      },
+      {
+        id: 17,
+        name: "Đối Chiếu Chéo Lợi Nhuận Trước Thuế (LCTT Gián Tiếp ↔ KQKD)",
+        category: "ĐỐI CHIẾU CHÉO",
+        formula: "Mã 01 (LN trước thuế trên LCTT Gián Tiếp) == Mã 50 (LN trước thuế trên Báo Cáo KQKD)",
+        desc: "Khởi điểm của phương pháp lập LCTT gián tiếp bắt buộc là Lợi nhuận trước thuế trên Báo Cáo KQKD.",
+        keywords: ["ĐỐI_CHIẾU_CHÉO_LN_TRƯỚC_THUẾ", "ĐỐI_CHIẾU_CHÉO_LN", "LCTT gián tiếp (01) == KQKD (50)"],
+        failKeywords: ["LỆCH_ĐỐI_CHIẾU_CHÉO_LN"]
+      }
+    ];
+
+    let currentGigoFilter = 'all';
+    window.lastAntiGigoData = null;
+
+    async function openGigoModal() {
+      // 1. Thử lấy dữ liệu Anti-GIGO mới nhất nếu chưa có
+      if (!window.lastAntiGigoData || !window.lastAntiGigoData.total_checks) {
+        try {
+          const resStatus = await fetch('/api/status');
+          const stJson = await resStatus.json();
+          if (stJson && stJson.anti_gigo && (stJson.anti_gigo.total_checks || stJson.anti_gigo.passed_checks)) {
+            window.lastAntiGigoData = stJson.anti_gigo;
+          }
+        } catch (e) {
+          console.warn("Không thể lấy /api/status:", e);
+        }
+
+        if (!window.lastAntiGigoData || !window.lastAntiGigoData.total_checks) {
+          try {
+            const resGigo = await fetch('/api/gigo_report');
+            const gJson = await resGigo.json();
+            if (gJson.success && gJson.anti_gigo && gJson.anti_gigo.total_checks) {
+              window.lastAntiGigoData = gJson.anti_gigo;
+            }
+          } catch (e) { }
+        }
+      }
+
+      renderGigoModalContent();
+
+      const modal = document.getElementById('gigoModal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeGigoModal() {
+      const modal = document.getElementById('gigoModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function handleGigoBackdropClick(e) {
+      if (e.target && e.target.id === 'gigoModal') {
+        closeGigoModal();
+      }
+    }
+
+    function filterGigoTests(type) {
+      currentGigoFilter = type;
+      document.querySelectorAll('.gigo-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-filter') === type);
+      });
+      renderGigoModalContent();
+    }
+
+    function renderGigoModalContent() {
+      const audit = window.lastAntiGigoData || {};
+      const passedList = audit.passed_list || [];
+      const failedList = audit.failed_list || [];
+      const hasExecuted = (passedList.length > 0 || failedList.length > 0);
+
+      // Cập nhật Header stats
+      const passCounter = document.getElementById('gigoModalPassCounter');
+      const statusBadge = document.getElementById('gigoModalStatusBadge');
+
+      if (hasExecuted) {
+        const passedCount = passedList.length;
+        const totalCount = audit.total_checks || (passedList.length + failedList.length);
+        if (passCounter) passCounter.innerText = `${passedCount} / ${totalCount} Đạt`;
+
+        if (statusBadge) {
+          if (failedList.length === 0) {
+            statusBadge.className = 'gigo-summary-badge success';
+            statusBadge.innerText = '✅ CÂN ĐỐI 100% (KHÔNG CÓ GIGO)';
+          } else {
+            statusBadge.className = 'gigo-summary-badge warning';
+            statusBadge.innerText = `⚠️ CÓ ${failedList.length} ĐẲNG THỨC CHÊNH LỆCH`;
+          }
+        }
+      } else {
+        if (passCounter) passCounter.innerText = 'Chưa kiểm toán / 17';
+        if (statusBadge) {
+          statusBadge.className = 'gigo-summary-badge';
+          statusBadge.innerText = '⚪ Sẵn sàng kiểm toán 17 đẳng thức';
+        }
+      }
+
+      // Render danh sách 17 bài test
+      const listContainer = document.getElementById('gigoModalList');
+      if (!listContainer) return;
+
+      listContainer.innerHTML = '';
+
+      GIGO_INVARIANTS.forEach((t, idx) => {
+        let status = 'pending'; // 'pass' | 'fail' | 'pending'
+        let detailText = '';
+
+        if (hasExecuted) {
+          // 1. Tìm trong passedList theo danh sách từ khóa linh hoạt
+          let passMatch = passedList.find(p => (t.keywords || []).some(kw => p.includes(kw)));
+          // 2. Tìm trong failedList theo danh sách từ khóa
+          let failMatch = failedList.find(f => (t.failKeywords || []).some(kw => f.includes(kw)) || (t.keywords || []).some(kw => f.includes(kw)));
+
+          // 3. Fallback vị trí nếu passedList có đủ 17 bài theo thứ tự
+          if (!passMatch && !failMatch && passedList.length === 17 && failedList.length === 0) {
+            passMatch = passedList[idx];
+          }
+
+          if (passMatch) {
+            status = 'pass';
+            detailText = passMatch;
+          } else if (failMatch) {
+            status = 'fail';
+            detailText = failMatch;
+          }
+        }
+
+        // Lọc theo currentGigoFilter
+        if (currentGigoFilter === 'pass' && status !== 'pass') return;
+        if (currentGigoFilter === 'fail' && status !== 'fail') return;
+
+        const card = document.createElement('div');
+        card.className = `gigo-item-card ${status}`;
+
+        let badgeHtml = '';
+        if (status === 'pass') {
+          badgeHtml = '<span class="gigo-status-badge pass">✓ ĐẠT (PASS)</span>';
+        } else if (status === 'fail') {
+          badgeHtml = '<span class="gigo-status-badge fail">✗ CHÊNH LỆCH</span>';
+        } else {
+          badgeHtml = '<span class="gigo-status-badge pending">○ Chưa kiểm tra</span>';
+        }
+
+        let detailHtml = '';
+        if (detailText) {
+          detailHtml = `<div class="gigo-item-detail ${status}">
+            <strong>Kết quả thực tế:</strong> ${escapeHtml(detailText)}
+          </div>`;
+        }
+
+        card.innerHTML = `
+          <div class="gigo-item-header">
+            <div class="gigo-item-title-box">
+              <span class="gigo-item-stt">#${t.id}</span>
+              <span class="gigo-item-cat">${t.category}</span>
+              <span class="gigo-item-name">${t.name}</span>
+            </div>
+            ${badgeHtml}
+          </div>
+          <div class="gigo-item-formula">${t.formula}</div>
+          <div class="gigo-item-desc">${t.desc}</div>
+          ${detailHtml}
+        `;
+
+        listContainer.appendChild(card);
+      });
+
+      if (listContainer.children.length === 0) {
+        listContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 40px 0;">Không có bài kiểm tra nào trong danh mục lọc này.</div>';
+      }
+    }
+  </script>
+
+  <!-- POPUP / MODAL CHI TIẾT 17 BÀI TEST ANTI-GIGO -->
+  <div id="gigoModal" class="gigo-modal-overlay" onclick="handleGigoBackdropClick(event)">
+    <div class="gigo-modal-container" role="dialog" aria-modal="true">
+      <!-- Modal Header -->
+      <div class="gigo-modal-header">
+        <div class="gigo-modal-title-box">
+          <div class="gigo-modal-icon">🛡️</div>
+          <div>
+            <div class="gigo-modal-title">Bộ Tự Kiểm Toán Số Học Anti-GIGO</div>
+            <div class="gigo-modal-subtitle">17 Đẳng Thức Kế Toán Bất Biến (Theo Chuẩn Thông Tư 200/2014/TT-BTC)</div>
+          </div>
+        </div>
+        <button type="button" class="gigo-modal-close" onclick="closeGigoModal()" title="Đóng cửa sổ (Esc)">✕</button>
+      </div>
+
+      <!-- Modal Summary Bar -->
+      <div class="gigo-modal-summary">
+        <div class="gigo-summary-stat">
+          <span class="gigo-stat-label">Tiến trình kiểm toán:</span>
+          <span class="gigo-stat-val" id="gigoModalPassCounter">-- / 17 Đạt</span>
+        </div>
+        <div class="gigo-summary-badge" id="gigoModalStatusBadge">
+          ⚪ Chưa thực hiện kiểm toán
+        </div>
+        <div class="gigo-filter-group">
+          <button type="button" class="gigo-filter-btn active" data-filter="all" onclick="filterGigoTests('all')">Tất cả
+            (17)</button>
+          <button type="button" class="gigo-filter-btn" data-filter="pass" onclick="filterGigoTests('pass')">Đạt
+            (Pass)</button>
+          <button type="button" class="gigo-filter-btn" data-filter="fail" onclick="filterGigoTests('fail')">Lệch
+            (Fail)</button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Danh sách 17 bài test) -->
+      <div class="gigo-modal-body" id="gigoModalList">
+        <!-- Render động bằng JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="gigo-modal-footer">
+        <div class="gigo-modal-hint">
+          💡 <span>Hệ thống tự động đối chiếu chéo số liệu sau khi OCR để loại bỏ triệt để rủi ro GIGO (Garbage In,
+            Garbage Out).</span>
+        </div>
+        <button type="button" class="gigo-btn-close" onclick="closeGigoModal()">Đóng cửa sổ</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

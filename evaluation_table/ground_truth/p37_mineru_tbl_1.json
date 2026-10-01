@@ -1,0 +1,13 @@
+{
+  "table_id": "p37_mineru_tbl_1",
+  "n_rows": 10,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "11. Tài sản thuế thu nhập hoãn lại và thuế thu nhập hoãn lại phải trả (Trang 37)",
+  "page": 37,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

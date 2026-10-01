@@ -1,0 +1,23 @@
+{
+  "table_id": "p41_mineru_tbl_2",
+  "page": 41,
+  "note_title": "Biến động dự phòng trợ cấp thôi việc trong năm như sau:",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 6,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.128,
+    0.322,
+    0.892,
+    0.485
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_41.json",
+  "content": "||2025 VND|2024 VND|\n| --- | --- | --- |\n|Số dư đầu năm|6.159.175.944|5.678.649.449|\n|Tăng dự phòng trong năm|18.310.296.270|5.750.228.016|\n|Sử dụng dự phòng trong năm|(14.787.078.207)|(5.179.532.507)|\n|Hoàn nhập dự phòng trong năm|(823.256.837)|(90.169.014)|\n|Số dư cuối năm|8.859.137.170|6.159.175.944|"
+}

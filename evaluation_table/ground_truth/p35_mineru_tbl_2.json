@@ -1,0 +1,13 @@
+{
+  "table_id": "p35_mineru_tbl_2",
+  "n_rows": 6,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Các công trình xây dựng cơ bản dở dang lớn đang thực hiện (Trang 35)",
+  "page": 35,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

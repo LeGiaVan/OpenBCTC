@@ -1,0 +1,23 @@
+{
+  "table_id": "p35_mineru_tbl_3",
+  "page": 35,
+  "note_title": "(a) Chi phí trả trước ngắn hạn",
+  "format": "markdown",
+  "test_group": "group_1_simple_header",
+  "group_name": "Bảng đơn giản (1 tầng header)",
+  "n_rows_pred": 8,
+  "n_cols_pred": 3,
+  "n_spans_pred": 0,
+  "spans_pred": [],
+  "tags": [
+    "simple_header"
+  ],
+  "bbox": [
+    0.127,
+    0.687,
+    0.894,
+    0.868
+  ],
+  "source_file": "data\\cache\\notes\\VNM_2024\\page_35.json",
+  "content": "||31/12/2025 VND|1/1/2025 VND|\n| --- | --- | --- |\n|Bảo trì hệ thống và triển khai phần mềm|22.322.463.500|10.988.861.985|\n|Thuê hoạt động|31.277.392.519|9.943.538.639|\n|Cải tạo, sửa chữa lớn|1.494.610.762|3.056.587.938|\n|Công cụ và dụng cụ|8.040.521.056|2.329.820.070|\n|Quảng cáo|7.102.259.287|2.336.844.018|\n|Chi phí trả trước ngắn hạn khác|8.470.235.447|7.053.197.940|\n||78.707.482.571|35.708.850.590|"
+}

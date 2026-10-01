@@ -1,0 +1,13 @@
+{
+  "table_id": "p46_mineru_tbl_1",
+  "n_rows": 26,
+  "n_cols": 3,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "Doanh thu các bên liên quan & Giá vốn hàng bán (Trang 46)",
+  "page": 46,
+  "test_group": "group_3_has_subtotals",
+  "group_name": "Bảng có dòng 'Cộng / Tổng cộng'"
+}

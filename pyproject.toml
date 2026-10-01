@@ -1,0 +1,53 @@
+[project]
+name = "fin-audit-ai"
+version = "0.1.0"
+description = "FinAudit AI — Hybrid SQL + Vector RAG Financial Statement QA System"
+requires-python = ">=3.11"
+
+dependencies = [
+    # ── Core LangChain / LLM ──────────────────────────────────────────
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-groq>=0.2.0",
+    "langchain-openai>=0.2.0",
+    "langchain-anthropic>=0.2.0",
+
+    # ── Config & Validation ───────────────────────────────────────────
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "python-dotenv>=1.0",
+
+    # ── Phase 1: PDF Parsing & Document Intelligence ───────────────────
+    "pdfplumber>=0.11.0",
+
+    # ── Phase 2 & 3: SQL + Vector (for future phases) ──────────────────
+    # "qdrant-client>=1.9.0",
+    # "fastembed>=0.3.0",
+    # "sentence-transformers>=3.0.0",
+    # "sqlalchemy>=2.0.0",
+    # "langgraph>=0.2.0",
+    # "langfuse>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "ruff>=0.4.0",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

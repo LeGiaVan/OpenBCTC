@@ -1,0 +1,13 @@
+{
+  "table_id": "p40_mineru_tbl_1",
+  "n_rows": 5,
+  "n_cols": 6,
+  "spans": [],
+  "header_rows": [
+    0
+  ],
+  "description": "16. Vay ngắn hạn (Trang 40)",
+  "page": 40,
+  "test_group": "group_5_dashes_empty",
+  "group_name": "Bảng có ô trống / gạch ngang '-'"
+}

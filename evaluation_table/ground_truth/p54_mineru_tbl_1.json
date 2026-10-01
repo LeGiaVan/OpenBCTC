@@ -1,0 +1,39 @@
+{
+  "table_id": "p54_mineru_tbl_1",
+  "n_rows": 5,
+  "n_cols": 7,
+  "spans": [
+    [
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      2
+    ],
+    [
+      0,
+      3,
+      0,
+      4
+    ],
+    [
+      0,
+      5,
+      0,
+      6
+    ]
+  ],
+  "header_rows": [
+    0,
+    1
+  ],
+  "description": "Thông tin bộ phận theo khu vực địa lý (Trang 54)",
+  "page": 54,
+  "test_group": "group_2_two_tier_header",
+  "group_name": "Bảng có header 2 tầng (gộp cột con / spans)"
+}
