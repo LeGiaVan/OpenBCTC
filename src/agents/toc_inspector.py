@@ -345,9 +345,10 @@ class TOCInspector:
                 page = pdf.pages[p_num - 1]
                 page_text = page.extract_text() or ""
 
-                # Nếu là Scanned Image (Non-native PDF), kiểm tra checkpoint cache để lấy text nhanh (0 API calls)
                 if not page_text.strip():
-                    cache_file = Path("data/cache/ocr") / f"{company}_{year}" / f"page_{p_num}.json"
+                    cand1 = Path(f"outputs/{company}_{year}/cache/ocr/page_{p_num}.json")
+                    cand2 = Path("data/cache/ocr") / f"{company}_{year}" / f"page_{p_num}.json"
+                    cache_file = cand1 if cand1.exists() else cand2
                     if cache_file.exists():
                         try:
                             with open(cache_file, encoding="utf-8") as f:

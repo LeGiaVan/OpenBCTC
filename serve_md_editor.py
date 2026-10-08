@@ -233,17 +233,25 @@ def format_grid_to_markdown(
 # =====================================================================
 
 def detect_latest_company_year() -> tuple[str, int]:
-    """Tự động xác định doanh nghiệp và năm mới nhất có trong cache."""
+    """Tự động xác định doanh nghiệp và năm mới nhất có trong outputs/ hoặc cache."""
+    candidates = []
+
+    # 1. Quét các thư mục trong outputs/{company}_{year}
+    outputs_dir = PROJECT_ROOT / "outputs"
+    if outputs_dir.exists():
+        for p in outputs_dir.iterdir():
+            if p.is_dir() and "_" in p.name:
+                candidates.append((p.stat().st_mtime, p.name))
+
+    # 2. Quét cache cũ nếu chưa có outputs
     notes_dir = PROJECT_ROOT / "data" / "cache" / "notes"
     ocr_dir = PROJECT_ROOT / "data" / "cache" / "ocr"
-    
-    candidates = []
     for base in (notes_dir, ocr_dir):
         if base.exists():
             for p in base.iterdir():
                 if p.is_dir() and "_" in p.name:
                     candidates.append((p.stat().st_mtime, p.name))
-    
+
     if candidates:
         candidates.sort(reverse=True)
         latest_name = candidates[0][1]
@@ -254,45 +262,56 @@ def detect_latest_company_year() -> tuple[str, int]:
         except (ValueError, IndexError):
             yr = 2025
         return comp, yr
-        
-    return "VIC", 2025
+
+    return "VNM", 2025
 
 
 def find_pdf_for_company(company: str, year: int) -> Path | None:
-    """Tìm đúng file PDF của công ty trong uploads hoặc thư mục gốc."""
+    """Tìm đúng file PDF của công ty trong pdf_files, uploads hoặc thư mục gốc."""
     comp_upper = company.upper()
-    uploads_dir = PROJECT_ROOT / "data" / "uploads"
-    if uploads_dir.exists():
-        for f in uploads_dir.glob("*.pdf"):
+    search_dirs = [
+        PROJECT_ROOT / "pdf_files",
+        PROJECT_ROOT / "data" / "uploads",
+        PROJECT_ROOT / "data" / "bctc_pdfs",
+        PROJECT_ROOT,
+    ]
+    for d in search_dirs:
+        if not d.exists():
+            continue
+        for f in d.glob("*.pdf"):
             if comp_upper in f.name.upper():
                 return f
-        # Nếu chỉ có 1 file duy nhất trong uploads
-        all_pdfs = list(uploads_dir.glob("*.pdf"))
-        if len(all_pdfs) == 1:
+        all_pdfs = list(d.glob("*.pdf"))
+        if len(all_pdfs) == 1 and comp_upper in ("VNM", "VIC"):
             return all_pdfs[0]
-            
-    # Thư mục gốc
-    for f in PROJECT_ROOT.glob("*.pdf"):
-        if comp_upper in f.name.upper():
-            return f
+
     if comp_upper == "VNM" and (PROJECT_ROOT / "vnm.pdf").exists():
         return PROJECT_ROOT / "vnm.pdf"
-        
+
     return None
 
 
 def load_all_tables_from_cache(company: str, year: int) -> list[dict[str, Any]]:
     """
     Trích xuất 100% các bảng biểu từ cache OCR và Thuyết minh.
-    Giữ đúng thứ tự trang PDF từ đầu đến cuối, trích xuất ngữ cảnh và tiêu đề thuyết minh.
+    Ưu tiên tìm trong outputs/{company}_{year}/cache/, sau đó fallback data/cache/.
     """
-    ocr_dir = PROJECT_ROOT / "data" / "cache" / "ocr" / f"{company}_{year}"
-    notes_dir = PROJECT_ROOT / "data" / "cache" / "notes" / f"{company}_{year}"
-    
+    tag = f"{company}_{year}"
+    candidate_dirs = [
+        PROJECT_ROOT / "outputs" / tag / "cache" / "ocr",
+        PROJECT_ROOT / "outputs" / tag / "cache" / "notes",
+        PROJECT_ROOT / "data" / "cache" / "ocr" / tag,
+        PROJECT_ROOT / "data" / "cache" / "notes" / tag,
+    ]
+
     all_json_files: list[Path] = []
-    for d in (ocr_dir, notes_dir):
+    seen_files = set()
+    for d in candidate_dirs:
         if d.exists():
-            all_json_files.extend(list(d.glob("*.json")))
+            for jf in d.glob("*.json"):
+                if jf.name not in seen_files:
+                    seen_files.add(jf.name)
+                    all_json_files.append(jf)
 
     def extract_page_num(p: Path) -> int:
         m = re.search(r"p(?:age_)?(\d+)", p.stem)
@@ -372,7 +391,7 @@ def reconstruct_full_document(
         for t in all_tables:
             tid = t["table_id"]
             cur = edited_tables.get(tid, t)
-            lines.append(f"### {cur['heading']} *(Trang {cur['page']})*\n")
+            lines.append(f"### {cur.get('heading', f'Bảng {tid}')} *(Trang {cur.get('page', 1)})*\n")
             if cur.get("pre_text"):
                 lines.append(cur["pre_text"] + "\n")
             tbl_lines = format_grid_to_markdown(cur["rows"], cur.get("header_rows_count", 1))
@@ -381,29 +400,83 @@ def reconstruct_full_document(
         return "\n".join(lines)
 
     content = original_md_path.read_text(encoding="utf-8")
+    table_pattern = re.compile(
+        r'(<table[\s\S]*?</table>)|((?:^[ \t]*\|[^\n]+\|[ \t]*$\n?)+)',
+        re.MULTILINE | re.IGNORECASE
+    )
+
+    replacements: list[tuple[int, int, str]] = []
+
     for tid, edited in edited_tables.items():
         orig_t = next((t for t in all_tables if t["table_id"] == tid), None)
         if not orig_t:
             continue
-            
+
         new_md = "\n".join(format_grid_to_markdown(
             rows=edited["rows"],
             header_rows_count=edited.get("header_rows_count", 1),
             alignments=edited.get("alignments")
         ))
-        
-        orig_raw = orig_t["raw_markdown"]
+
+        # Ưu tiên 1: Khớp chính xác chuỗi raw_markdown nếu tồn tại nguyên vẹn
+        orig_raw = orig_t.get("raw_markdown", "").strip()
         if orig_raw and orig_raw in content:
-            content = content.replace(orig_raw, new_md, 1)
+            pos = content.find(orig_raw)
+            replacements.append((pos, pos + len(orig_raw), new_md))
+            continue
+
+        # Ưu tiên 2: Token matching theo các ô dữ liệu đặc trưng của bảng
+        orig_rows = orig_t.get("rows", [])
+        tokens = set()
+        for r in orig_rows:
+            for cell in r:
+                c = str(cell).strip()
+                if len(c) >= 3 and not c.startswith("|") and not c.startswith("-"):
+                    tokens.add(c[:35])
+
+        if not tokens:
+            for r in edited.get("rows", []):
+                for cell in r:
+                    c = str(cell).strip()
+                    if len(c) >= 3 and not c.startswith("|") and not c.startswith("-"):
+                        tokens.add(c[:35])
+
+        doc_matches = list(table_pattern.finditer(content))
+        best_match = None
+        best_score = 0
+        for m in doc_matches:
+            tbl_text = m.group(0)
+            score = sum(1 for tok in tokens if tok in tbl_text)
+            if score > best_score:
+                best_score = score
+                best_match = m
+
+        if best_match and best_score >= 1:
+            replacements.append((best_match.start(), best_match.end(), new_md))
+        else:
+            # Ưu tiên 3: Tìm theo tiêu đề hoặc ngữ cảnh gần nhất
+            heading = orig_t.get("heading", "")
+            if heading and heading in content:
+                h_pos = content.find(heading)
+                post_content = content[h_pos:]
+                m_near = table_pattern.search(post_content)
+                if m_near and m_near.start() < 1500:
+                    replacements.append((h_pos + m_near.start(), h_pos + m_near.end(), new_md))
+
+    # Sắp xếp các đoạn cần thay thế theo vị trí giảm dần để không làm lệch offset
+    replacements.sort(key=lambda x: x[0], reverse=True)
+    for start, end, new_text in replacements:
+        content = content[:start] + new_text + content[end:]
 
     return content
+
 
 
 # =====================================================================
 # 3. GIAO DIỆN WEB HIỆN ĐẠI (CHUYÊN BIỆT CHO CROP BẢNG TỪ CACHE)
 # =====================================================================
 
-EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
+EDITOR_HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
@@ -1070,8 +1143,8 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
         document.getElementById('badgeTableCount').innerText = `${tables.length} Bảng Biểu`;
         
         const defaultExport = currentDocument.file_path 
-          ? currentDocument.file_path.replace(/\\.md$/i, '_final.md')
-          : `outputs/${comp}_${yr}_financial_report_final.md`;
+          ? currentDocument.file_path.replace(/\.md$/i, '_final.md')
+          : `outputs/${comp}_${yr}/${comp}_${yr}_financial_report_final.md`;
         document.getElementById('exportPathInput').value = defaultExport;
 
         // Khởi tạo danh sách chọn nhanh bảng
@@ -1510,8 +1583,17 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
       renderSheetGrid(t);
     }
 
+    function commitCurrentTableInMemory() {
+      if (!tables || tables.length === 0 || currentIndex < 0 || currentIndex >= tables.length) return;
+      const orig = tables[currentIndex];
+      if (editedTables[orig.table_id]) {
+        editedTables[orig.table_id] = getActiveTableData();
+      }
+    }
+
     function prevTable() {
       if (currentIndex > 0) {
+        commitCurrentTableInMemory();
         currentIndex--;
         renderCurrentTable();
       }
@@ -1519,6 +1601,7 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
 
     function nextTable() {
       if (currentIndex < tables.length - 1) {
+        commitCurrentTableInMemory();
         currentIndex++;
         renderCurrentTable();
       }
@@ -1527,6 +1610,7 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
     function jumpToTable(idx) {
       const target = parseInt(idx);
       if (!isNaN(target) && target >= 0 && target < tables.length) {
+        commitCurrentTableInMemory();
         currentIndex = target;
         renderCurrentTable();
       }
@@ -1555,6 +1639,38 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
       document.getElementById('progressSummary').innerText = `Đã sửa ${count} / ${tables.length} bảng`;
     }
 
+    async function syncAllEditsToServer() {
+      if (tables && tables.length > 0 && currentIndex >= 0 && currentIndex < tables.length) {
+        const tid = tables[currentIndex].table_id;
+        if (editedTables[tid]) {
+          editedTables[tid] = getActiveTableData();
+        }
+      }
+      updateGlobalStats();
+
+      const comp = (currentDocument && currentDocument.company) || 'VNM';
+      const yr = (currentDocument && currentDocument.year) || 2025;
+      const fpath = (currentDocument && currentDocument.file_path) || '';
+
+      try {
+        const res = await fetch('/api/sync_all_edits', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            company: comp,
+            year: yr,
+            file_path: fpath,
+            edited_tables: editedTables
+          })
+        });
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.warn('Lỗi syncAllEditsToServer:', err);
+        return { status: 'error', error: err.message };
+      }
+    }
+
     async function saveCurrentTable() {
       if (!tables || tables.length === 0 || currentIndex < 0 || currentIndex >= tables.length) return;
       const tid = tables[currentIndex].table_id;
@@ -1568,37 +1684,25 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
         statusBadge.innerText = '✏️ Đã chỉnh sửa';
       }
 
-      // Đổi text trực tiếp trên saveBtn, tuyệt đối không dùng event.target
       const saveBtn = document.getElementById('saveBtn');
       if (saveBtn) {
-        const origText = '💾 Lưu Bảng (Ctrl+S)';
-        saveBtn.innerText = '✓ Đã Lưu!';
-        saveBtn.style.backgroundColor = '#10b981';
-        setTimeout(() => { 
-          saveBtn.innerText = origText; 
-          saveBtn.style.backgroundColor = '';
-        }, 1200);
+        saveBtn.innerText = '⏳ Đang Lưu...';
+        saveBtn.style.backgroundColor = '#f59e0b';
       }
 
-      showToast(`✅ Đã lưu dữ liệu Bảng ${currentIndex + 1} thành công!`, 'success');
+      const syncResult = await syncAllEditsToServer();
 
-      // Tự động lưu ngầm lên server
-      try {
-        fetch('/api/save_table', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            table_id: tid,
-            rows: t.rows,
-            raw_markdown: t.raw_markdown,
-            company: currentDocument.company || t.company,
-            year: currentDocument.year || t.year,
-            page: t.page,
-            block_id: t.block_id,
-            header_rows_count: t.header_rows_count
-          })
-        });
-      } catch (_) {}
+      if (saveBtn) {
+        const count = Object.keys(editedTables).length;
+        saveBtn.innerText = `✓ Đã Lưu (${count} bảng)`;
+        saveBtn.style.backgroundColor = '#10b981';
+        setTimeout(() => { 
+          saveBtn.innerText = '💾 Lưu Bảng (Ctrl+S)'; 
+          saveBtn.style.backgroundColor = '';
+        }, 1500);
+      }
+
+      showToast(`✅ Đã đồng bộ & lưu ${Object.keys(editedTables).length} bảng vào file Markdown hoàn thiện!`, 'success');
     }
 
     function openExportModal() {
@@ -1633,7 +1737,7 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
 
         const data = await res.json();
         if (data.status === 'ok') {
-          alert(`🎉 XUẤT FILE HOÀN TẤT!\\nFile đã lưu tại:\\n${data.saved_path}`);
+          alert(`🎉 XUẤT FILE HOÀN TẤT!\nFile đã lưu tại:\n${data.saved_path}`);
           document.getElementById('exportModal').style.display = 'none';
         } else {
           alert("Lỗi xuất file: " + data.error);
@@ -1682,10 +1786,15 @@ EDITOR_HTML_TEMPLATE = """<!DOCTYPE html>
       }
     });
 
-    // Lắng nghe lệnh lưu từ trang cha (nếu nhúng iframe)
-    window.addEventListener('message', (e) => {
-      if (e.data && e.data.action === 'save_table') {
-        saveCurrentTable();
+    // Lắng nghe lệnh lưu / đồng bộ từ trang cha (nếu nhúng iframe)
+    window.addEventListener('message', async (e) => {
+      if (e.data && (e.data.action === 'save_table' || e.data.action === 'sync_all' || e.data.action === 'export_all')) {
+        const res = await syncAllEditsToServer();
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ action: 'sync_complete', status: 'ok', detail: res }, '*');
+          }
+        } catch (_) {}
       }
     });
 
@@ -1740,11 +1849,15 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                     year = int(req_year)
                 except ValueError:
                     year = 2025
-                target_path = PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md"
+                cand1 = PROJECT_ROOT / "outputs" / f"{company}_{year}" / f"{company}_{year}_financial_report.md"
+                cand2 = PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md"
+                target_path = cand1 if cand1.exists() else (cand2 if cand2.exists() else cand1)
             else:
                 # Tự động nhận diện doanh nghiệp mới nhất trong cache
                 company, year = detect_latest_company_year()
-                target_path = PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md"
+                cand1 = PROJECT_ROOT / "outputs" / f"{company}_{year}" / f"{company}_{year}_financial_report.md"
+                cand2 = PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md"
+                target_path = cand1 if cand1.exists() else (cand2 if cand2.exists() else cand1)
 
             TableEditorHandler.active_company = company
             TableEditorHandler.active_year = year
@@ -1754,9 +1867,9 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                 tables = load_all_tables_from_cache(company=company, year=year)
                 if not tables:
                     # Kiểm tra xem có niên độ nào khác của doanh nghiệp này trong cache không
-                    notes_base = PROJECT_ROOT / "data" / "cache" / "notes"
-                    if notes_base.exists():
-                        matched_dirs = list(notes_base.glob(f"{company}_*"))
+                    outputs_base = PROJECT_ROOT / "outputs"
+                    if outputs_base.exists():
+                        matched_dirs = [d for d in outputs_base.glob(f"{company}_*") if d.is_dir() and (d / "cache").exists()]
                         if matched_dirs:
                             matched_dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
                             fallback_year_str = matched_dirs[0].name.split("_")[-1]
@@ -1764,6 +1877,18 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                                 year = int(fallback_year_str)
                                 tables = load_all_tables_from_cache(company=company, year=year)
                                 TableEditorHandler.active_year = year
+
+                    if not tables:
+                        notes_base = PROJECT_ROOT / "data" / "cache" / "notes"
+                        if notes_base.exists():
+                            matched_dirs = list(notes_base.glob(f"{company}_*"))
+                            if matched_dirs:
+                                matched_dirs.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+                                fallback_year_str = matched_dirs[0].name.split("_")[-1]
+                                if fallback_year_str.isdigit():
+                                    year = int(fallback_year_str)
+                                    tables = load_all_tables_from_cache(company=company, year=year)
+                                    TableEditorHandler.active_year = year
 
                 TableEditorHandler.cached_tables = tables
 
@@ -1797,9 +1922,20 @@ class TableEditorHandler(BaseHTTPRequestHandler):
 
             # 1. ƯU TIÊN SỐ 1: Phục vụ trực tiếp ảnh đã crop của đúng {company}_{year} trong cache
             if block_id:
-                crop_file = PROJECT_ROOT / "data" / "cache" / "table_crops" / f"{company}_{year}" / f"{block_id}.png"
+                crop_file = PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "table_crops" / f"{block_id}.png"
                 if not crop_file.exists():
-                    # Thử tìm trong các niên độ khác của cùng doanh nghiệp
+                    crop_file = PROJECT_ROOT / "data" / "cache" / "table_crops" / f"{company}_{year}" / f"{block_id}.png"
+                if not crop_file.exists():
+                    # Thử tìm trong các thư mục outputs khác của cùng doanh nghiệp
+                    outputs_base = PROJECT_ROOT / "outputs"
+                    if outputs_base.exists():
+                        for cdir in outputs_base.glob(f"{company}_*/cache/table_crops"):
+                            cand = cdir / f"{block_id}.png"
+                            if cand.exists():
+                                crop_file = cand
+                                break
+                if not crop_file.exists():
+                    # Thử tìm trong các niên độ khác của cùng doanh nghiệp ở data/cache
                     crops_base = PROJECT_ROOT / "data" / "cache" / "table_crops"
                     if crops_base.exists():
                         for cdir in crops_base.glob(f"{company}_*"):
@@ -1848,7 +1984,7 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                         
                         # Lưu vào cache table_crops để lần sau load tức thì (0ms)
                         if block_id:
-                            save_dir = PROJECT_ROOT / "data" / "cache" / "table_crops" / f"{company}_{year}"
+                            save_dir = PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "table_crops"
                             save_dir.mkdir(parents=True, exist_ok=True)
                             (save_dir / f"{block_id}.png").write_bytes(png_bytes)
 
@@ -1887,35 +2023,166 @@ class TableEditorHandler(BaseHTTPRequestHandler):
         except Exception:
             payload = {}
 
-        if path == "/api/save_table":
-            table_id = payload.get("table_id")
-            rows = payload.get("rows")
-            raw_markdown = payload.get("raw_markdown")
-            target_tbl = next((t for t in TableEditorHandler.cached_tables if t.get("table_id") == table_id), None)
-            if target_tbl and rows:
-                target_tbl["rows"] = rows
-                if raw_markdown:
-                    target_tbl["raw_markdown"] = raw_markdown
+        if path in ("/api/save_table", "/api/sync_all_edits"):
+            company = (payload.get("company") or TableEditorHandler.active_company).upper()
+            try:
+                year = int(payload.get("year") or TableEditorHandler.active_year)
+            except (ValueError, TypeError):
+                year = 2025
+
+            TableEditorHandler.active_company = company
+            TableEditorHandler.active_year = year
+
+            file_path_str = payload.get("file_path")
+            if file_path_str and Path(file_path_str).exists():
+                TableEditorHandler.active_file = Path(file_path_str).resolve()
+            else:
+                cand1 = PROJECT_ROOT / "outputs" / f"{company}_{year}" / f"{company}_{year}_financial_report.md"
+                cand2 = PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md"
+                TableEditorHandler.active_file = cand1 if cand1.exists() else (cand2 if cand2.exists() else cand1)
+
+            # Đảm bảo danh sách bảng trong cache luôn sẵn sàng
+            if not TableEditorHandler.cached_tables:
+                TableEditorHandler.cached_tables = load_all_tables_from_cache(company=company, year=year)
+
+            cache_dirs = [
+                PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "notes",
+                PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "ocr",
+                PROJECT_ROOT / "data" / "cache" / "notes" / f"{company}_{year}",
+                PROJECT_ROOT / "data" / "cache" / "ocr" / f"{company}_{year}",
+            ]
+
+            # 1. Thu thập tất cả các bảng cần cập nhật
+            tables_to_update: dict[int, dict[str, Any]] = {}
+
+            # Nếu là sync_all_edits: nhận toàn bộ map edited_tables
+            raw_edited = payload.get("edited_tables", {})
+            for k, v in raw_edited.items():
+                try:
+                    tables_to_update[int(k)] = v
+                except (ValueError, TypeError):
+                    pass
+
+            # Nếu là save_table đơn lẻ
+            single_tid = payload.get("table_id")
+            if single_tid is not None:
+                try:
+                    s_tid = int(single_tid)
+                    tables_to_update[s_tid] = {
+                        "table_id": s_tid,
+                        "rows": payload.get("rows"),
+                        "raw_markdown": payload.get("raw_markdown"),
+                        "page": payload.get("page"),
+                        "block_id": payload.get("block_id"),
+                        "header_rows_count": payload.get("header_rows_count", 1)
+                    }
+                except (ValueError, TypeError):
+                    pass
+
+            # 2. Cập nhật vào TableEditorHandler.cached_tables và ghi cache JSON trên đĩa
+            for tid, ed in tables_to_update.items():
+                target_tbl = next((t for t in TableEditorHandler.cached_tables if t.get("table_id") == tid), None)
+                if not target_tbl:
+                    continue
+
+                if ed.get("rows"):
+                    target_tbl["rows"] = ed["rows"]
+                    target_tbl["n_rows"] = len(ed["rows"])
+                    target_tbl["n_cols"] = len(ed["rows"][0]) if ed["rows"] else 0
+                if ed.get("header_rows_count"):
+                    target_tbl["header_rows_count"] = ed["header_rows_count"]
+                if ed.get("raw_markdown"):
+                    target_tbl["raw_markdown"] = ed["raw_markdown"]
                 target_tbl["is_edited"] = True
-            self._send_json({"status": "ok", "message": f"Đã lưu bảng {table_id}"})
+
+                # Cập nhật cache JSON trên đĩa
+                block_id = ed.get("block_id") or target_tbl.get("block_id")
+                page_num = ed.get("page") or target_tbl.get("page")
+                if block_id and page_num:
+                    new_md_content = ed.get("raw_markdown") or "\n".join(format_grid_to_markdown(
+                        rows=target_tbl["rows"],
+                        header_rows_count=target_tbl.get("header_rows_count", 1)
+                    ))
+                    for cdir in cache_dirs:
+                        if not cdir.exists():
+                            continue
+                        for json_f in cdir.glob(f"page_{page_num}.json"):
+                            try:
+                                jdata = json.loads(json_f.read_text(encoding="utf-8"))
+                                for blk in jdata:
+                                    if blk.get("block_id") == block_id:
+                                        blk["content"] = new_md_content
+                                json_f.write_text(json.dumps(jdata, ensure_ascii=False, indent=2), encoding="utf-8")
+                            except Exception as ex:
+                                logger.warning("Lỗi cập nhật cache JSON: %s", ex)
+
+            # 3. Tự động ráp nối lại toàn bộ tài liệu và ghi ngay vào file _final.md
+            final_path = None
+            try:
+                all_edited_map = {
+                    t["table_id"]: t
+                    for t in TableEditorHandler.cached_tables
+                    if t.get("is_edited")
+                }
+                for tid, ed in tables_to_update.items():
+                    all_edited_map[tid] = ed
+
+                if all_edited_map:
+                    final_doc = reconstruct_full_document(
+                        original_md_path=TableEditorHandler.active_file,
+                        edited_tables=all_edited_map,
+                        all_tables=TableEditorHandler.cached_tables
+                    )
+                    clean_stem = TableEditorHandler.active_file.stem.replace("_final", "")
+                    final_path = TableEditorHandler.active_file.parent / f"{clean_stem}_final.md"
+                    final_path.write_text(final_doc, encoding="utf-8")
+                    logger.info("✓ [Auto-Save] Đã cập nhật file Markdown hoàn thiện: %s (%d bảng)", final_path, len(all_edited_map))
+            except Exception as ex:
+                logger.error("Lỗi tự động cập nhật _final.md: %s", ex)
+
+            self._send_json({
+                "status": "ok",
+                "message": f"Đã đồng bộ {len(tables_to_update)} bảng",
+                "saved_path": str(final_path) if final_path else "",
+                "file_name": final_path.name if final_path else "",
+                "tables_count": len(tables_to_update)
+            })
             return
 
         elif path == "/api/export_final":
             try:
                 export_path_str = payload.get("export_path")
                 raw_edited = payload.get("edited_tables", {})
+                company = (payload.get("company") or TableEditorHandler.active_company).upper()
+                year = int(payload.get("year") or TableEditorHandler.active_year)
+
+                TableEditorHandler.active_company = company
+                TableEditorHandler.active_year = year
+
+                if not TableEditorHandler.cached_tables:
+                    TableEditorHandler.cached_tables = load_all_tables_from_cache(company=company, year=year)
+
                 edited_tables = {int(k): v for k, v in raw_edited.items()}
 
                 if not export_path_str:
-                    export_path = TableEditorHandler.active_file.parent / f"{TableEditorHandler.active_file.stem}_final.md"
+                    clean_stem = TableEditorHandler.active_file.stem.replace("_final", "")
+                    export_path = TableEditorHandler.active_file.parent / f"{clean_stem}_final.md"
                 else:
                     export_path = Path(export_path_str).resolve()
 
                 export_path.parent.mkdir(parents=True, exist_ok=True)
 
+                all_edited_map = {
+                    t["table_id"]: t
+                    for t in TableEditorHandler.cached_tables
+                    if t.get("is_edited")
+                }
+                for tid, ed in edited_tables.items():
+                    all_edited_map[tid] = ed
+
                 final_markdown = reconstruct_full_document(
                     original_md_path=TableEditorHandler.active_file,
-                    edited_tables=edited_tables,
+                    edited_tables=all_edited_map,
                     all_tables=TableEditorHandler.cached_tables
                 )
 
@@ -1925,7 +2192,8 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                 self._send_json({
                     "status": "ok",
                     "saved_path": str(export_path),
-                    "total_tables_edited": len(edited_tables)
+                    "file_name": export_path.name,
+                    "total_tables_edited": len(all_edited_map)
                 })
             except Exception as e:
                 logger.error("Lỗi export_final: %s", e)
@@ -1959,7 +2227,17 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                 company = (payload.get("company") or TableEditorHandler.active_company).upper()
                 year = int(payload.get("year") or TableEditorHandler.active_year)
 
-                crop_file = PROJECT_ROOT / "data" / "cache" / "table_crops" / f"{company}_{year}" / f"{block_id}.png"
+                crop_file = PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "table_crops" / f"{block_id}.png"
+                if not crop_file.exists():
+                    crop_file = PROJECT_ROOT / "data" / "cache" / "table_crops" / f"{company}_{year}" / f"{block_id}.png"
+                if not crop_file.exists():
+                    outputs_base = PROJECT_ROOT / "outputs"
+                    if outputs_base.exists():
+                        for cdir in outputs_base.glob(f"{company}_*/cache/table_crops"):
+                            cand = cdir / f"{block_id}.png"
+                            if cand.exists():
+                                crop_file = cand
+                                break
                 if not crop_file.exists():
                     crops_base = PROJECT_ROOT / "data" / "cache" / "table_crops"
                     if crops_base.exists():
@@ -2012,6 +2290,8 @@ class TableEditorHandler(BaseHTTPRequestHandler):
 
                 # 5. Cập nhật cache JSON trên đĩa để bền vững
                 cache_dirs = [
+                    PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "notes",
+                    PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache" / "ocr",
                     PROJECT_ROOT / "data" / "cache" / "notes" / f"{company}_{year}",
                     PROJECT_ROOT / "data" / "cache" / "ocr" / f"{company}_{year}",
                 ]

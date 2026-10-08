@@ -2479,8 +2479,17 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       if (step === 4) {
-        loadMarkdownPreview();
-        loadOriginalHeadings();
+        // Gửi lệnh đồng bộ tất cả bảng từ iframe Table Reviewer
+        const iframe = document.getElementById("editor-iframe");
+        if (iframe && iframe.contentWindow) {
+          try {
+            iframe.contentWindow.postMessage({ action: "sync_all" }, "*");
+          } catch (_) {}
+        }
+        setTimeout(async () => {
+          await loadMarkdownPreview();
+          await loadOriginalHeadings();
+        }, 400);
       }
     }
 
@@ -2873,7 +2882,48 @@
       }
     }
 
-    function confirmAndGoToExport() {
+    async function confirmAndGoToExport() {
+      const btn = document.querySelector('.action-bar .btn-primary');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳ Đang đồng bộ bảng vào Markdown...</span>';
+      }
+
+      // 1. Gửi lệnh sync_all đến iframe nếu đang mở
+      const iframe = document.getElementById("editor-iframe");
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.postMessage({ action: "sync_all" }, "*");
+        } catch (_) {}
+      }
+
+      // 2. Gọi đồng thời API đồng bộ bảng từ cache sang Markdown hoàn thiện
+      const comp = document.getElementById("cfg-company")?.value || "VNM";
+      const yr = parseInt(document.getElementById("cfg-year")?.value) || 2025;
+
+      try {
+        await Promise.allSettled([
+          fetch("http://localhost:8502/api/sync_all_edits", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ company: comp, year: yr })
+          }),
+          fetch("/api/sync_edits", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ company: comp, year: yr })
+          })
+        ]);
+      } catch (_) {}
+
+      await new Promise(r => setTimeout(r, 400));
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+
       switchStep(4);
     }
 
@@ -2895,6 +2945,28 @@
 
           const lineCount = text.split("\n").length;
           document.getElementById("preview-lines-count").textContent = `${lineCount} dòng • Sẵn sàng`;
+
+          // Cập nhật tên file và trạng thái hoàn thiện
+          try {
+            const stRes = await fetch("/api/status");
+            if (stRes.ok) {
+              const stData = await stRes.json();
+              if (stData.output_md_name) {
+                const fnEl = document.getElementById("final-file-name");
+                if (fnEl) {
+                  if (stData.has_final || stData.output_md_name.includes("_final")) {
+                    fnEl.innerHTML = `<span style="color: #34d399; font-weight: 700;">✓ ${escapeHtml(stData.output_md_name)} (Đã cập nhật bảng)</span>`;
+                  } else {
+                    fnEl.textContent = stData.output_md_name;
+                  }
+                }
+              }
+              const sizeEl = document.getElementById("final-file-size");
+              if (sizeEl && text) {
+                sizeEl.textContent = `${(new Blob([text]).size / 1024).toFixed(1)} KB`;
+              }
+            }
+          } catch (_) {}
         }
       } catch (err) {
         console.warn("Lỗi load markdown:", err);

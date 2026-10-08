@@ -222,8 +222,13 @@ class LocalOCREngine:
           4. Nếu không có VietOCR: Fallback sang RapidOCR ONNX.
           5. Lưu cache và trả về list[ParsedBlock].
         """
-        cache_dir = Path("data/cache/notes") / f"{company}_{year}"
-        cache_file = cache_dir / f"page_{page_number}.json"
+        cand_new = Path(f"outputs/{company}_{year}/cache/notes")
+        cand_old = Path("data/cache/notes") / f"{company}_{year}"
+        cache_dir = cand_new
+        cache_file = cand_new / f"page_{page_number}.json"
+        if not cache_file.exists() and (cand_old / f"page_{page_number}.json").exists():
+            cache_file = cand_old / f"page_{page_number}.json"
+            cache_dir = cand_old
 
         # 1. Nạp từ Cache nếu có
         if self.use_cache and cache_file.exists():
@@ -266,11 +271,12 @@ class LocalOCREngine:
         # Thanh lọc & nâng cấp blocks trước khi lưu cache
         blocks = _sanitize_and_polish_blocks(blocks, year=year)
 
-        # Lưu Cache
+        # Lưu Cache vào outputs/{company}_{year}/cache/notes
         if blocks:
             try:
-                cache_dir.mkdir(parents=True, exist_ok=True)
-                with open(cache_file, "w", encoding="utf-8") as f:
+                cand_new.mkdir(parents=True, exist_ok=True)
+                target_cache_file = cand_new / f"page_{page_number}.json"
+                with open(target_cache_file, "w", encoding="utf-8") as f:
                     json.dump([b.model_dump() for b in blocks], f, ensure_ascii=False, indent=2)
             except Exception as e:
                 logger.warning("NotesExtractor: Không thể ghi cache trang %d: %s", page_number, e)

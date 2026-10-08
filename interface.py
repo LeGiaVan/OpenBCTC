@@ -206,6 +206,7 @@ def clear_cache(company: str = "", year: int = 0) -> None:
     """Xóa sạch cache đĩa để ép hệ thống xử lý hoàn toàn từ đầu (Fresh Run)."""
     if company and year:
         cache_dirs = [
+            PROJECT_ROOT / "outputs" / f"{company}_{year}" / "cache",
             PROJECT_ROOT / "data" / "cache" / "ocr" / f"{company}_{year}",
             PROJECT_ROOT / "data" / "cache" / "notes" / f"{company}_{year}",
             PROJECT_ROOT / "data" / "cache" / "table_crops" / f"{company}_{year}",
@@ -216,6 +217,11 @@ def clear_cache(company: str = "", year: int = 0) -> None:
             PROJECT_ROOT / "data" / "cache" / "notes",
             PROJECT_ROOT / "data" / "cache" / "table_crops",
         ]
+        outputs_dir = PROJECT_ROOT / "outputs"
+        if outputs_dir.exists():
+            for p in outputs_dir.iterdir():
+                if p.is_dir() and (p / "cache").exists():
+                    cache_dirs.append(p / "cache")
     for d in cache_dirs:
         if d.exists():
             shutil.rmtree(d, ignore_errors=True)
@@ -427,14 +433,16 @@ def run_pipeline(
         JobState.error_message = msg_err
         return {}
 
-    # Đặt tên file đầu ra linh hoạt theo doanh nghiệp & năm
+    # Đặt tên file đầu ra linh hoạt theo doanh nghiệp & năm trong thư mục hợp nhất outputs/{clean_stem}/
     clean_stem = f"{company}_{year}" if company else pdf_file.stem
+    run_dir = PROJECT_ROOT / "outputs" / clean_stem
+    run_dir.mkdir(parents=True, exist_ok=True)
     if not doc_md:
-        doc_md = str(PROJECT_ROOT / "outputs" / f"{clean_stem}_financial_report.md")
+        doc_md = str(run_dir / f"{clean_stem}_financial_report.md")
     if not report_md:
-        report_md = str(PROJECT_ROOT / "outputs" / f"{clean_stem}_ocr_benchmark_report.md")
+        report_md = str(run_dir / f"{clean_stem}_ocr_benchmark_report.md")
     if not db_path:
-        db_path = str(PROJECT_ROOT / "data" / f"benchmark_{clean_stem}.db")
+        db_path = str(run_dir / f"benchmark_{clean_stem}.db")
 
     hw = get_hardware_profile()
     process = psutil.Process() if psutil else None
@@ -506,7 +514,7 @@ def run_pipeline(
         report_md_path=report_md_resolved,
     )
 
-    metrics_json_path = PROJECT_ROOT / "outputs" / f"{clean_stem}_ocr_benchmark_metrics.json"
+    metrics_json_path = report_md_resolved.parent / f"{clean_stem}_ocr_benchmark_metrics.json"
     metrics_data = {
         "timestamp": datetime.now().isoformat(),
         "pdf_name": pdf_file.name,
@@ -571,7 +579,7 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
         elif path == "/api/gigo_report":
             data = dict(JobState.anti_gigo) if JobState.anti_gigo else {}
             if not data or not data.get("total_checks"):
-                metrics_files = sorted((PROJECT_ROOT / "outputs").glob("*_ocr_benchmark_metrics.json"), key=lambda f: f.stat().st_mtime, reverse=True)
+                metrics_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_ocr_benchmark_metrics.json")), key=lambda f: f.stat().st_mtime, reverse=True)
                 if metrics_files:
                     try:
                         m_content = json.loads(metrics_files[0].read_text(encoding="utf-8"))
@@ -583,17 +591,39 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
             self._send_json({"success": True, "anti_gigo": data})
 
         elif path == "/api/sample_info":
-            sample_path = PROJECT_ROOT / "vnm.pdf"
-            if sample_path.exists():
+            sample_candidates = [
+                PROJECT_ROOT / "vnm.pdf",
+                PROJECT_ROOT / "pdf_files" / "vnm.pdf",
+                PROJECT_ROOT / "pdf_files" / "VNM_2025.pdf",
+                PROJECT_ROOT / "pdf_files" / "VNM_2024.pdf",
+            ]
+            sample_path = next((p for p in sample_candidates if p.exists()), None)
+            if not sample_path and (PROJECT_ROOT / "pdf_files").exists():
+                pdfs = list((PROJECT_ROOT / "pdf_files").glob("*.pdf"))
+                if pdfs:
+                    sample_path = pdfs[0]
+
+            if sample_path and sample_path.exists():
                 meta = inspect_pdf_file(sample_path)
-                meta["suggested_company"] = "VNM"
-                meta["suggested_year"] = 2024
+                meta["suggested_company"] = meta.get("suggested_company") or "VNM"
+                meta["suggested_year"] = meta.get("suggested_year") or 2025
+                meta["pdf_path"] = str(sample_path)
                 self._send_json({"success": True, **meta})
             else:
-                self._send_json({"success": False, "error": "Chưa tìm thấy file mẫu vnm.pdf"})
+                self._send_json({"success": False, "error": "Chưa tìm thấy file PDF mẫu"})
 
         elif path == "/api/status":
-            out_path = Path(JobState.output_md_path) if JobState.output_md_path else Path("outputs/financial_report.md")
+            if JobState.output_md_path:
+                out_path = Path(JobState.output_md_path)
+            else:
+                md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report*.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                out_path = md_files[0] if md_files else Path("outputs/financial_report.md")
+
+            clean_stem = out_path.stem.replace("_final", "")
+            final_p = out_path.parent / f"{clean_stem}_final.md"
+            has_final = final_p.exists()
+            active_out = final_p if has_final else out_path
+
             self._send_json({
                 "status": JobState.status,
                 "progress": JobState.progress,
@@ -602,8 +632,9 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                 "performance": JobState.performance,
                 "table_audit": JobState.table_audit,
                 "anti_gigo": JobState.anti_gigo,
-                "output_md": str(out_path),
-                "output_md_name": out_path.name,
+                "output_md": str(active_out),
+                "output_md_name": active_out.name,
+                "has_final": has_final,
                 "report_md": JobState.report_md_path,
                 "company": JobState.company,
                 "year": JobState.year,
@@ -620,15 +651,24 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                 if JobState.output_md_path:
                     target = Path(JobState.output_md_path)
                 else:
-                    md_files = sorted(list((PROJECT_ROOT / "outputs").glob("*_financial_report.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                    md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report.md")), key=lambda p: p.stat().st_mtime, reverse=True)
                     target = md_files[0] if md_files else (PROJECT_ROOT / "outputs" / "vnm_financial_report.md")
             else:
                 if JobState.output_md_path:
                     base_p = Path(JobState.output_md_path)
-                    final_f = base_p.parent / f"{base_p.stem}_final.md"
+                    clean_stem = base_p.stem.replace("_final", "")
+                    final_f = base_p.parent / f"{clean_stem}_final.md"
                     target = final_f if final_f.exists() else base_p
                 else:
-                    target = PROJECT_ROOT / "outputs" / "vnm_financial_report.md"
+                    md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report*.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                    if md_files:
+                        cand = md_files[0]
+                        clean_stem = cand.stem.replace("_final", "")
+                        final_f = cand.parent / f"{clean_stem}_final.md"
+                        base_f = cand.parent / f"{clean_stem}.md"
+                        target = final_f if final_f.exists() else (base_f if base_f.exists() else cand)
+                    else:
+                        target = PROJECT_ROOT / "outputs" / "vnm_financial_report.md"
 
             if target.exists():
                 text = target.read_text(encoding="utf-8")
@@ -645,11 +685,19 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
             file_type = query.get("type", ["md"])[0]
             if JobState.output_md_path:
                 base_p = Path(JobState.output_md_path)
-                final_f = base_p.parent / f"{base_p.stem}_final.md"
+                clean_stem = base_p.stem.replace("_final", "")
+                final_f = base_p.parent / f"{clean_stem}_final.md"
                 target = final_f if final_f.exists() else base_p
             else:
-                md_files = sorted(list((PROJECT_ROOT / "outputs").glob("*_financial_report*.md")), key=lambda p: p.stat().st_mtime, reverse=True)
-                target = md_files[0] if md_files else (PROJECT_ROOT / "outputs" / "vnm_financial_report.md")
+                md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report*.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                if md_files:
+                    cand = md_files[0]
+                    clean_stem = cand.stem.replace("_final", "")
+                    final_f = cand.parent / f"{clean_stem}_final.md"
+                    base_f = cand.parent / f"{clean_stem}.md"
+                    target = final_f if final_f.exists() else (base_f if base_f.exists() else cand)
+                else:
+                    target = PROJECT_ROOT / "outputs" / "vnm_financial_report.md"
 
             headings = []
             level_counts = {}
@@ -690,16 +738,25 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                 if JobState.output_md_path:
                     target = Path(JobState.output_md_path)
                 else:
-                    md_files = sorted(list((PROJECT_ROOT / "outputs").glob("*_financial_report.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                    md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report.md")), key=lambda p: p.stat().st_mtime, reverse=True)
                     target = md_files[0] if md_files else (PROJECT_ROOT / "outputs" / "vnm_financial_report.md")
                 filename = target.name if target.name else "financial_report_original.md"
             else:
                 if JobState.output_md_path:
                     base_p = Path(JobState.output_md_path)
-                    final_f = base_p.parent / f"{base_p.stem}_final.md"
+                    clean_stem = base_p.stem.replace("_final", "")
+                    final_f = base_p.parent / f"{clean_stem}_final.md"
                     target = final_f if final_f.exists() else base_p
                 else:
-                    target = PROJECT_ROOT / "outputs" / "vnm_financial_report.md"
+                    md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report*.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                    if md_files:
+                        cand = md_files[0]
+                        clean_stem = cand.stem.replace("_final", "")
+                        final_f = cand.parent / f"{clean_stem}_final.md"
+                        base_f = cand.parent / f"{clean_stem}.md"
+                        target = final_f if final_f.exists() else (base_f if base_f.exists() else cand)
+                    else:
+                        target = PROJECT_ROOT / "outputs" / "vnm_financial_report.md"
                 filename = target.name if target.name else "financial_report.md"
 
             if target.exists():
@@ -805,9 +862,11 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
 
             # Reset state
             clean_stem = f"{company}_{year}" if company else Path(pdf_path).stem
-            doc_md = str(PROJECT_ROOT / "outputs" / f"{clean_stem}_financial_report.md")
-            report_md = str(PROJECT_ROOT / "outputs" / f"{clean_stem}_ocr_benchmark_report.md")
-            db_path = str(PROJECT_ROOT / "data" / f"benchmark_{clean_stem}.db")
+            run_dir = PROJECT_ROOT / "outputs" / clean_stem
+            run_dir.mkdir(parents=True, exist_ok=True)
+            doc_md = str(run_dir / f"{clean_stem}_financial_report.md")
+            report_md = str(run_dir / f"{clean_stem}_ocr_benchmark_report.md")
+            db_path = str(run_dir / f"benchmark_{clean_stem}.db")
 
             JobState.status = "RUNNING"
             JobState.progress = 5
@@ -863,7 +922,7 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                     final_f = base_p.parent / f"{base_p.stem}_final.md"
                     target = final_f
                 else:
-                    md_files = sorted(list((PROJECT_ROOT / "outputs").glob("*_financial_report.md")), key=lambda p: p.stat().st_mtime, reverse=True)
+                    md_files = sorted(list((PROJECT_ROOT / "outputs").rglob("*_financial_report.md")), key=lambda p: p.stat().st_mtime, reverse=True)
                     if md_files:
                         base_p = md_files[0]
                         final_f = base_p.parent / f"{base_p.stem}_final.md"
@@ -901,6 +960,43 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
             except Exception as e:
                 logger.exception("Lỗi khi lưu Markdown:")
                 self._send_json({"error": f"Không thể lưu file Markdown: {str(e)}"}, 500)
+
+        elif path == "/api/sync_edits":
+            try:
+                body = self.rfile.read(content_length).decode("utf-8")
+                data = json.loads(body) if body else {}
+                comp = (data.get("company") or JobState.company or "VNM").upper()
+                yr = int(data.get("year") or JobState.year or 2025)
+
+                from serve_md_editor import load_all_tables_from_cache, reconstruct_full_document
+                tables = load_all_tables_from_cache(company=comp, year=yr)
+
+                if JobState.output_md_path and Path(JobState.output_md_path).exists():
+                    target_base = Path(JobState.output_md_path)
+                else:
+                    cand1 = PROJECT_ROOT / "outputs" / f"{comp}_{yr}" / f"{comp}_{yr}_financial_report.md"
+                    cand2 = PROJECT_ROOT / "outputs" / f"{comp}_{yr}_financial_report.md"
+                    target_base = cand1 if cand1.exists() else (cand2 if cand2.exists() else cand1)
+
+                if target_base.exists():
+                    clean_stem = target_base.stem.replace("_final", "")
+                    final_path = target_base.parent / f"{clean_stem}_final.md"
+                    
+                    # Thu thập toàn bộ bảng trong cache
+                    edited_map = {t["table_id"]: t for t in tables}
+                    final_doc = reconstruct_full_document(
+                        original_md_path=target_base,
+                        edited_tables=edited_map,
+                        all_tables=tables
+                    )
+                    final_path.write_text(final_doc, encoding="utf-8")
+                    logger.info("✓ [interface.py sync_edits] Đã cập nhật %s từ cache", final_path)
+                    self._send_json({"success": True, "saved_path": str(final_path), "file_name": final_path.name})
+                else:
+                    self._send_json({"success": False, "error": f"Không tìm thấy file {target_base}"}, 404)
+            except Exception as ex:
+                logger.error("Lỗi sync_edits: %s", ex)
+                self._send_json({"success": False, "error": str(ex)}, 500)
 
         else:
             self._send_json({"error": "Route POST không tồn tại"}, 404)
@@ -943,7 +1039,10 @@ def start_editor_daemon(port: int = 8502) -> str:
             return f"http://localhost:{port}{query_param}"
 
     from serve_md_editor import run_editor_server
-    target_file = Path(JobState.output_md_path) if JobState.output_md_path else (PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md")
+    cand1 = PROJECT_ROOT / "outputs" / f"{company}_{year}" / f"{company}_{year}_financial_report.md"
+    cand2 = PROJECT_ROOT / "outputs" / f"{company}_{year}_financial_report.md"
+    default_cand = cand1 if cand1.exists() else (cand2 if cand2.exists() else cand1)
+    target_file = Path(JobState.output_md_path) if JobState.output_md_path else default_cand
 
     def run_th():
         try:

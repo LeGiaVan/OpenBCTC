@@ -130,9 +130,15 @@ class VisionOCRPipeline:
           4. Gọi Vision API bóc tách Markdown text & table.
           5. Lưu vào Checkpoint Cache và trả về danh sách ParsedBlock.
         """
-        # 1. Kiểm tra Checkpoint Cache trên đĩa
-        cache_dir = Path("data/cache/ocr") / f"{company}_{year}"
-        cache_file = cache_dir / f"page_{page_number}.json"
+        # 1. Kiểm tra Checkpoint Cache trên đĩa (ưu tiên outputs/{company}_{year}/cache/ocr)
+        cand_new = Path(f"outputs/{company}_{year}/cache/ocr")
+        cand_old = Path("data/cache/ocr") / f"{company}_{year}"
+        cache_dir = cand_new
+        cache_file = cand_new / f"page_{page_number}.json"
+        if not cache_file.exists() and (cand_old / f"page_{page_number}.json").exists():
+            cache_file = cand_old / f"page_{page_number}.json"
+            cache_dir = cand_old
+
         if cache_file.exists():
             try:
                 with open(cache_file, encoding="utf-8") as f:
@@ -209,11 +215,12 @@ class VisionOCRPipeline:
             year=year,
         )
 
-        # 5. Lưu vào Checkpoint Cache
+        # 5. Lưu vào Checkpoint Cache outputs/{company}_{year}/cache/ocr
         if blocks:
             try:
-                cache_dir.mkdir(parents=True, exist_ok=True)
-                with open(cache_file, "w", encoding="utf-8") as f:
+                cand_new.mkdir(parents=True, exist_ok=True)
+                target_cache_file = cand_new / f"page_{page_number}.json"
+                with open(target_cache_file, "w", encoding="utf-8") as f:
                     json.dump([b.model_dump() for b in blocks], f, ensure_ascii=False, indent=2)
             except Exception as e:
                 logger.warning("VisionOCRPipeline: Không thể lưu cache trang %d: %s", page_number, e)

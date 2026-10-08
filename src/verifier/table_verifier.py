@@ -49,34 +49,42 @@ class TableBlockIndexer:
 
     def _load_cache(self) -> None:
         self.cached_blocks = []
-        
-        # 1. Load từ cache OCR (BCTC cốt lõi) và Notes (Thuyết minh)
-        search_roots = [
-            self.project_root / "data" / "cache" / "ocr",
-            self.project_root / "data" / "cache" / "notes",
-        ]
-        
         target_dir_name = f"{self.company}_{self.year}" if self.company and self.year else ""
-        
-        for s_root in search_roots:
-            if not s_root.exists():
+
+        # 1. Thu thập tất cả các thư mục chứa cache json
+        search_dirs: list[Path] = []
+        if target_dir_name:
+            search_dirs.extend([
+                self.project_root / "outputs" / target_dir_name / "cache" / "ocr",
+                self.project_root / "outputs" / target_dir_name / "cache" / "notes",
+                self.project_root / "data" / "cache" / "ocr" / target_dir_name,
+                self.project_root / "data" / "cache" / "notes" / target_dir_name,
+            ])
+        else:
+            outputs_dir = self.project_root / "outputs"
+            if outputs_dir.exists():
+                for sub in outputs_dir.iterdir():
+                    if sub.is_dir() and (sub / "cache").exists():
+                        search_dirs.append(sub / "cache" / "ocr")
+                        search_dirs.append(sub / "cache" / "notes")
+            for base in (self.project_root / "data" / "cache" / "ocr", self.project_root / "data" / "cache" / "notes"):
+                if base.exists():
+                    search_dirs.extend([d for d in base.iterdir() if d.is_dir()])
+
+        for c_dir in search_dirs:
+            if not c_dir.exists():
                 continue
-            for company_dir in s_root.iterdir():
-                if company_dir.is_dir():
-                    # Nếu có chỉ định doanh nghiệp, chỉ load đúng cache của doanh nghiệp đó
-                    if target_dir_name and company_dir.name.upper() != target_dir_name.upper():
-                        continue
-                    for f in sorted(company_dir.glob("*.json")):
-                        try:
-                            data = json.loads(f.read_text(encoding="utf-8"))
-                            for b in data:
-                                if b.get("block_type") == "table":
-                                    b_copy = dict(b)
-                                    b_copy["_company"] = company_dir.name
-                                    b_copy["_tokens"] = self._tokenize(b.get("content", ""))
-                                    self.cached_blocks.append(b_copy)
-                        except Exception:
-                            pass
+            for f in sorted(c_dir.glob("*.json")):
+                try:
+                    data = json.loads(f.read_text(encoding="utf-8"))
+                    for b in data:
+                        if b.get("block_type") == "table":
+                            b_copy = dict(b)
+                            b_copy["_company"] = target_dir_name or c_dir.parent.name
+                            b_copy["_tokens"] = self._tokenize(b.get("content", ""))
+                            self.cached_blocks.append(b_copy)
+                except Exception:
+                    pass
 
         # 2. CHỈ nạp manifest mẫu khi đang kiểm thử riêng Vinamilk (tránh nhiễm chéo sang doanh nghiệp khác)
         if (not self.company or self.company.upper() == "VNM") and (not self.year or self.year == 2024):
@@ -349,7 +357,11 @@ class TableInspector:
           5. Trả về báo cáo tổng hợp TableAuditReport.
         """
         if crops_dir is None:
-            crops_dir = self.project_root / "data" / "cache" / "table_crops" / f"{company}_{year}"
+            cand_crops = self.project_root / "outputs" / f"{company}_{year}" / "cache" / "table_crops"
+            cand_old = self.project_root / "data" / "cache" / "table_crops" / f"{company}_{year}"
+            crops_dir = cand_crops
+            if not cand_crops.exists() and cand_old.exists():
+                crops_dir = cand_old
         crops_dir.mkdir(parents=True, exist_ok=True)
 
         # Cập nhật indexer theo đúng doanh nghiệp và niên độ hiện tại
@@ -410,7 +422,12 @@ class TableInspector:
             crop_filename = f"{block_id}.png"
             crop_cache_path = crops_dir / crop_filename
 
-            # Ưu tiên nếu đã có sẵn trong data/cache/table_crops/{company}_{year}/
+            # Ưu tiên nếu đã có sẵn trong outputs/{company}_{year}/cache/table_crops/ hoặc data/cache/
+            if not crop_cache_path.exists():
+                cand_old_file = self.project_root / "data" / "cache" / "table_crops" / f"{company}_{year}" / crop_filename
+                if cand_old_file.exists():
+                    crop_cache_path = cand_old_file
+
             if crop_cache_path.exists():
                 audit_res["crop_image_path"] = str(crop_cache_path)
                 captured_count += 1

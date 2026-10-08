@@ -95,7 +95,7 @@
 - [2. Quy Trình Chuyển Đổi PDF → Markdown (Pipeline Architecture)](#2-quy-trình-chuyển-đổi-pdf--markdown-pipeline-architecture)
   - [2.1. Sơ đồ Luồng Bóc Tách Toàn Trình (End-to-End Flow)](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow)
   - [2.2. Phân Tầng Trách Nhiệm Kỹ Thuật](#22-phân-tầng-trách-nhiệm-kỹ-thuật)
-  - [2.3. Ngăn Xếp Công Nghệ (Technology Stack)](#23-ngăn-xếp-công-nghệ-technology-stack)
+  - [2.3. Technology Stack](#23-ngăn-xếp-công-nghệ-technology-stack)
 - [3. Cấu Trúc Thư Mục Dự Án (Project Structure)](#3-cấu-trúc-thư-mục-dự-án-project-structure)
 - [4. Các Công Nghệ & Kỹ Thuật Trọng Tâm](#4-các-công-nghệ--kỹ-thuật-trọng-tâm)
   - [4.1. TOC Inspector: Trinh Sát Mục Lục & Căn Chỉnh Lệch Trang Vật Lý](#41-toc-inspector-trinh-sát-mục-lục--căn-chỉnh-lệch-trang-vật-lý)

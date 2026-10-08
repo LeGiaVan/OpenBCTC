@@ -5,6 +5,7 @@ mọi cấu hình được load tự động qua pydantic-settings từ file .en
 """
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -105,3 +106,48 @@ def get_settings() -> Settings:
     Có thể dùng dependency injection trong API hoặc mock trong test suite.
     """
     return Settings()
+
+
+def get_run_dir(company: str = "VNM", year: int | str = 2025, project_root: Path | None = None) -> Path:
+    """
+    Trả về thư mục hợp nhất chứa toàn bộ output & cache của một kỳ BCTC:
+    outputs/{company}_{year}/
+    """
+    if project_root is None:
+        project_root = Path(__file__).resolve().parent.parent
+    c = (company or "VNM").upper().strip()
+    y = str(year or 2025).strip()
+    tag = f"{c}_{y}" if y and y != "0" else c
+    d = project_root / "outputs" / tag
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def get_run_cache_dir(company: str = "VNM", year: int | str = 2025, sub: str = "notes", project_root: Path | None = None) -> Path:
+    """
+    Trả về thư mục cache hợp nhất: outputs/{company}_{year}/cache/{sub}/
+    """
+    run_d = get_run_dir(company, year, project_root)
+    cache_d = run_d / "cache" / sub
+    cache_d.mkdir(parents=True, exist_ok=True)
+    return cache_d
+
+
+def find_cache_file(company: str, year: int | str, sub: str, filename: str, project_root: Path | None = None) -> Path:
+    """
+    Tìm cache file: Ưu tiên outputs/{company}_{year}/cache/{sub}/{filename},
+    sau đó fallback về data/cache/{sub}/{company}_{year}/{filename}.
+    """
+    if project_root is None:
+        project_root = Path(__file__).resolve().parent.parent
+    c = (company or "VNM").upper().strip()
+    y = str(year or 2025).strip()
+    tag = f"{c}_{y}" if y and y != "0" else c
+
+    cand1 = project_root / "outputs" / tag / "cache" / sub / filename
+    if cand1.exists():
+        return cand1
+    cand2 = project_root / "data" / "cache" / sub / tag / filename
+    if cand2.exists():
+        return cand2
+    return cand1
