@@ -2257,7 +2257,10 @@
             <p>Tài liệu BCTC Markdown chuẩn hóa Thông tư 200, sạch rác OCR, sẵn sàng nạp vào LLM / RAG / SQL Database.
             </p>
           </div>
-          <div style="display: flex; gap: 10px;">
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" class="btn btn-accent" id="btn-sync-copilot-top" onclick="syncToCopilot()">
+              <span>🚀 Đồng Bộ Sang Copilot</span>
+            </button>
             <button type="button" class="btn btn-secondary" onclick="copyMarkdownContent()">
               <span id="btn-copy-text">📋 Sao Chép Markdown</span>
             </button>
@@ -2300,6 +2303,10 @@
 
             <div class="export-stat-box">
               <h4>🎯 Tài Liệu Kèm Theo</h4>
+              <button type="button" class="btn btn-accent" id="btn-sync-copilot"
+                style="width: 100%; margin-bottom: 8px; font-size: 0.85rem;" onclick="syncToCopilot()">
+                🚀 Đồng Bộ Sang Copilot
+              </button>
               <button type="button" class="btn btn-secondary"
                 style="width: 100%; margin-bottom: 8px; font-size: 0.85rem; border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;" onclick="togglePreviewTab('headings')">
                 📑 Xem Tiêu Đề MD Gốc
@@ -2925,6 +2932,52 @@
       }
 
       switchStep(4);
+    }
+
+    // 11b. Chủ động đồng bộ bản final sang OpenBCTC Copilot (Dual-Storage)
+    async function syncToCopilot() {
+      const btn1 = document.getElementById("btn-sync-copilot-top");
+      const btn2 = document.getElementById("btn-sync-copilot");
+      const comp = document.getElementById("cfg-company")?.value || "VNM";
+      const yr = parseInt(document.getElementById("cfg-year")?.value) || 2025;
+      
+      const setBtnLoading = (loading) => {
+        [btn1, btn2].forEach(b => {
+          if (!b) return;
+          b.disabled = loading;
+          if (loading) {
+            b.setAttribute("data-orig", b.innerHTML);
+            b.innerHTML = `<span>⏳ Đang đồng bộ...</span>`;
+          } else {
+            b.innerHTML = b.getAttribute("data-orig") || `<span>🚀 Đồng Bộ Sang Copilot</span>`;
+          }
+        });
+      };
+
+      setBtnLoading(true);
+
+      try {
+        const res = await fetch("/api/sync_copilot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ company: comp, year: yr })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const items = (data.synced_items || []).join(", ");
+          alert(`✅ Đã đồng bộ thành công sang OpenBCTC Copilot!\n\n• Doanh nghiệp: ${comp} (${yr})\n• Các mục đã nạp: [${items}]\n• Dữ liệu sạch 100% sau rà soát HITL đã sẵn sàng trên MongoDB GridFS và Qdrant.`);
+          [btn1, btn2].forEach(b => {
+            if (b) b.innerHTML = `<span>✓ Đã Đồng Bộ Copilot</span>`;
+          });
+          setTimeout(() => setBtnLoading(false), 3000);
+        } else {
+          alert(`⚠️ Đồng bộ Copilot chưa thành công: ${data.message || data.detail || data.error || 'Kiểm tra xem Docker Copilot đã bật chưa'}`);
+          setBtnLoading(false);
+        }
+      } catch (err) {
+        alert(`❌ Lỗi kết nối khi đồng bộ sang Copilot: ${err.message}`);
+        setBtnLoading(false);
+      }
     }
 
     // 12. Nạp và hiển thị Markdown Preview

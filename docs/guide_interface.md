@@ -239,9 +239,9 @@ Bước cuối cùng cho phép bạn kiểm tra và tải về tài liệu Markd
 
 Một tính năng đột phá của OpenBCTC là khả năng **tự động kết nối với trợ lý AI đàm thoại OpenBCTC Copilot** theo mô hình **Zero-Touch Workflow** mà bạn không cần phải copy/paste file hay nạp thủ công:
 
-1. **Cơ chế kích hoạt kép (Dual-Hook Trigger):**
-   * **Hook 1 (Ngay sau Bước 2):** Khi pipeline OCR bóc tách và kiểm toán Anti-GIGO xong, module `CopilotSyncer` tự động kích hoạt.
-   * **Hook 2 (Sau Bước 3 & Bước 4):** Khi kiểm toán viên bấm *"Xác Nhận Đạt Chuẩn & Xuất Markdown"*, bản `_final.md` mới nhất sẽ tự động ghi đè bản cũ trên Copilot.
+1. **Cơ chế kích hoạt chuẩn mực (HITL-Verified Trigger):**
+   * **Bước 1 & Bước 2 (Bóc tách & Đánh giá máy):** Hệ thống lưu cache JSON bảng biểu, MD thô, CSDL SQLite Facts và Benchmark tại local làm "nguyên liệu" cho chuyên viên rà soát. Hệ thống **tuyệt đối không vội đẩy dữ liệu thô** sang Copilot nhằm đảm bảo triết lý chống rác dữ liệu (**Anti-GIGO**).
+   * **Bước 3 & Bước 4 (Rà soát & Hoàn thiện):** Sau khi kiểm toán viên đối chiếu ảnh crop, chỉnh sửa cell số liệu trên HITL Web Editor và bấm *"Xác Nhận Đạt Chuẩn & Xuất Markdown"* (hoặc bấm nút *"🚀 Đồng Bộ Sang Copilot"* ở Bước 4), bản hoàn thiện `_final.md` chuẩn hóa 100% cùng SQLite Facts sạch mới chính thức được nạp sang MongoDB GridFS và Copilot Ingest Engine.
 
 2. **Dữ liệu được tự động nạp sang Copilot:**
    * **MongoDB GridFS:** Đẩy file PDF gốc `{company_lower}_{year}.pdf`, Markdown `{company_lower}_{year}_final.md`, và SQLite Facts DB `benchmark_{company_lower}_{year}.db`.

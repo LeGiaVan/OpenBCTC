@@ -421,6 +421,7 @@ def run_pipeline(
     doc_md: str = "",
     report_md: str = "",
     db_path: str = "",
+    sync_to_copilot: bool = False,
 ) -> dict[str, Any]:
     """Chạy toàn trình Ingestion Pipeline thông qua LangGraph."""
     from src.agents.ingestion_graph import IngestionAgent
@@ -541,26 +542,31 @@ def run_pipeline(
     }
     metrics_json_path.write_text(json.dumps(metrics_data, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    # ── Tự động đồng bộ sang OpenBCTC Copilot (Dual-Storage) ─────────────
-    try:
-        from src.uploader.copilot_syncer import CopilotSyncer
-        syncer = CopilotSyncer()
-        if syncer.enabled:
-            JobState.logs.append("Đang kiểm tra kết nối và đồng bộ dữ liệu sang OpenBCTC Copilot...")
-            sync_res = syncer.sync_company_run(
-                company=company,
-                year=year,
-                output_dir=run_dir,
-                pdf_path=pdf_file,
-                trigger_ingest=True,
-            )
-            if sync_res.get("status") == "SUCCESS":
-                items = ", ".join(sync_res.get("synced_items", []))
-                JobState.logs.append(f"✓ Đã đồng bộ sang Copilot (MongoDB GridFS & Collections): [{items}]")
-            elif sync_res.get("status") == "WARNING":
-                JobState.logs.append(f"ℹ️ {sync_res.get('detail', 'MongoDB chưa bật. Dữ liệu đã lưu an toàn tại local.')}")
-    except Exception as e:
-        logger.warning("Lỗi kích hoạt CopilotSyncer: %s", e)
+    # ── Đồng bộ sang OpenBCTC Copilot (Chỉ kích hoạt khi được yêu cầu) ────
+    # Trong quy trình Web UI tương tác, hệ thống lưu cache JSON, MD thô & SQLite tại local,
+    # và chờ kiểm toán viên HITL rà soát xong (Bước 3 & 4) mới đồng bộ bản final sang Copilot.
+    if sync_to_copilot:
+        try:
+            from src.uploader.copilot_syncer import CopilotSyncer
+            syncer = CopilotSyncer()
+            if syncer.enabled:
+                JobState.logs.append("Đang kiểm tra kết nối và đồng bộ dữ liệu sang OpenBCTC Copilot...")
+                sync_res = syncer.sync_company_run(
+                    company=company,
+                    year=year,
+                    output_dir=run_dir,
+                    pdf_path=pdf_file,
+                    trigger_ingest=True,
+                )
+                if sync_res.get("status") == "SUCCESS":
+                    items = ", ".join(sync_res.get("synced_items", []))
+                    JobState.logs.append(f"✓ Đã đồng bộ sang Copilot (MongoDB GridFS & Collections): [{items}]")
+                elif sync_res.get("status") == "WARNING":
+                    JobState.logs.append(f"ℹ️ {sync_res.get('detail', 'MongoDB chưa bật. Dữ liệu đã lưu an toàn tại local.')}")
+        except Exception as e:
+            logger.warning("Lỗi kích hoạt CopilotSyncer: %s", e)
+    else:
+        JobState.logs.append("ℹ️ Bước 1 hoàn tất: Đã lưu cache JSON, MD thô, DB & Benchmark. Chờ kiểm toán viên rà soát (HITL) tại Bước 3 & 4 trước khi đồng bộ Copilot.")
 
     # Cập nhật JobState toàn cục
     JobState.performance = perf
@@ -913,6 +919,7 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                         doc_md=doc_md,
                         report_md=report_md,
                         db_path=db_path,
+                        sync_to_copilot=False,
                     )
                 except Exception as e:
                     logger.exception("Lỗi khi chạy pipeline:")
@@ -970,6 +977,29 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                 lines_count = len(new_content.splitlines())
                 logger.info(f"Đã lưu nội dung Markdown người dùng chỉnh sửa vào: {target} ({file_size_kb} KB, {lines_count} dòng)")
 
+                # Đồng bộ sang Copilot nếu người dùng lưu file hoàn thiện final
+                copilot_synced = False
+                if "_final" in target.name:
+                    try:
+                        from src.uploader.copilot_syncer import CopilotSyncer
+                        syncer = CopilotSyncer()
+                        if syncer.enabled:
+                            comp = (JobState.company or "VNM").upper()
+                            yr = int(JobState.year or 2025)
+                            pdf_cand = PROJECT_ROOT / "pdf_files" / f"{comp.lower()}_{yr}.pdf"
+                            if not pdf_cand.exists():
+                                pdf_cand = Path(JobState.pdf_path) if JobState.pdf_path else None
+                            sync_res = syncer.sync_company_run(
+                                company=comp,
+                                year=yr,
+                                output_dir=target.parent,
+                                pdf_path=pdf_cand if pdf_cand and pdf_cand.exists() else None,
+                                trigger_ingest=True,
+                            )
+                            copilot_synced = (sync_res.get("status") == "SUCCESS")
+                    except Exception as ex_sync:
+                        logger.warning("CopilotSyncer warning trong files/save: %s", ex_sync)
+
                 self._send_json({
                     "success": True,
                     "message": "Đã lưu thành công nội dung chỉnh sửa Markdown!",
@@ -977,6 +1007,7 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                     "file_name": target.name,
                     "file_size_kb": file_size_kb,
                     "lines_count": lines_count,
+                    "copilot_synced": copilot_synced,
                 })
             except Exception as e:
                 logger.exception("Lỗi khi lưu Markdown:")
@@ -1012,11 +1043,80 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                     )
                     final_path.write_text(final_doc, encoding="utf-8")
                     logger.info("✓ [interface.py sync_edits] Đã cập nhật %s từ cache", final_path)
-                    self._send_json({"success": True, "saved_path": str(final_path), "file_name": final_path.name})
+
+                    # Đồng bộ sang OpenBCTC Copilot (Dual-Storage) sau khi đã xuất bản final
+                    copilot_synced = False
+                    try:
+                        from src.uploader.copilot_syncer import CopilotSyncer
+                        syncer = CopilotSyncer()
+                        if syncer.enabled:
+                            pdf_cand = PROJECT_ROOT / "pdf_files" / f"{comp.lower()}_{yr}.pdf"
+                            if not pdf_cand.exists():
+                                pdf_cand = Path(JobState.pdf_path) if JobState.pdf_path else None
+                            sync_res = syncer.sync_company_run(
+                                company=comp,
+                                year=yr,
+                                output_dir=final_path.parent,
+                                pdf_path=pdf_cand if pdf_cand and pdf_cand.exists() else None,
+                                trigger_ingest=True,
+                            )
+                            copilot_synced = (sync_res.get("status") == "SUCCESS")
+                            logger.info("✓ [sync_edits] Đã đồng bộ sang Copilot: %s", sync_res)
+                    except Exception as ex_sync:
+                        logger.warning("CopilotSyncer warning trong sync_edits: %s", ex_sync)
+
+                    self._send_json({
+                        "success": True,
+                        "saved_path": str(final_path),
+                        "file_name": final_path.name,
+                        "copilot_synced": copilot_synced,
+                    })
                 else:
                     self._send_json({"success": False, "error": f"Không tìm thấy file {target_base}"}, 404)
             except Exception as ex:
                 logger.error("Lỗi sync_edits: %s", ex)
+                self._send_json({"success": False, "error": str(ex)}, 500)
+
+        elif path == "/api/sync_copilot":
+            # Endpoint kích hoạt chủ động đồng bộ bản final sang Copilot
+            try:
+                body = self.rfile.read(content_length).decode("utf-8")
+                data = json.loads(body) if body else {}
+                comp = (data.get("company") or JobState.company or "VNM").upper()
+                yr = int(data.get("year") or JobState.year or 2025)
+
+                clean_stem = f"{comp}_{yr}"
+                cand_dir = PROJECT_ROOT / "outputs" / clean_stem
+                run_dir = cand_dir if cand_dir.exists() else (PROJECT_ROOT / "outputs")
+
+                from src.uploader.copilot_syncer import CopilotSyncer
+                syncer = CopilotSyncer()
+                if not syncer.enabled:
+                    self._send_json({
+                        "success": False,
+                        "message": "Copilot Syncer đang bị tắt (ENABLE_COPILOT_SYNC=false)."
+                    }, 400)
+                    return
+
+                pdf_cand = PROJECT_ROOT / "pdf_files" / f"{comp.lower()}_{yr}.pdf"
+                if not pdf_cand.exists():
+                    pdf_cand = Path(JobState.pdf_path) if JobState.pdf_path else None
+
+                sync_res = syncer.sync_company_run(
+                    company=comp,
+                    year=yr,
+                    output_dir=run_dir,
+                    pdf_path=pdf_cand if pdf_cand and pdf_cand.exists() else None,
+                    trigger_ingest=True,
+                )
+                self._send_json({
+                    "success": sync_res.get("status") == "SUCCESS",
+                    "status": sync_res.get("status"),
+                    "synced_items": sync_res.get("synced_items", []),
+                    "detail": sync_res.get("detail", ""),
+                })
+            except Exception as ex:
+                logger.exception("Lỗi /api/sync_copilot:")
                 self._send_json({"success": False, "error": str(ex)}, 500)
 
         else:
