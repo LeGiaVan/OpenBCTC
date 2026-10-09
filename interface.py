@@ -421,7 +421,6 @@ def run_pipeline(
     doc_md: str = "",
     report_md: str = "",
     db_path: str = "",
-    sync_to_copilot: bool = False,
 ) -> dict[str, Any]:
     """Chạy toàn trình Ingestion Pipeline thông qua LangGraph."""
     from src.agents.ingestion_graph import IngestionAgent
@@ -542,31 +541,11 @@ def run_pipeline(
     }
     metrics_json_path.write_text(json.dumps(metrics_data, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    # ── Đồng bộ sang OpenBCTC Copilot (Chỉ kích hoạt khi được yêu cầu) ────
-    # Trong quy trình Web UI tương tác, hệ thống lưu cache JSON, MD thô & SQLite tại local,
-    # và chờ kiểm toán viên HITL rà soát xong (Bước 3 & 4) mới đồng bộ bản final sang Copilot.
-    if sync_to_copilot:
-        try:
-            from src.uploader.copilot_syncer import CopilotSyncer
-            syncer = CopilotSyncer()
-            if syncer.enabled:
-                JobState.logs.append("Đang kiểm tra kết nối và đồng bộ dữ liệu sang OpenBCTC Copilot...")
-                sync_res = syncer.sync_company_run(
-                    company=company,
-                    year=year,
-                    output_dir=run_dir,
-                    pdf_path=pdf_file,
-                    trigger_ingest=True,
-                )
-                if sync_res.get("status") == "SUCCESS":
-                    items = ", ".join(sync_res.get("synced_items", []))
-                    JobState.logs.append(f"✓ Đã đồng bộ sang Copilot (MongoDB GridFS & Collections): [{items}]")
-                elif sync_res.get("status") == "WARNING":
-                    JobState.logs.append(f"ℹ️ {sync_res.get('detail', 'MongoDB chưa bật. Dữ liệu đã lưu an toàn tại local.')}")
-        except Exception as e:
-            logger.warning("Lỗi kích hoạt CopilotSyncer: %s", e)
-    else:
-        JobState.logs.append("ℹ️ Bước 1 hoàn tất: Đã lưu cache JSON, MD thô, DB & Benchmark. Chờ kiểm toán viên rà soát (HITL) tại Bước 3 & 4 trước khi đồng bộ Copilot.")
+    # ── Ghi nhận hoàn tất Bước 1: Lưu trữ an toàn tại local ──────────────
+    # Toàn bộ việc đồng bộ sang Copilot sẽ diễn ra sau khi chuyên viên tài chính
+    # hoàn tất rà soát HITL và xuất bản file final ở Bước 3 & Bước 4.
+    JobState.logs.append("ℹ️ Bước 1 hoàn tất: Đã lưu cache bảng biểu, Markdown thô, SQLite DB & Benchmark tại local.")
+    JobState.logs.append("👉 Vui lòng chuyển sang Bước 3 để rà soát (HITL). Bản sạch final sẽ tự động đồng bộ sang Copilot khi bạn xuất file.")
 
     # Cập nhật JobState toàn cục
     JobState.performance = perf
@@ -919,7 +898,6 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                         doc_md=doc_md,
                         report_md=report_md,
                         db_path=db_path,
-                        sync_to_copilot=False,
                     )
                 except Exception as e:
                     logger.exception("Lỗi khi chạy pipeline:")
@@ -997,6 +975,9 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                                 trigger_ingest=True,
                             )
                             copilot_synced = (sync_res.get("status") == "SUCCESS")
+                            if copilot_synced:
+                                items = ", ".join(sync_res.get("synced_items", []))
+                                JobState.logs.append(f"✓ [Lưu File Final] Đã đồng bộ bản cập nhật sang Copilot: [{items}]")
                     except Exception as ex_sync:
                         logger.warning("CopilotSyncer warning trong files/save: %s", ex_sync)
 
@@ -1062,6 +1043,11 @@ class OpenBCTCWebHandler(BaseHTTPRequestHandler):
                             )
                             copilot_synced = (sync_res.get("status") == "SUCCESS")
                             logger.info("✓ [sync_edits] Đã đồng bộ sang Copilot: %s", sync_res)
+                            if copilot_synced:
+                                items = ", ".join(sync_res.get("synced_items", []))
+                                JobState.logs.append(f"✓ [HITL Final] Đã đồng bộ bản hoàn thiện sang Copilot (MongoDB GridFS & Qdrant): [{items}]")
+                            elif sync_res.get("status") == "WARNING":
+                                JobState.logs.append(f"ℹ️ {sync_res.get('detail', 'MongoDB chưa bật. Bản final đã lưu an toàn tại local.')}")
                     except Exception as ex_sync:
                         logger.warning("CopilotSyncer warning trong sync_edits: %s", ex_sync)
 
