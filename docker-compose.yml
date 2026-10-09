@@ -1,0 +1,27 @@
+version: '3.8'
+
+networks:
+  openbctc-net:
+    external: true  # Dùng chung mạng với OpenBCTC Copilot (Docker network)
+
+services:
+  openbctc-ocr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openbctc_ocr_engine
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+      - "8502:8502"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_DB=openbctc
+      - COPILOT_API_URL=http://copilot-api:8000
+      - ENABLE_COPILOT_SYNC=true
+    volumes:
+      - ./data:/app/data
+      - ./outputs:/app/outputs
+      - ./pdf_files:/app/pdf_files
+    networks:
+      - openbctc-net

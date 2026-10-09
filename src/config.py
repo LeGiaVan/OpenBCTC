@@ -91,6 +91,12 @@ class Settings(BaseSettings):
     environment: str = "development"
     log_level: str = "INFO"
 
+    # ── 10. Tích Hợp Hệ Sinh Thái OpenBCTC Copilot (Dual-Storage) ──────────
+    enable_copilot_sync: bool = True
+    mongo_uri: str = "mongodb://localhost:27017"
+    mongo_db: str = "openbctc"
+    copilot_api_url: str = "http://localhost:8000"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

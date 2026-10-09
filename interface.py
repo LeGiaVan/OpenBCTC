@@ -541,6 +541,27 @@ def run_pipeline(
     }
     metrics_json_path.write_text(json.dumps(metrics_data, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    # ── Tự động đồng bộ sang OpenBCTC Copilot (Dual-Storage) ─────────────
+    try:
+        from src.uploader.copilot_syncer import CopilotSyncer
+        syncer = CopilotSyncer()
+        if syncer.enabled:
+            JobState.logs.append("Đang kiểm tra kết nối và đồng bộ dữ liệu sang OpenBCTC Copilot...")
+            sync_res = syncer.sync_company_run(
+                company=company,
+                year=year,
+                output_dir=run_dir,
+                pdf_path=pdf_file,
+                trigger_ingest=True,
+            )
+            if sync_res.get("status") == "SUCCESS":
+                items = ", ".join(sync_res.get("synced_items", []))
+                JobState.logs.append(f"✓ Đã đồng bộ sang Copilot (MongoDB GridFS & Collections): [{items}]")
+            elif sync_res.get("status") == "WARNING":
+                JobState.logs.append(f"ℹ️ {sync_res.get('detail', 'MongoDB chưa bật. Dữ liệu đã lưu an toàn tại local.')}")
+    except Exception as e:
+        logger.warning("Lỗi kích hoạt CopilotSyncer: %s", e)
+
     # Cập nhật JobState toàn cục
     JobState.performance = perf
     JobState.table_audit = table_audit

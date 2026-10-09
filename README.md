@@ -24,7 +24,7 @@
 
 <br/>
 
-[🚀 Trải Nghiệm Web App](#52-khởi-chạy-giao-diện-web-app-trực-quan-interfacepy) • [💻 Tech Stack](#23-ngăn-xếp-công-nghệ-technology-stack) • [📖 Hướng Dẫn Giao Diện](docs/guide_interface.md) • [⚡ Cài Đặt Nhanh](#51-cài-đặt-môi-trường) • [🏗️ Sơ Đồ Kiến Trúc](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow) • [🛡️ 17 Đẳng Thức Anti-GIGO](#43-bộ-kiểm-toán-số-học-anti-gigo--kính-lúp-vision-zoom-sửa-sai) • [📊 Benchmark](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
+[🚀 Trải Nghiệm Web App](#52-khởi-chạy-giao-diện-web-app-trực-quan-interfacepy) • [💻 Tech Stack](#23-ngăn-xếp-công-nghệ-technology-stack) • [📖 Hướng Dẫn Giao Diện](docs/guide_interface.md) • [⚡ Cài Đặt Nhanh](#51-cài-đặt-môi-trường) • [🏗️ Sơ Đồ Kiến Trúc](#21-sơ-đồ-luồng-bóc-tách-toàn-trình-end-to-end-flow) • [🛡️ 17 Đẳng Thức Anti-GIGO](#43-bộ-kiểm-toán-số-học-anti-gigo--kính-lúp-vision-zoom-sửa-sai) • [📊 Benchmark](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang) • [🔗 Tích Hợp Copilot & Docker](#7-tích-hợp-hệ-sinh-thái-openbctc-copilot--docker-dual-storage)
 
 ---
 
@@ -112,7 +112,12 @@
   - [6.1. Bảng Hiệu Năng Đo Lường Trên BCTC Vinamilk 2024 (54 Trang)](#61-bảng-hiệu-năng-đo-lường-trên-bctc-vinamilk-2024-54-trang)
   - [6.2. Đánh Giá Độ Chính Xác Cấu Trúc Bảng (49 Bảng Thuyết Minh Ground Truth)](#62-đánh-giá-độ-chính-xác-cấu-trúc-bảng-49-bảng-thuyết-minh-ground-truth)
   - [6.3. Các Tệp Đầu Ra Trọng Yếu](#63-các-tệp-đầu-ra-trọng-yếu)
-- [7. Lộ Trình Phát Triển (Roadmap)](#7-lộ-trình-phát-triển-roadmap)
+- [7. Tích Hợp Hệ Sinh Thái OpenBCTC Copilot & Docker (Dual-Storage)](#7-tích-hợp-hệ-sinh-thái-openbctc-copilot--docker-dual-storage)
+  - [7.1. Triết Lý Dual-Storage (Lưu Trữ Song Song)](#71-triết-lý-dual-storage-lưu-trữ-song-song)
+  - [7.2. Khế Ước Dữ Liệu Đồng Bộ](#72-khế-ước-dữ-liệu-đồng-bộ)
+  - [7.3. Hướng Dẫn Cấu Hình & Tự Động Kích Hoạt](#73-hướng-dẫn-cấu-hình--tự-động-kích-hoạt)
+  - [7.4. Đóng Gói Docker & Kết Nối Chung Mạng Nội Bộ](#74-đóng-gói-docker--kết-nối-chung-mạng-nội-bộ)
+- [8. Lộ Trình Phát Triển (Roadmap)](#8-lộ-trình-phát-triển-roadmap)
 
 ---
 
@@ -347,11 +352,14 @@ OpenBCTC_AI/
 │       ├── accounting_verifier.py        # Động cơ kiểm toán số học 17 Đẳng thức Kế toán TT200
 │       └── vision_zoom_corrector.py      # Kính lúp cục bộ: StructuredTableCropper + Vision-LLM Hot-patch
 ├── tests/                                # Bộ kiểm thử tự động toàn diện
-├── outputs/                              # TÀI LIỆU MARKDOWN XUẤT BẢN & BÁO CÁO
-│   ├── vnm_financial_report.md           # Toàn văn BCTC Markdown bóc tách tự động (88.4 KB)
-│   ├── vnm_financial_report_final.md     # Bản BCTC hoàn thiện cuối cùng sau khi Review HITL (91.8 KB)
-│   ├── vnm_ocr_benchmark_report.md       # Báo cáo toàn diện phần cứng, hiệu năng & kiểm toán Anti-GIGO
-│   └── vnm_ocr_benchmark_metrics.json   # Dữ liệu số liệu Benchmark định dạng máy đọc JSON
+├── outputs/                              # TÀI LIỆU MARKDOWN XUẤT BẢN & CƠ SỞ DỮ LIỆU
+│   └── <mã_ck>_<năm>/                   # Thư mục gói tài sản theo từng doanh nghiệp & kỳ báo cáo
+│       ├── <mã>_<năm>_financial_report_final.md # Toàn văn BCTC Markdown hoàn thiện sau HITL
+│       ├── benchmark_<mã>_<năm>.db       # CSDL SQLite Facts (224 facts) & Ratios (13 chỉ số)
+│       ├── <mã>_<năm>_ocr_benchmark_report.md  # Báo cáo đo lường & kiểm toán 17 đẳng thức Anti-GIGO
+│       ├── <mã>_<năm>_ocr_benchmark_metrics.json # Dữ liệu Benchmark JSON máy đọc
+│       └── cache/                        # Cache JSON blocks có toạ độ bbox & ảnh crop bảng 200 DPI
+├── Intergration_w_Copilot.md             # 🚀 Kế hoạch & Hướng dẫn tích hợp Dual-Storage sang OpenBCTC Copilot
 └── scripts/                              # Các công cụ script chuyên biệt
 ```
 
@@ -867,16 +875,97 @@ python evaluation_table/evaluator.py
 
 ### 6.3. Các Tệp Đầu Ra Trọng Yếu
 
-Sau khi chạy pipeline, hệ thống tự động xuất bản và đồng bộ các tệp kết quả tại thư mục `outputs/`:
+Sau khi chạy pipeline, hệ thống tự động xuất bản và tổ chức toàn bộ gói tài sản tại thư mục `outputs/<mã_ck>_<năm>/` (ví dụ: `outputs/VNM_2025/`):
 
-* 📄 **[`outputs/vnm_financial_report.md`](outputs/vnm_financial_report.md)**: Toàn văn BCTC định dạng Markdown bóc tách tự động hoàn chỉnh (88.4 KB).
-* 📝 **[`outputs/vnm_financial_report_final.md`](outputs/vnm_financial_report_final.md)**: Bản Markdown hoàn thiện cuối cùng sau khi kiểm toán viên rà soát qua HITL Web Reviewer (91.8 KB).
-* 📊 **[`outputs/vnm_ocr_benchmark_report.md`](outputs/vnm_ocr_benchmark_report.md)**: Báo cáo kỹ thuật chi tiết về cấu hình phần cứng, hiệu năng đo lường, kiểm toán Anti-GIGO và kiểm toán bảng biểu.
-* ⚙️ **[`outputs/vnm_ocr_benchmark_metrics.json`](outputs/vnm_ocr_benchmark_metrics.json)**: Tập hợp các chỉ số đo lường định dạng máy đọc JSON phục vụ CI/CD.
+* 📄 **`outputs/<mã>_<năm>/<mã>_<năm>_financial_report.md`**: Toàn văn BCTC định dạng Markdown bóc tách tự động hoàn chỉnh.
+* 📝 **`outputs/<mã>_<năm>/<mã>_<năm>_financial_report_final.md`**: Bản Markdown hoàn thiện cuối cùng sau khi kiểm toán viên rà soát qua HITL Web Reviewer (Port 8502).
+* 💾 **`outputs/<mã>_<năm>/benchmark_<mã>_<năm>.db`**: Cơ sở dữ liệu SQLite lưu trữ cấu trúc 224 chỉ tiêu tài chính TT200 (`financial_facts`) và 13 chỉ số tài chính (`financial_ratios`) phục vụ SQL Fact Engine.
+* 📊 **`outputs/<mã>_<năm>/<mã>_<năm>_ocr_benchmark_report.md`**: Báo cáo kỹ thuật chi tiết về cấu hình phần cứng, hiệu năng đo lường, kiểm toán Anti-GIGO và kiểm toán bảng biểu.
+* ⚙️ **`outputs/<mã>_<năm>/<mã>_<năm>_ocr_benchmark_metrics.json`**: Tập hợp các chỉ số đo lường định dạng máy đọc JSON phục vụ CI/CD.
+* 🧩 **`outputs/<mã>_<năm>/cache/notes/page_*.json`**: Tập hợp các khối nội dung nguyên tử chứa số trang `page` và toạ độ `bbox` phục vụ trích dẫn trực quan (Visual Grounding).
+* 🖼️ **`outputs/<mã>_<năm>/cache/table_crops/*.png`**: Bộ sưu tập ảnh crop độ phân giải 200 DPI của từng bảng biểu dùng cho đối chiếu và kiểm toán số học.
 
 ---
 
-## 7. Lộ Trình Phát Triển (Roadmap)
+## 7. Tích Hợp Hệ Sinh Thái OpenBCTC Copilot & Docker (Dual-Storage)
+
+> 💡 **Tài Liệu Chi Tiết & Mã Nguồn Syncer:** Xem hướng dẫn tích hợp chuyên sâu tại **[`Intergration_w_Copilot.md`](Intergration_w_Copilot.md)**.
+
+### 7.1. Triết Lý Dual-Storage (Lưu Trữ Song Song)
+Nhằm kết nối hoàn hảo với trợ lý AI đàm thoại **OpenBCTC Copilot** (chạy Docker stack gồm FastAPI, MongoDB GridFS, Qdrant Hybrid RAG và Nginx) mà vẫn giữ nguyên trải nghiệm đơn giản, không phụ thuộc của người dùng truyền thống:
+
+* **Nhánh 1: Cục Bộ (Local Standalone):** Vẫn lưu đầy đủ tệp PDF, Markdown, SQLite `.db` và JSON blocks ra thư mục `outputs/<mã_ck>_<năm>/`. Người dùng độc lập không cần cài đặt Docker hay MongoDB, có thể mở file trực tiếp trên ổ cứng.
+* **Nhánh 2: Đám Mây / Docker (Copilot Ecosystem):** Mỗi khi OpenBCTC chạy xong OCR (hoặc sau khi kiểm toán viên bấm xác nhận trên HITL Web Editor), hệ thống tự động kích hoạt module `CopilotSyncer` đẩy dữ liệu vào MongoDB của Copilot và gửi webhook kích hoạt Copilot tự động nạp vector chunks vào Qdrant.
+
+```mermaid
+flowchart LR
+    A["OpenBCTC (OCR Engine)"] -->|Nhánh 1: Local| B["outputs/<mã>_<năm>/<br/>(MD, SQLite DB, JSON, PDF)"]
+    A -->|Nhánh 2: CopilotSyncer| C[("MongoDB GridFS :27017<br/>PDF, MD, SQLite DB")]
+    A -->|Nhánh 2: CopilotSyncer| D[("MongoDB Collections<br/>JSON Blocks (BBox)")]
+    A -.->|Trigger Webhook| E["Copilot API (:8000)<br/>Auto Ingest -> Qdrant :6333"]
+    E --> F["Copilot Web UI (:5500)<br/>Chat & Visual Grounding"]
+```
+
+### 7.2. Khế Ước Dữ Liệu Đồng Bộ (Data Contract)
+| Dữ Liệu OpenBCTC | Đích Đến Tại MongoDB Copilot | Vai Trò Trong Hệ Thống Copilot |
+| :--- | :--- | :--- |
+| **PDF BCTC gốc** | GridFS: `{company_lower}_{year}.pdf` | Stream nhanh cho Web UI để vẽ khung highlight BBox |
+| **Markdown BCTC final** | GridFS: `{company_lower}_{year}_final.md` | Cung cấp toàn văn & TOC Tree cho LLM Reasoning |
+| **SQLite DB (`benchmark_*.db`)** | GridFS: `benchmark_{company_lower}_{year}.db` | Cung cấp dữ liệu cho Deterministic SQL Fact Engine |
+| **Cache JSON (`page_*.json`)** | Collection: `document_blocks` | Cung cấp toạ độ `bbox` cho Hybrid Qdrant Vector RAG |
+| **Benchmark Metrics JSON** | Collection: `ocr_benchmarks` | Giám sát chất lượng kiểm toán số học Anti-GIGO |
+
+### 7.3. Hướng Dẫn Cấu Hình & Tự Động Kích Hoạt
+
+#### 1. Cài đặt thư viện kết nối:
+```bash
+pip install pymongo motor httpx
+```
+
+#### 2. Cấu hình biến môi trường (`.env`):
+```dotenv
+ENABLE_COPILOT_SYNC=true
+MONGO_URI=mongodb://localhost:27017
+MONGO_DB=openbctc
+COPILOT_API_URL=http://localhost:8000
+```
+
+> **🛡️ Cơ Chế Graceful Degradation (Chống Treo):** Nếu Docker của Copilot chưa khởi động, module `CopilotSyncer` sẽ tự động phát hiện với timeout 3s, chỉ ghi cảnh báo nhẹ và **tuyệt đối không làm gián đoạn** tiến trình OCR cục bộ.
+
+### 7.4. Đóng Gói Docker & Kết Nối Chung Mạng Nội Bộ
+
+OpenBCTC cung cấp cấu hình `Dockerfile` và `docker-compose.yml` kết nối vào mạng `openbctc-net` để giao tiếp nội bộ với Copilot:
+
+```yaml
+version: '3.8'
+
+networks:
+  openbctc-net:
+    external: true  # Dùng chung mạng với OpenBCTC Copilot
+
+services:
+  openbctc-ocr:
+    build: .
+    container_name: openbctc_ocr_engine
+    ports:
+      - "8501:8501"
+      - "8502:8502"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017
+      - COPILOT_API_URL=http://copilot-api:8000
+      - ENABLE_COPILOT_SYNC=true
+    volumes:
+      - ./outputs:/app/outputs
+      - ./pdf_files:/app/pdf_files
+    networks:
+      - openbctc-net
+```
+
+Quy trình vận hành trở thành một vòng tuần hoàn **Zero-Touch 100%**: Thả file PDF vào OpenBCTC → OCR xong tự động đẩy dữ liệu sang Docker → Mở Copilot UI lên chat và phân tích dữ liệu ngay lập tức!
+
+---
+
+## 8. Lộ Trình Phát Triển (Roadmap)
 
 - [x] **Dual-Branch Ingestion Pipeline**: Phân luồng BCTC Cốt lõi (Vision LLM) và Thuyết minh (Offline OCR).
 - [x] **TOC Inspector & Physical Offset**: Tự động giải quyết lệch trang vật lý PDF scan.
@@ -885,6 +974,7 @@ Sau khi chạy pipeline, hệ thống tự động xuất bản và đồng bộ
 - [x] **Tối Ưu Hóa Local OCR**: VietOCR Batch GPU Acceleration (Batch N = 16) & Active Memory Eviction.
 - [x] **Zero-Latency Table Cropper & Web HITL Editor**: Giao diện Spreadsheet đối chiếu ảnh 200 DPI (Port 8502).
 - [x] **Web App All-in-One (`interface.py`)**: Kéo thả nạp PDF đa doanh nghiệp & Live stream log (Port 8501).
+- [x] **Tích Hợp OpenBCTC Copilot (Dual-Storage & Docker)**: Đồng bộ tự động sang MongoDB GridFS & Qdrant RAG Ingestion phục vụ Chatbot tài chính trực quan.
 - [ ] **Xuất dữ liệu Đa định dạng**: Xuất trực tiếp sang Microsoft Excel (`.xlsx`), JSON Schema và XBRL chuẩn quốc tế.
 - [ ] **Multi-turn Financial QA Agent**: Tích hợp trợ lý hỏi đáp BCTC chuyên sâu kết hợp Hybrid RAG (SQL + Vector).
 

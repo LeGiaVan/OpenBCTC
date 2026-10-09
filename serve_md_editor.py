@@ -2189,6 +2189,20 @@ class TableEditorHandler(BaseHTTPRequestHandler):
                 export_path.write_text(final_markdown, encoding="utf-8")
                 logger.info("✓ Đã xuất file Markdown cuối cùng: %s", export_path)
 
+                # Tự động đồng bộ sang OpenBCTC Copilot (Dual-Storage)
+                try:
+                    from src.uploader.copilot_syncer import CopilotSyncer
+                    syncer = CopilotSyncer()
+                    if syncer.enabled:
+                        syncer.sync_company_run(
+                            company=company,
+                            year=year,
+                            output_dir=export_path.parent,
+                            trigger_ingest=True,
+                        )
+                except Exception as ex_sync:
+                    logger.warning("CopilotSyncer warning trong export_final: %s", ex_sync)
+
                 self._send_json({
                     "status": "ok",
                     "saved_path": str(export_path),
