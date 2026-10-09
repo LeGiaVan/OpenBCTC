@@ -67,9 +67,16 @@ GEMINI_VISION_MODEL=gemini-2.0-flash
 # Cấu hình OCR Cục bộ (Chạy offline 0 đồng cho phần Thuyết minh)
 ENABLE_OCR_FALLBACK=true
 OCR_PROVIDER=auto
+
+# Tích Hợp Hệ Sinh Thái OpenBCTC Copilot (Tùy chọn)
+ENABLE_COPILOT_SYNC=true
+MONGO_URI=mongodb://localhost:27017
+MONGO_DB=openbctc
+COPILOT_API_URL=http://localhost:8000
 ```
 
 *(Toàn bộ các trang Thuyết minh từ trang 13 đến hết sẽ được xử lý hoàn toàn Offline bằng mô hình OCR nội bộ, không tốn thêm bất kỳ token hay chi phí nào).*
+
 
 ---
 
@@ -107,13 +114,16 @@ Giao diện được thiết kế theo quy trình dạng thẻ bước (Stepper)
 flowchart LR
     Step1["1️⃣ Nạp PDF & Cấu Hình"] --> Step2["2️⃣ Xử Lý & Live Logs"]
     Step2 --> Step3["3️⃣ Rà Soát Bảng (HITL)"]
-    Step3 --> Step4["4️⃣ Xem & Xuất Markdown"]
+    Step3 --> Step4["4️⃣ Xuất Markdown"]
+    Step4 -.->|Zero-Touch Sync| Step5["🤖 Trợ Lý AI Copilot (:5500)"]
 
     style Step1 fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#fff
     style Step2 fill:#1e293b,stroke:#10b981,stroke-width:2px,color:#fff
     style Step3 fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fff
     style Step4 fill:#1e293b,stroke:#8b5cf6,stroke-width:2px,color:#fff
+    style Step5 fill:#1e293b,stroke:#06b6d4,stroke-width:2px,color:#fff
 ```
+
 
 ---
 
@@ -224,6 +234,37 @@ Bước cuối cùng cho phép bạn kiểm tra và tải về tài liệu Markd
 * **🔄 Bóc Tách BCTC Mới:** Quay lại Bước 1 để xử lý tài liệu của doanh nghiệp khác.
 
 ---
+
+### Bước 5: Tự Động Đồng Bộ & Khởi Chạy Trợ Lý AI OpenBCTC Copilot (Zero-Touch AI)
+
+Một tính năng đột phá của OpenBCTC là khả năng **tự động kết nối với trợ lý AI đàm thoại OpenBCTC Copilot** theo mô hình **Zero-Touch Workflow** mà bạn không cần phải copy/paste file hay nạp thủ công:
+
+1. **Cơ chế kích hoạt kép (Dual-Hook Trigger):**
+   * **Hook 1 (Ngay sau Bước 2):** Khi pipeline OCR bóc tách và kiểm toán Anti-GIGO xong, module `CopilotSyncer` tự động kích hoạt.
+   * **Hook 2 (Sau Bước 3 & Bước 4):** Khi kiểm toán viên bấm *"Xác Nhận Đạt Chuẩn & Xuất Markdown"*, bản `_final.md` mới nhất sẽ tự động ghi đè bản cũ trên Copilot.
+
+2. **Dữ liệu được tự động nạp sang Copilot:**
+   * **MongoDB GridFS:** Đẩy file PDF gốc `{company_lower}_{year}.pdf`, Markdown `{company_lower}_{year}_final.md`, và SQLite Facts DB `benchmark_{company_lower}_{year}.db`.
+   * **MongoDB Collections:** Đẩy hơn 400 JSON Blocks có toạ độ Bounding Box vào collection `document_blocks`.
+   * **Webhook Kích Hoạt Qdrant:** Tự động gửi lệnh `POST http://localhost:8000/api/v1/ingest` để Copilot Backend chạy nạp vector (Dense BGE-M3 + BM25 Sparse) vào Qdrant.
+
+3. **Thông báo trực tiếp trên Live Log Terminal:**
+   ```text
+   Đang kiểm tra kết nối và đồng bộ dữ liệu sang OpenBCTC Copilot...
+   ✓ Đã đồng bộ sang Copilot (MongoDB GridFS & Collections): [pdf, markdown, sqlite, json_blocks, metrics, copilot_triggered]
+   ```
+
+4. **Trải nghiệm đàm thoại tài chính tức thì:**
+   * Mở trình duyệt tại cổng Copilot: 👉 **`http://localhost:5500`**
+   * Bạn có thể chọn doanh nghiệp (ví dụ: `VNM 2025`) và đặt các câu hỏi chuyên sâu:
+     > *"Doanh thu thuần và lợi nhuận sau thuế năm 2024 là bao nhiêu? Cho biết chi tiết các khoản chi phí bán hàng trong thuyết minh?"*
+   * Trợ lý Copilot sẽ tự động truy vấn số liệu xác định (100% chuẩn xác không ảo giác từ SQLite Fact Engine) và **vẽ khung đỏ Bounding Box highlight trực tiếp trên trang PDF gốc**!
+
+> [!NOTE]
+> **🛡️ Cơ chế Graceful Degradation (Không Phụ Thuộc Docker):** Nếu bạn chỉ sử dụng OpenBCTC độc lập và chưa bật Docker stack của Copilot, hệ thống sẽ phát hiện timeout sau 3 giây, chỉ ghi chú nhẹ trên màn hình log và **tuyệt đối không gây lỗi**. Toàn bộ dữ liệu vẫn được lưu trữ đầy đủ 100% tại thư mục cục bộ `outputs/<MÃ>_<NĂM>/`.
+
+---
+
 
 ## 💡 4. Các Mẹo Vận Hành & Phím Tắt Tiện Ích
 

@@ -889,7 +889,11 @@ Sau khi chạy pipeline, hệ thống tự động xuất bản và tổ chức 
 
 ## 7. Tích Hợp Hệ Sinh Thái OpenBCTC Copilot & Docker (Dual-Storage)
 
-> 💡 **Tài Liệu Chi Tiết & Mã Nguồn Syncer:** Xem hướng dẫn tích hợp chuyên sâu tại **[`Intergration_w_Copilot.md`](docs/Intergration_w_Copilot.md)**.
+> 💡 **Tài Liệu Hướng Dẫn Kỹ Thuật Cho AI Agent & Vận Hành:**
+> - 📘 **[Agent Guide: OpenBCTC (Producer Agent)](docs/AGENT_GUIDE_OPENBCTC.md)**: Đặc tả Data Contract, DDL SQLite 4 bảng, Schema JSON Blocks và CopilotSyncer.
+> - 📙 **[Agent Guide: OpenBCTC Copilot (Consumer Agent)](docs/AGENT_GUIDE_COPILOT.md)**: Đặc tả Ingestion Webhook, Dynamic Fact Resolver, Qdrant Hybrid RAG và LangGraph Multi-Agent.
+> - 📖 **[Hướng Dẫn Giao Diện & Quy Trình 5 Bước](docs/guide_interface.md)**: Hướng dẫn trải nghiệm người dùng từ nạp PDF đến chat đàm thoại.
+> - 📄 **[Tài Liệu Kế Hoạch Tích Hợp](docs/Intergration_w_Copilot.md)**: Bản đặc tả chi tiết kiến trúc Dual-Storage ban đầu.
 
 ### 7.1. Triết Lý Dual-Storage (Lưu Trữ Song Song)
 Nhằm kết nối hoàn hảo với trợ lý AI đàm thoại **OpenBCTC Copilot** (chạy Docker stack gồm FastAPI, MongoDB GridFS, Qdrant Hybrid RAG và Nginx) mà vẫn giữ nguyên trải nghiệm đơn giản, không phụ thuộc của người dùng truyền thống:
@@ -934,7 +938,9 @@ COPILOT_API_URL=http://localhost:8000
 
 ### 7.4. Đóng Gói Docker & Kết Nối Chung Mạng Nội Bộ
 
-OpenBCTC cung cấp cấu hình `Dockerfile` và `docker-compose.yml` kết nối vào mạng `openbctc-net` để giao tiếp nội bộ với Copilot:
+Hai dự án kết nối mượt mà qua mạng nội bộ Docker **`openbctc-net`**:
+
+#### 1. Cấu hình tại OpenBCTC (`docker-compose.yml` — Tham gia mạng external):
 
 ```yaml
 version: '3.8'
@@ -961,7 +967,113 @@ services:
       - openbctc-net
 ```
 
+#### 2. Cấu hình tại OpenBCTC Copilot (`docker-compose.yml` — Khởi tạo mạng bridge):
+```yaml
+version: '3.8'
+
+networks:
+  openbctc-net:
+    name: openbctc-net
+    driver: bridge
+
+services:
+  # Backend FastAPI
+  copilot-api:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - QDRANT_URL=http://qdrant:6333
+      - MONGO_URI=mongodb://mongodb:27017
+      - MONGO_DB=openbctc
+    depends_on:
+      - qdrant
+      - mongodb
+    volumes:
+      - ./data:/app/data
+      - ../OpenBCTC/outputs:/app/outputs:ro  # Mount thư mục đầu ra của OpenBCTC làm nguồn facts
+    networks:
+      - openbctc-net
+
+  # Frontend Web UI + Static Storage (Nginx)
+  copilot-ui:
+    image: nginx:alpine
+    ports:
+      - 5500:80
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./data:/usr/share/nginx/html/data:ro
+    networks:
+      - openbctc-net
+
+  # Vector Database cho Hybrid RAG
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - 6333:6333
+      - 6334:6334
+    volumes:
+      - qdrant_data:/qdrant/storage
+    networks:
+      - openbctc-net
+
+  # Document & Metadata Storage
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - openbctc-net
+
+volumes:
+  qdrant_data:
+  mongodb_data:
+```
+
+---
+
+### 7.5. Quy Trình Vận Hành Toàn Trình Zero-Touch (End-to-End Workflow)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Chuyên Viên Phân Tích
+    participant OpenBCTC as OpenBCTC (OCR Engine :8501)
+    participant Mongo as MongoDB (:27017)
+    participant CopilotAPI as Copilot Backend (:8000)
+    participant Qdrant as Qdrant Vector DB (:6333)
+    participant CopilotUI as Copilot Web UI (:5500)
+
+    User->>OpenBCTC: Tải lên PDF BCTC & Bấm "Bắt Đầu Bóc Tách"
+    OpenBCTC->>OpenBCTC: Vision LLM Core + Local OCR Notes
+    OpenBCTC->>OpenBCTC: Kiểm toán số học Anti-GIGO (17 đẳng thức)
+    OpenBCTC->>OpenBCTC: Ghi ra đĩa cục bộ: outputs/VNM_2025/ (Nhánh 1)
+    
+    rect rgb(235, 248, 255)
+        Note over OpenBCTC, Mongo: Tự Động Bơm Dữ Liệu Sang Copilot (Nhánh 2)
+        OpenBCTC->>Mongo: Đẩy PDF gốc, Markdown final, SQLite .db vào GridFS
+        OpenBCTC->>Mongo: Đẩy toàn bộ JSON Blocks có BBox vào 'document_blocks'
+        OpenBCTC->>CopilotAPI: Webhook POST /api/v1/ingest {"company": "VNM", "year": 2025}
+    end
+
+    rect rgb(240, 255, 240)
+        Note over CopilotAPI, Qdrant: Tự Động Xây Dựng RAG & Vector Index
+        CopilotAPI->>Mongo: Đọc JSON Blocks từ 'document_blocks'
+        CopilotAPI->>Qdrant: Layout-Aware Chunker -> Index Dense (BGE-M3) + Sparse (BM25)
+    end
+
+    User->>CopilotUI: Mở giao diện chat (:5500) & Đặt câu hỏi
+    CopilotUI->>CopilotAPI: Gửi câu hỏi đàm thoại
+    CopilotAPI->>CopilotAPI: SQL Fact Engine (Số liệu xác thực) + RAG Thuyết minh
+    CopilotAPI-->>CopilotUI: Trả lời kèm trích dẫn số trang & Highlight Bounding Box trên PDF!
+```
+
 Quy trình vận hành trở thành một vòng tuần hoàn **Zero-Touch 100%**: Thả file PDF vào OpenBCTC → OCR xong tự động đẩy dữ liệu sang Docker → Mở Copilot UI lên chat và phân tích dữ liệu ngay lập tức!
+
 
 ---
 

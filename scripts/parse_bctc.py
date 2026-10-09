@@ -448,6 +448,23 @@ def main() -> None:
         print(f"  * Đường dẫn CSDL:              {Path(args.db).resolve()}")
         print("=" * 80 + "\n")
 
+        # BƯỚC 6: TỰ ĐỘNG ĐỒNG BỘ SANG OPENBCTC COPILOT (DUAL-STORAGE)
+        try:
+            from src.uploader.copilot_syncer import CopilotSyncer
+            syncer = CopilotSyncer()
+            if syncer.enabled:
+                print_banner(f"BƯỚC 6: ĐỒNG BỘ DỮ LIỆU SANG OPENBCTC COPILOT — [{args.company} {args.year}]")
+                syncer.sync_company_run(
+                    company=args.company,
+                    year=args.year,
+                    output_dir=args.output_dir,
+                    pdf_path=args.pdf,
+                    trigger_ingest=True,
+                )
+        except Exception as ex_sync:
+            logger.warning("CopilotSyncer warning trong parse_bctc: %s", ex_sync)
+
 
 if __name__ == "__main__":
     main()
+
