@@ -889,7 +889,7 @@ Sau khi chạy pipeline, hệ thống tự động xuất bản và tổ chức 
 
 ## 7. Tích Hợp Hệ Sinh Thái OpenBCTC Copilot & Docker (Dual-Storage)
 
-> 💡 **Tài Liệu Chi Tiết & Mã Nguồn Syncer:** Xem hướng dẫn tích hợp chuyên sâu tại **[`Intergration_w_Copilot.md`](Intergration_w_Copilot.md)**.
+> 💡 **Tài Liệu Chi Tiết & Mã Nguồn Syncer:** Xem hướng dẫn tích hợp chuyên sâu tại **[`Intergration_w_Copilot.md`](docs/Intergration_w_Copilot.md)**.
 
 ### 7.1. Triết Lý Dual-Storage (Lưu Trữ Song Song)
 Nhằm kết nối hoàn hảo với trợ lý AI đàm thoại **OpenBCTC Copilot** (chạy Docker stack gồm FastAPI, MongoDB GridFS, Qdrant Hybrid RAG và Nginx) mà vẫn giữ nguyên trải nghiệm đơn giản, không phụ thuộc của người dùng truyền thống:
